@@ -23,15 +23,17 @@
 <meta property="og:site_name" content="The Practical Quant">
 <meta property="og:description" content="When I first look at these credit investment opportunities, the challenge was immediately clear. Our team was evaluating two legacy services chains in Florida, yet almost none of the analytical infras">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yumeng-li.github.io/legacy_files/census.png">
+<meta property="og:image" content="http://yumeng-li.github.io/legacy_files/cdc.png">
 <meta property="og:image" content="http://yumeng-li.github.io/legacy_files/legacy_16_0.png">
 <meta property="og:image" content="http://yumeng-li.github.io/legacy_files/legacy_18_0.png">
 <meta property="og:image" content="http://yumeng-li.github.io/legacy_files/legacy_20_0.png">
 <meta property="og:image" content="http://yumeng-li.github.io/legacy_files/legacy_39_0.png">
 <meta property="article:published_time" content="2025-10-11T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-12-12T17:53:04.182Z">
+<meta property="article:modified_time" content="2025-12-12T18:20:15.318Z">
 <meta property="article:author" content="Yumeng Li">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yumeng-li.github.io/legacy_files/legacy_16_0.png">
+<meta name="twitter:image" content="http://yumeng-li.github.io/legacy_files/census.png">
 
 
 
@@ -254,6 +256,7 @@
 
 <h2 id="Confronting-an-opaque-sector-with-minimal-initial-intuition"><a href="#Confronting-an-opaque-sector-with-minimal-initial-intuition" class="headerlink" title="Confronting an opaque sector with minimal initial intuition"></a>Confronting an opaque sector with minimal initial intuition</h2><p>My first attempt at framing the problem was straightforward but ultimately insufficient. I began with the assumption that local population size should correlate with demand, and therefore revenue, in a necessity-based service. The logic felt self-evident.</p>
 <p>Yet once I tested this idea against the reference dataset where one comparable chain provided actual revenue data&#x2014;the relationship collapsed almost immediately. Dense ZIP codes did not necessarily produce higher revenue, and several low-population regions performed unexpectedly well. This mismatch signaled that the core driver of performance was not simply &#x201C;how many people live nearby.&#x201D; It forced a re-examination of what demand actually means in this context.</p>
+<p><img src="http://yumeng-li.github.io/legacy_files/census.png" width="400"> <img src="http://yumeng-li.github.io/legacy_files/cdc.png" width="400"></p>
 <h2 id="Refining-the-definition-of-demand"><a href="#Refining-the-definition-of-demand" class="headerlink" title="Refining the definition of demand"></a>Refining the definition of demand</h2><p>A more nuanced view is that not all population contributes equally to demand. To approximate the actual service need in each market, I began assembling a dataset that did not exist in any ready-made form. I pulled <strong>age-bucket distributions from the American Community Survey at the ZIP-code level</strong>, then matched each location to its corresponding county in order to merge in <strong>CDC crude mortality rates by age group</strong>. Only after aligning these disparate geographies&#x2014;coordinates &#x2192; ZIP &#x2192; county&#x2014;was it possible to compute a more meaningful proxy: the expected number of annual events within each location&#x2019;s true catchment area.</p>
 <figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd</span><br><span class="line"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np</span><br><span class="line"><span class="hljs-keyword">import</span> statsmodels.formula.api <span class="hljs-keyword">as</span> smf</span><br><span class="line"><span class="hljs-keyword">import</span> statsmodels.api <span class="hljs-keyword">as</span> sm</span><br><span class="line"><span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt </span><br><span class="line"><span class="hljs-keyword">import</span> cartopy.crs <span class="hljs-keyword">as</span> ccrs</span><br><span class="line"><span class="hljs-keyword">import</span> cartopy.feature <span class="hljs-keyword">as</span> cfeature</span><br><span class="line"><span class="hljs-keyword">from</span> math <span class="hljs-keyword">import</span> radians, cos, sin, asin, sqrt</span><br></pre></td></tr></tbody></table></figure>
 
