@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+<head>
+    <meta charset="utf-8">
+<title>Predicting Post-Pandemic Consumption Behaviors Given Potential Paths of Monetary Policy, Part 2 -- Cointegration, VAR/VECM and Forecast - The Practical Quant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css">
+
+
+
+
+<meta name="description" content="">
+
+
+
+
+
+    <meta name="description" content="In the last blog, we went through the economic intuitions behind this consumption model, conducted some preliminary analysis in search for structural breaks and checked the stationarity of the endogen">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Predicting Post-Pandemic Consumption Behaviors Given Potential Paths of Monetary Policy, Part 2 -- Cointegration, VAR&#x2F;VECM and Forecast">
+<meta property="og:url" content="http://yoursite.com/2022/01/11/VECM2/index.html">
+<meta property="og:site_name" content="The Practical Quant">
+<meta property="og:description" content="In the last blog, we went through the economic intuitions behind this consumption model, conducted some preliminary analysis in search for structural breaks and checked the stationarity of the endogen">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yumeng-li.github.io/VECM_files/flowchart.png">
+<meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_61_1.png">
+<meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_62_1.png">
+<meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_67_1.png">
+<meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_68_1.png">
+<meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_80_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_87_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_91_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_105_0.png">
+<meta property="article:published_time" content="2022-01-11T17:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-12T03:46:40.109Z">
+<meta property="article:author" content="Yumeng Li">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yumeng-li.github.io/VECM_files/flowchart.png">
+
+
+
+
+
+<link rel="icon" href="/favicon.png">
+
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ovo|Source+Code+Pro">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/css/justifiedGallery.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+<script defer src="//use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+
+<meta name="generator" content="Hexo 5.0.0"></head>
+<body>
+    
+<nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item navbar-logo" href="/">
+                
+                    
+                    THE PRACTICAL QUANT
+                    
+                
+            </a>
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <div class="navbar-menu navbar-start">
+            
+            <a class="navbar-item "
+               href="/archives">Archives</a>
+            
+            <a class="navbar-item "
+               href="/categories">Category</a>
+            
+            <a class="navbar-item "
+               target="_blank" rel="noopener" href="http://allaboutmacros.com/">Blog</a>
+            
+            <a class="navbar-item "
+               target="_blank" rel="noopener" href="https://www.linkedin.com/in/emmelineli/">Linkedin</a>
+            
+        </div>
+        
+        <div class="navbar-menu navbar-end">
+            
+            <a class="navbar-item search" title="Search" href="javascript:;">
+                <i class="fas fa-search"></i>
+            </a>
+            
+            
+            
+            <a class="navbar-item" title="GitHub" target="_blank" rel="noopener" href="https://github.com/ppoffice/hexo-theme-minos">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+               
+            
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+    <div class="container">
+    <article class="article content gallery" itemscope itemprop="blogPost">
+    <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
+        
+            Predicting Post-Pandemic Consumption Behaviors Given Potential Paths of Monetary Policy, Part 2 -- Cointegration, VAR/VECM and Forecast
+        
+    </h1>
+    <div class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile">
+        <span class="column is-narrow">
+            <time datetime="2022-01-11T17:00:00.000Z" itemprop="datePublished">Jan 11 2022</time>
+        </span>
+        
+        <span class="column is-narrow article-category">
+            <i class="far fa-folder"></i>
+            <a class="article-category-link" href="/categories/Time-Series-Analysis/">Time Series Analysis</a>
+        </span>
+        
+        
+        <span class="column is-narrow">
+            
+            
+            26 minutes read (About 3833 words)
+        </span>
+        
+    </div>
+    <div class="article-entry is-size-6-mobile" itemprop="articleBody">
+    
+        <html><head></head><body><p>In the last blog, we went through the economic intuitions behind this consumption model, conducted some preliminary analysis in search for structural breaks and checked the stationarity of the endogenous variables using ADF and KPSS tests. Since we have found that none of the variables can be considered stationary, we can therefore ask whether the variables form a cointegrated system with a given number of &#x201C;common trends&#x201D;. Intuitively, I would argue that there exists one cointegration equation among the three variables as in the long run, one&#x2019;s consumption and net wealth should add up to the one&#x2019;s income.</p>
+<p>So let&#x2019;s keep going down to the path, and see how we can test for cointegration and include it in a VECM.</p>
+<img src="http://yumeng-li.github.io/VECM_files/flowchart.png">
+
+
+
+<h2 id="Cointegration-Test"><a href="#Cointegration-Test" class="headerlink" title="Cointegration Test"></a>Cointegration Test</h2><p>Given that all variables are consistent with the unit root hypothesis and possibly cointegrated, we can use <strong>Johansen&#x2019;s trace statistic</strong> to test for the existence of a common trend i.e., a long-run cointegration relationship among the three endogenous variables.</p>
+<p>First, we should estimate the VAR in levels so as to find out the optimal lags to use for the cointegration test. You might want to do this in first differences depending on your preferences, but basically the objective here is to run a preliminary VAR without worrying about whether the variables are cointegrated, which is <strong>obviously an issue given that they all have unit roots</strong>.</p>
+<h3 id="VAR-in-Levels"><a href="#VAR-in-Levels" class="headerlink" title="VAR in Levels"></a>VAR in Levels</h3><p>I&#x2019;m going to allow for 10 lags in the first instance just to get the process going, and these are the variables in the VAR as I include the dummy variables sb_1975_4, sb_2008_3 to allow for the possibility of a structural breaks.</p>
+<p>The BIC and HQ statistics suggest two lags for the optimal number of lags, whereas the AIC and FPE statistics suggest three. We choose the VAR model with three lags to allow for the possibility.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">train = train.iloc[<span class="hljs-number">1</span>:]</span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">model = VAR(endog=train[[<span class="hljs-string">&apos;ln_rc&apos;</span>,<span class="hljs-string">&apos;ln_rdy&apos;</span>,<span class="hljs-string">&apos;ln_rnw&apos;</span>]], exog =train[[<span class="hljs-string">&apos;sb_1975_4&apos;</span>,<span class="hljs-string">&apos;sb_2008_3&apos;</span>,<span class="hljs-string">&apos;const&apos;</span>]])</span><br><span class="line">res = model.select_order(<span class="hljs-number">10</span>)</span><br><span class="line">res.summary()</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<table class="simpletable">
+<caption>VAR Order Selection (* highlights the minimums)</caption>
+<tbody><tr>
+   <td></td>      <th>AIC</th>         <th>BIC</th>         <th>FPE</th>        <th>HQIC</th>    
+</tr>
+<tr>
+  <th>0</th>  <td>    -17.58</td>  <td>    -17.39</td>  <td> 2.310e-08</td>  <td>    -17.51</td>
+</tr>
+<tr>
+  <th>1</th>  <td>    -27.99</td>  <td>    -27.66</td>  <td> 6.975e-13</td>  <td>    -27.86</td>
+</tr>
+<tr>
+  <th>2</th>  <td>    -28.19</td>  <td>    -27.71*</td> <td> 5.696e-13</td>  <td>    -28.00*</td>
+</tr>
+<tr>
+  <th>3</th>  <td>    -28.20*</td> <td>    -27.58</td>  <td> 5.664e-13*</td> <td>    -27.95</td>
+</tr>
+<tr>
+  <th>4</th>  <td>    -28.17</td>  <td>    -27.40</td>  <td> 5.829e-13</td>  <td>    -27.86</td>
+</tr>
+<tr>
+  <th>5</th>  <td>    -28.13</td>  <td>    -27.22</td>  <td> 6.067e-13</td>  <td>    -27.76</td>
+</tr>
+<tr>
+  <th>6</th>  <td>    -28.12</td>  <td>    -27.07</td>  <td> 6.144e-13</td>  <td>    -27.69</td>
+</tr>
+<tr>
+  <th>7</th>  <td>    -28.07</td>  <td>    -26.87</td>  <td> 6.488e-13</td>  <td>    -27.58</td>
+</tr>
+<tr>
+  <th>8</th>  <td>    -28.02</td>  <td>    -26.68</td>  <td> 6.810e-13</td>  <td>    -27.48</td>
+</tr>
+<tr>
+  <th>9</th>  <td>    -28.02</td>  <td>    -26.53</td>  <td> 6.807e-13</td>  <td>    -27.42</td>
+</tr>
+<tr>
+  <th>10</th> <td>    -27.97</td>  <td>    -26.33</td>  <td> 7.217e-13</td>  <td>    -27.31</td>
+</tr>
+</tbody></table>
+
+
+
+<h3 id="Johansen-Cointegration-Test"><a href="#Johansen-Cointegration-Test" class="headerlink" title="Johansen Cointegration Test"></a>Johansen Cointegration Test</h3><p>Then, we conduct the Johansen&#x2019;s test with two lags. One has to ensure that the lag interval for the<br>differenced endogenous variables is <strong>1 smaller</strong> than the number of lags used in VAR in levels by moving to the corresponding VECM form.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vec_rank = vecm.select_coint_rank(endog=train[[<span class="hljs-string">&apos;ln_rc&apos;</span>,<span class="hljs-string">&apos;ln_rdy&apos;</span>,<span class="hljs-string">&apos;ln_rnw&apos;</span>]], det_order = <span class="hljs-number">0</span>, k_ar_diff = <span class="hljs-number">2</span>, method = <span class="hljs-string">&apos;trace&apos;</span>, signif=<span class="hljs-number">0.05</span>)</span><br><span class="line">print(vec_rank.summary())</span><br><span class="line">print(<span class="hljs-string">&apos;The rank to choose according to the Johansen test: &apos;</span>+ str(vec_rank.rank))</span><br></pre></td></tr></tbody></table></figure>
+
+<pre><code>Johansen cointegration test using trace test statistic with 5% significance level
+=====================================
+r_0 r_1 test statistic critical value
+-------------------------------------
+  0   3          33.75          29.80
+  1   3          11.44          15.49
+-------------------------------------
+The rank to choose according to the Johansen test: 1</code></pre>
+<p>The results suggest that we can reject the null hypothesis of no cointegration (or zero cointegrating vectors) using a 5% significance level. Moreover, we cannot reject the null hypotheses of at most 1 cointegrating vectors versus the alternative of 2. Therefore, we assume that there exists one (and only one) cointegrating vector.</p>
+<h2 id="VECM-Estimation"><a href="#VECM-Estimation" class="headerlink" title="VECM Estimation"></a>VECM Estimation</h2><p>Since there is a cointegration relationship existing, we should construct an ECM equation (e.g., an error correction model) that can explain the actual behavior of consumption during the sample period based on the long-run specification.</p>
+<p>In developing the ECM model, we can include additional exogenous variables in the VECM to explain short-run dynamics of consumption. Besides the structural break around 1976 and the inequality gap, here are a bunch of other variables that we should consider. Remember the the determinants we discussed at the beginning?</p>
+<ul>
+<li>Disposable Income (in the current period) (+)</li>
+<li>Expectations (consumer confidence indexes, employment growth) (+)</li>
+<li>Wealth (stock market performance, housing prices) (+)</li>
+<li>Uncertainty (precautionary saving) (-)</li>
+<li>Availability of Credit (+)</li>
+<li>Real Interest Rate (?)<ul>
+<li>Substitution effect (-)</li>
+<li>Income effect (+)</li>
+</ul>
+</li>
+</ul>
+<h3 id="Explore-Exogenous-Variables"><a href="#Explore-Exogenous-Variables" class="headerlink" title="Explore Exogenous Variables"></a>Explore Exogenous Variables</h3><p>In developing the ECM model, we should include additional exogenous variables in the VECM to explain short-run dynamics of consumption.</p>
+<h4 id="Expectations"><a href="#Expectations" class="headerlink" title="Expectations"></a>Expectations</h4><p>Here we use the unemployment rate and the consumer confidence index as exogenous variables. These variables are proxies for changes in the level of income uncertainty facing the household sector.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">f, (ax1, ax2) = plt.subplots(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>,figsize=(<span class="hljs-number">14</span>,<span class="hljs-number">4</span>))</span><br><span class="line">ax1.plot(train[<span class="hljs-string">&apos;unemp&apos;</span>])</span><br><span class="line">ax2.plot(train[<span class="hljs-string">&apos;unemp&apos;</span>].diff().dropna())</span><br><span class="line">ax1.set_title(<span class="hljs-string">&apos;unemp&apos;</span>)</span><br><span class="line">ax2.set_title(<span class="hljs-string">&apos;diff_unemp&apos;</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+
+<img src="http://yumeng-li.github.io/VECM_files/VECM_61_1.png">
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">f, (ax1, ax2) = plt.subplots(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>,figsize=(<span class="hljs-number">14</span>,<span class="hljs-number">4</span>))</span><br><span class="line">ax1.plot(train[<span class="hljs-string">&apos;consumer_confidence&apos;</span>])</span><br><span class="line">ax2.plot(np.log(train[<span class="hljs-string">&apos;consumer_confidence&apos;</span>]))</span><br><span class="line">ax1.set_title(<span class="hljs-string">&apos;consumer_confidence&apos;</span>)</span><br><span class="line">ax2.set_title(<span class="hljs-string">&apos;ln_consumer_confidence&apos;</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<img src="http://yumeng-li.github.io/VECM_files/VECM_62_1.png">
+
+
+
+<p>Let&#x2019;s then conduct the stationary tests for the change in the unemployment rate and the logarithm of the consumer confidence index, to check whether they are separately consistent with the stationarity assumption.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">augmented_dickey_fuller_test(train[<span class="hljs-string">&apos;unemp&apos;</span>].diff().dropna())</span><br><span class="line">kpss_test(train[<span class="hljs-string">&apos;unemp&apos;</span>].diff().dropna())</span><br></pre></td></tr></tbody></table></figure>
+
+<pre><code>ADF Statistic: -5.032319
+ADF p-value: 0.000019
+stationary - null hypothesis of a unit root can be rejected at a 5% significant level
+KPSS Statistic: 0.048204
+KPSS p-value: 0.100000
+stationary - null hypothesis of stationary cannot be rejected at a 5% significant level</code></pre>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">augmented_dickey_fuller_test(np.log(train[<span class="hljs-string">&apos;consumer_confidence&apos;</span>]))</span><br><span class="line">kpss_test(np.log(train[<span class="hljs-string">&apos;consumer_confidence&apos;</span>]))</span><br></pre></td></tr></tbody></table></figure>
+
+<pre><code>ADF Statistic: -3.450606
+ADF p-value: 0.009350
+stationary - null hypothesis of a unit root can be rejected at a 5% significant level
+KPSS Statistic: 0.134007
+KPSS p-value: 0.100000
+stationary - null hypothesis of stationary cannot be rejected at a 5% significant level</code></pre>
+<h4 id="Availability-of-Credit"><a href="#Availability-of-Credit" class="headerlink" title="Availability of Credit"></a>Availability of Credit</h4><p>Evidently, the availability and cost of credit will also affect decisions of households to consume. So the behavior of monetary aggregates in terms of the availability of credit and the interest rates in terms of the cost of credit will matter for our projections for private consumption.</p>
+<p>(Honestly, it would be ridiculous to ignore the crazy amount of money that the fed has been pumping into the economy since 2008 and its consequential impact. The hopeless belief in the Keynesian&#x2019;s monetary policy.)</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">f, (ax1, ax2) = plt.subplots(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>,figsize=(<span class="hljs-number">14</span>,<span class="hljs-number">4</span>))</span><br><span class="line">ax1.plot(train[<span class="hljs-string">&apos;m2&apos;</span>])</span><br><span class="line">ax2.plot(np.log(train[<span class="hljs-string">&apos;m2&apos;</span>]).diff())</span><br><span class="line">ax1.set_title(<span class="hljs-string">&apos;real m2&apos;</span>)</span><br><span class="line">ax2.set_title(<span class="hljs-string">&apos;diff real m2&apos;</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<img src="http://yumeng-li.github.io/VECM_files/VECM_67_1.png">
+
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">f, (ax1, ax2) = plt.subplots(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>,figsize=(<span class="hljs-number">14</span>,<span class="hljs-number">4</span>))</span><br><span class="line">ax1.plot(train[<span class="hljs-string">&apos;dff&apos;</span>])</span><br><span class="line">ax2.plot(train[<span class="hljs-string">&apos;dff&apos;</span>].diff())</span><br><span class="line">ax1.set_title(<span class="hljs-string">&apos;Federal Funds Effective Rate&apos;</span>)</span><br><span class="line">ax2.set_title(<span class="hljs-string">&apos;Diff Federal Funds Effective Rate&apos;</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<img src="http://yumeng-li.github.io/VECM_files/VECM_68_1.png">
+
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">augmented_dickey_fuller_test(np.log(train[<span class="hljs-string">&apos;m2&apos;</span>]).diff().dropna())</span><br><span class="line">kpss_test(np.log(train[<span class="hljs-string">&apos;m2&apos;</span>]).diff().dropna())</span><br></pre></td></tr></tbody></table></figure>
+
+<pre><code>ADF Statistic: -5.040178
+ADF p-value: 0.000018
+stationary - null hypothesis of a unit root can be rejected at a 5% significant level
+KPSS Statistic: 0.172896
+KPSS p-value: 0.100000
+stationary - null hypothesis of stationary cannot be rejected at a 5% significant level</code></pre>
+<p>Let&#x2019;s adding these new variables to the dataframe.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="hljs-string">&apos;d_unemp&apos;</span>] = df[<span class="hljs-string">&apos;unemp&apos;</span>].diff()</span><br><span class="line">df[<span class="hljs-string">&apos;ln_consumer_confidence&apos;</span>] = np.log(df[<span class="hljs-string">&apos;consumer_confidence&apos;</span>])</span><br><span class="line">df[<span class="hljs-string">&apos;d_ln_m2&apos;</span>] = np.log(df[<span class="hljs-string">&apos;m2&apos;</span>]).diff()</span><br><span class="line">df[<span class="hljs-string">&apos;d_dff&apos;</span>] = df[<span class="hljs-string">&apos;dff&apos;</span>].diff()</span><br><span class="line">df[<span class="hljs-string">&apos;spread_10y3m&apos;</span>] = df[<span class="hljs-string">&apos;yield_10y&apos;</span>]-df[<span class="hljs-string">&apos;yield_3m&apos;</span>]</span><br><span class="line"></span><br><span class="line">train,test = df[<span class="hljs-number">1</span>:cut], df[cut:]</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Model-Estimation"><a href="#Model-Estimation" class="headerlink" title="Model Estimation"></a>Model Estimation</h3><p>Based on all previous analysis, we can eventually run a VECM. Based on the long-run equation, we specify the form of the model with three endogenous variables log(rc), log(rdy) and log(rnw), and allow for five additional exogenous variables.</p>
+<p>The lag intervals for the differenced endogenous variables are 2 given that we estimated the VAR with 3 lags in levels.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">endog = [<span class="hljs-string">&apos;ln_rc&apos;</span>,<span class="hljs-string">&apos;ln_rdy&apos;</span>,<span class="hljs-string">&apos;ln_rnw&apos;</span>]</span><br><span class="line">exog = [<span class="hljs-string">&apos;sb_1975_4&apos;</span>,<span class="hljs-string">&apos;sb_2008_3&apos;</span>,<span class="hljs-string">&apos;d_unemp&apos;</span>,<span class="hljs-string">&apos;ln_consumer_confidence&apos;</span>, <span class="hljs-string">&apos;d_ln_m2&apos;</span>, <span class="hljs-string">&apos;d_dff&apos;</span>]</span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vec = vecm.VECM(endog = train[endog],</span><br><span class="line">                exog =train[exog],</span><br><span class="line">                k_ar_diff = <span class="hljs-number">2</span>, coint_rank = <span class="hljs-number">1</span>, deterministic = <span class="hljs-string">&quot;co&quot;</span>, missing= <span class="hljs-string">&apos;drop&apos;</span>)</span><br><span class="line">vecm_fit = vec.fit()</span><br></pre></td></tr></tbody></table></figure>
+
+<p>The coefficients in the long-run equation are both statistically significantly different from zero (see the first three tables below), and most importantly, consistent with our economic priors i.e., income and wealth have positive coefficients on consumption (see parameters for ln_rdy and ln_rnw in the first table).</p>
+<p>For the exogenous variables, the negative coefficient on the structural breaks indicates that the increasing inequality may compress the consumption of households. Positive and significant coefficient on real m2 complies with our assumption that expanding monetary policy through quantitative ease may stimulate consumption in the short term.</p>
+<p>Also, the coefficient on the ECM term is <strong>negative</strong> and significant with respect to real consumption, and significant and <strong>positive</strong> with respect to disposable income, both using a 5% level of significance, which are reasonable since both consumption and income are endogenous variables and dependent on each other, a rational household would react to disequilibrium in consumption relative to its long-run path though simultaneous adjustments - lower their spending (negative coefficient) and increase their income (positive coefficient).</p>
+<p>From the &#x201C;cointegration relations&#x201D; table, we can verify our idea that in the long run, amount that one&#x2019;s consumption and wealth accumulated would be equal to the income one earns.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vecm_fit.summary().as_latex</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>&lt;bound method Summary.as_latex of &lt;class &apos;statsmodels.iolib.summary.Summary&apos;&gt;
+&quot;&quot;&quot;
+Det. terms outside the coint. relation &amp; lagged endog. parameters for equation ln_rc
+==============================================================================
+                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+const         -0.6625      0.154     -4.310      0.000      -0.964      -0.361
+exog1         -0.0027      0.001     -3.309      0.001      -0.004      -0.001
+exog2         -0.0052      0.001     -4.940      0.000      -0.007      -0.003
+exog3         -0.0069      0.001     -4.782      0.000      -0.010      -0.004
+exog4          0.1386      0.032      4.279      0.000       0.075       0.202
+exog5          0.1697      0.033      5.189      0.000       0.106       0.234
+exog6          0.0006      0.000      1.463      0.144      -0.000       0.001
+L1.ln_rc      -0.2099      0.068     -3.108      0.002      -0.342      -0.078
+L1.ln_rdy      0.0742      0.043      1.739      0.082      -0.009       0.158
+L1.ln_rnw      0.0485      0.022      2.248      0.025       0.006       0.091
+L2.ln_rc      -0.0623      0.063     -0.986      0.324      -0.186       0.062
+L2.ln_rdy      0.0077      0.042      0.184      0.854      -0.074       0.090
+L2.ln_rnw      0.0039      0.022      0.176      0.860      -0.039       0.047
+Det. terms outside the coint. relation &amp; lagged endog. parameters for equation ln_rdy
+==============================================================================
+                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+const         -0.2331      0.251     -0.928      0.353      -0.725       0.259
+exog1         -0.0025      0.001     -1.879      0.060      -0.005       0.000
+exog2         -0.0031      0.002     -1.777      0.076      -0.006       0.000
+exog3         -0.0069      0.002     -2.937      0.003      -0.011      -0.002
+exog4          0.0640      0.053      1.210      0.226      -0.040       0.168
+exog5          0.1607      0.053      3.007      0.003       0.056       0.265
+exog6         -0.0003      0.001     -0.445      0.656      -0.002       0.001
+L1.ln_rc       0.1241      0.110      1.124      0.261      -0.092       0.340
+L1.ln_rdy     -0.1826      0.070     -2.620      0.009      -0.319      -0.046
+L1.ln_rnw      0.0519      0.035      1.469      0.142      -0.017       0.121
+L2.ln_rc      -0.1472      0.103     -1.426      0.154      -0.350       0.055
+L2.ln_rdy      0.0505      0.068      0.738      0.460      -0.084       0.184
+L2.ln_rnw     -0.0868      0.036     -2.421      0.015      -0.157      -0.017
+Det. terms outside the coint. relation &amp; lagged endog. parameters for equation ln_rnw
+==============================================================================
+                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+const         -1.4968      0.494     -3.028      0.002      -2.466      -0.528
+exog1          0.0003      0.003      0.097      0.923      -0.005       0.005
+exog2         -0.0009      0.003     -0.260      0.795      -0.007       0.006
+exog3         -0.0024      0.005     -0.514      0.607      -0.011       0.007
+exog4          0.3093      0.104      2.968      0.003       0.105       0.513
+exog5          0.1839      0.105      1.748      0.080      -0.022       0.390
+exog6         -0.0021      0.001     -1.576      0.115      -0.005       0.001
+L1.ln_rc       0.1244      0.217      0.573      0.567      -0.301       0.550
+L1.ln_rdy     -0.2364      0.137     -1.723      0.085      -0.505       0.033
+L1.ln_rnw      0.0856      0.069      1.232      0.218      -0.051       0.222
+L2.ln_rc       0.2163      0.203      1.065      0.287      -0.182       0.615
+L2.ln_rdy     -0.2192      0.135     -1.629      0.103      -0.483       0.044
+L2.ln_rnw      0.0711      0.071      1.008      0.314      -0.067       0.209
+               Loading coefficients (alpha) for equation ln_rc                
+==============================================================================
+                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+ec1           -0.0605      0.020     -2.993      0.003      -0.100      -0.021
+               Loading coefficients (alpha) for equation ln_rdy              
+==============================================================================
+                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+ec1            0.0887      0.033      2.684      0.007       0.024       0.153
+               Loading coefficients (alpha) for equation ln_rnw              
+==============================================================================
+                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+ec1           -0.1382      0.065     -2.126      0.033      -0.266      -0.011
+          Cointegration relations for loading-coefficients-column 1          
+==============================================================================
+                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+beta.1         1.0000          0          0      0.000       1.000       1.000
+beta.2        -1.1175      0.073    -15.311      0.000      -1.261      -0.974
+beta.3         0.0555      0.058      0.963      0.336      -0.057       0.168
+==============================================================================
+&quot;&quot;&quot;&gt;</code></pre>
+<h2 id="VECM-Forecast"><a href="#VECM-Forecast" class="headerlink" title="VECM Forecast"></a>VECM Forecast</h2><h3 id="Out-of-sample-Forecast"><a href="#Out-of-sample-Forecast" class="headerlink" title="Out-of-sample Forecast"></a>Out-of-sample Forecast</h3><p>As we are comfortable with the model estimated, let&#x2019;s do some forecasting with the out-of-sample data and evaluate how the model works.</p>
+<p>To forecast for time beyond the sample period pre-2017, we need to provide futures shocks post-2017 i.e., the exogenous variables, which includes the dramatic economic downturn during the Covid recession. Let&#x2019;s plot them out and get a feel.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">f, (ax1, ax2, ax3) = plt.subplots(<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,figsize=(<span class="hljs-number">18</span>,<span class="hljs-number">4</span>))</span><br><span class="line">ax1.plot(test[<span class="hljs-string">&apos;d_unemp&apos;</span>])</span><br><span class="line">ax2.plot(test[<span class="hljs-string">&apos;d_ln_m2&apos;</span>])</span><br><span class="line">ax3.plot(test[<span class="hljs-string">&apos;d_dff&apos;</span>])</span><br><span class="line">ax1.set_title(<span class="hljs-string">&apos;Diff Unemployment Rate&apos;</span>)</span><br><span class="line">ax2.set_title(<span class="hljs-string">&apos;Diff Real M2&apos;</span>)</span><br><span class="line">ax3.set_title(<span class="hljs-string">&apos;Diff Fed Fund Rate&apos;</span>)</span><br><span class="line">f.autofmt_xdate()</span><br></pre></td></tr></tbody></table></figure>
+
+<img src="http://yumeng-li.github.io/VECM_files/VECM_80_0.png">
+
+
+<p>When forecasting, I include the confidence intervals for the predictions as well. Remember, point predictions won&#x2019;t help you much with gauging the uncertainty of forecasts.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mid, lower_1se, upper_1se = vecm_fit.predict(steps=len(test),alpha = <span class="hljs-number">0.32</span>, exog_fc =test[exog])</span><br><span class="line">_, lower_2se, upper_2se = vecm_fit.predict(steps=len(test),alpha = <span class="hljs-number">0.05</span>, exog_fc =test[exog])</span><br><span class="line"></span><br><span class="line">pred_mid = pd.DataFrame(np.exp(mid), columns=[<span class="hljs-string">&apos;pred_rc&apos;</span>,<span class="hljs-string">&apos;pred_rdy&apos;</span>,<span class="hljs-string">&apos;pred_rnw&apos;</span>], index = test.index)</span><br><span class="line">pred_lower_1se = pd.DataFrame(np.exp(lower_1se), columns=[<span class="hljs-string">&apos;lower_1se_rc&apos;</span>,<span class="hljs-string">&apos;lower_1se_rdy&apos;</span>,<span class="hljs-string">&apos;lower_1se_rnw&apos;</span>], index = test.index)</span><br><span class="line">pred_upper_1se = pd.DataFrame(np.exp(upper_1se), columns=[<span class="hljs-string">&apos;upper_1se_rc&apos;</span>,<span class="hljs-string">&apos;upper_1se_rdy&apos;</span>,<span class="hljs-string">&apos;upper_1se_rnw&apos;</span>], index = test.index)</span><br><span class="line">pred_lower_2se = pd.DataFrame(np.exp(lower_2se), columns=[<span class="hljs-string">&apos;lower_2se_rc&apos;</span>,<span class="hljs-string">&apos;lower_2se_rdy&apos;</span>,<span class="hljs-string">&apos;lower_2se_rnw&apos;</span>], index = test.index)</span><br><span class="line">pred_upper_2se = pd.DataFrame(np.exp(upper_2se), columns=[<span class="hljs-string">&apos;upper_2se_rc&apos;</span>,<span class="hljs-string">&apos;upper_2se_rdy&apos;</span>,<span class="hljs-string">&apos;upper_2se_rnw&apos;</span>], index = test.index)</span><br><span class="line">ptest = pd.concat([test, pred_mid, pred_lower_1se, pred_upper_1se, pred_lower_2se, pred_upper_2se],axis = <span class="hljs-number">1</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>The saving rate (percentage points) can be derived from total nominal consumption and<br>nominal household disposable income using the following formula:</p>
+<p>$saving\ rate=100*(rdy - (rc + (government\ transfers + interest\ payments/gdp\ deflator))) /rdy$</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ptest[<span class="hljs-string">&apos;pred_saving_rate&apos;</span>]=<span class="hljs-number">100</span>*(ptest.pred_rdy-(ptest.pred_rc+(ptest.gov_transfers+ptest.interest_payments/ptest.c_deflator)))/ptest.pred_rdy</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Now let&#x2019;s see how the model predicts,</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">plot_point_prediction</span>(<span class="hljs-params">test</span>):</span></span><br><span class="line">    fig, axes = plt.subplots(<span class="hljs-number">2</span>, <span class="hljs-number">2</span>, figsize=(<span class="hljs-number">12</span>,<span class="hljs-number">8</span>))</span><br><span class="line">    count=<span class="hljs-number">0</span></span><br><span class="line">    <span class="hljs-keyword">for</span> endog <span class="hljs-keyword">in</span> [<span class="hljs-string">&apos;rc&apos;</span>,<span class="hljs-string">&apos;rdy&apos;</span>,<span class="hljs-string">&apos;rnw&apos;</span>,<span class="hljs-string">&apos;saving_rate&apos;</span>]:</span><br><span class="line">        col=count %<span class="hljs-number">2</span></span><br><span class="line">        row=count //<span class="hljs-number">2</span></span><br><span class="line">        ax=axes[row][col]</span><br><span class="line">        ax.set_title(endog)</span><br><span class="line">        ax.plot(test[endog], color=<span class="hljs-string">&apos;Black&apos;</span>,linewidth=<span class="hljs-number">1</span>, label=<span class="hljs-string">&quot;Observed&quot;</span>)</span><br><span class="line">        ax.plot(test[<span class="hljs-string">&apos;pred_&apos;</span>+endog],color=<span class="hljs-string">&apos;grey&apos;</span>,linestyle=<span class="hljs-string">&apos;--&apos;</span>,linewidth=<span class="hljs-number">1</span>, label=<span class="hljs-string">&quot;Forecast&quot;</span>)  </span><br><span class="line">        ax.legend()</span><br><span class="line">        count+=<span class="hljs-number">1</span></span><br><span class="line">    fig.autofmt_xdate()</span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plot_point_prediction(ptest)</span><br></pre></td></tr></tbody></table></figure>
+
+<img src="http://yumeng-li.github.io/VECM_files/VECM_87_0.png">
+
+
+
+<p>The results are not so bad. Actually pretty dope pre-pandemic. For a model that is trying to predict for consumption three years out, its predictive accuracy is out-of-expectation.</p>
+<p>Though not surprisingly, the forecasts are over predicting actual real disposable income, real net wealth and therefore real consumption expenditures. This reflects the I(1) nature of the variables involved, the limited serial correlation in their innovation sequences, and the fact that all variables were trending upwards before the pandemic. Because of their I(1) nature, a dynamic forecast will effectively use the last known value (four years ago) of these variables to generate out-of-sample forecasts. Consequently, the forecasting model does not do good job of predicting the impact of covid19 on real consumption, and its predictions for the saving ratio appear to be systematically below the actual saving outcome.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">plot_forecast_with_confidence_intervals</span>(<span class="hljs-params">df,test</span>):</span></span><br><span class="line">    fig, axes = plt.subplots(<span class="hljs-number">3</span>, <span class="hljs-number">1</span>, figsize=(<span class="hljs-number">10</span>,<span class="hljs-number">10</span>))</span><br><span class="line">    count=<span class="hljs-number">0</span></span><br><span class="line">    <span class="hljs-keyword">for</span> endog <span class="hljs-keyword">in</span> [<span class="hljs-string">&apos;rc&apos;</span>,<span class="hljs-string">&apos;rdy&apos;</span>,<span class="hljs-string">&apos;rnw&apos;</span>]:</span><br><span class="line">        col=count</span><br><span class="line">        ax=axes[col]</span><br><span class="line">        ax.set_title(endog)</span><br><span class="line">        ax.plot(df[endog], color=<span class="hljs-string">&apos;Black&apos;</span>,linewidth=<span class="hljs-number">1.2</span>,label=<span class="hljs-string">&quot;Observed&quot;</span>)</span><br><span class="line">        ax.plot(test[<span class="hljs-string">&apos;pred_&apos;</span>+endog],<span class="hljs-string">&apos;k--&apos;</span>,linewidth=<span class="hljs-number">0.7</span>,label=<span class="hljs-string">&quot;Forecast&quot;</span>)</span><br><span class="line">        ax.fill_between(test[<span class="hljs-string">&apos;pred_&apos;</span>+endog].index,test[<span class="hljs-string">&apos;lower_1se_&apos;</span>+endog],test[<span class="hljs-string">&apos;upper_1se_&apos;</span>+endog],alpha=<span class="hljs-number">0.07</span>,color=<span class="hljs-string">&quot;k&quot;</span>)</span><br><span class="line">        ax.fill_between(test[<span class="hljs-string">&apos;pred_&apos;</span>+endog].index,test[<span class="hljs-string">&apos;lower_2se_&apos;</span>+endog],test[<span class="hljs-string">&apos;upper_2se_&apos;</span>+endog],alpha=<span class="hljs-number">0.07</span>,color=<span class="hljs-string">&quot;k&quot;</span>)      </span><br><span class="line">        ax.legend(loc =<span class="hljs-string">&apos;upper left&apos;</span>)</span><br><span class="line">        count+=<span class="hljs-number">1</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>With that being said, the previous assessment considers only a single point prediction using the baseline model. A fairer assessment of the model can be made considering the <strong>confidential intervals for prediction</strong>, which suggest that the underlying model is useful for predicting the outcome of the consumption and net wealth.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plot_forecast_with_confidence_intervals(df.iloc[<span class="hljs-number">200</span>:],ptest)</span><br></pre></td></tr></tbody></table></figure>
+
+<img src="http://yumeng-li.github.io/VECM_files/VECM_91_0.png">
+
+
+
+<p>While there is obvious (downward) bias in the model&#x2019;s predictions, it should be noted that this partly a reflection of the initial starting point of the forecast. If one begins the forecast after the pandemic, the resulting confidential intervals would be much closer to what observed. In this way, a <strong>static forecast</strong> which is <strong>one-period ahead forecasting</strong> would do a much better job. This is also how the model should be used in practice. As always, predicting future is difficult, trying to predict mutiple years out is meaningless.</p>
+<h3 id="Long-run-Forecasts-Based-on-Potential-Paths-of-Monetary-Policy"><a href="#Long-run-Forecasts-Based-on-Potential-Paths-of-Monetary-Policy" class="headerlink" title="Long-run Forecasts Based on Potential Paths of Monetary Policy"></a>Long-run Forecasts Based on Potential Paths of Monetary Policy</h3><p>Now it has come to a very interesting point. Let&#x2019;s fit a VECM with the complete data from 1962 to 2021Q2, and use it to forecast for 2021Q3 onwards using two simulated forward paths of the Fed&#x2019;s monetary policy. Correct assumptions would help us to get more accurate estimates for the long-run consumption, disposal income and net wealth of the American households after the pandemic.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">endog = [<span class="hljs-string">&apos;ln_rc&apos;</span>,<span class="hljs-string">&apos;ln_rdy&apos;</span>,<span class="hljs-string">&apos;ln_rnw&apos;</span>]</span><br><span class="line">exog = [<span class="hljs-string">&apos;sb_1975_4&apos;</span>,<span class="hljs-string">&apos;sb_2008_3&apos;</span>,<span class="hljs-string">&apos;d_unemp&apos;</span>,<span class="hljs-string">&apos;ln_consumer_confidence&apos;</span>, <span class="hljs-string">&apos;d_ln_m2&apos;</span>,<span class="hljs-string">&apos;d_dff&apos;</span>]</span><br><span class="line">vec = vecm.VECM(endog = df[endog],</span><br><span class="line">                exog =df[exog],</span><br><span class="line">                k_ar_diff = <span class="hljs-number">2</span>, coint_rank = <span class="hljs-number">1</span>, deterministic = <span class="hljs-string">&quot;co&quot;</span>, missing= <span class="hljs-string">&apos;drop&apos;</span>)</span><br><span class="line">vecm_fit = vec.fit()</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Let&#x2019;s generate two paths for the forward monetary shocks. One path assumes that fed keeps its current pacing of assets purchasing i.e., no tapering, the other path assumes four interest rate hikes in 2022, 2023 and 2024 assuming the same pace as the period after the financial crisis from 2014Q4 to 2017Q3, with all the other exogenous variables being the same, specifically, current value for unemployment rate and the historical average for consumer confidence.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">forecast_range = pd.date_range(start=<span class="hljs-string">&apos;04/01/2021&apos;</span>, end =<span class="hljs-string">&apos;01/01/2024&apos;</span>,freq=<span class="hljs-string">&apos;QS&apos;</span> )</span><br><span class="line">shocks = {}</span><br><span class="line">shocks = pd.DataFrame(shocks, index = forecast_range, columns = exog)</span><br><span class="line">shocks[<span class="hljs-string">&apos;sb_1975_4&apos;</span>] = <span class="hljs-number">1</span></span><br><span class="line">shocks[<span class="hljs-string">&apos;sb_2008_3&apos;</span>] = <span class="hljs-number">1</span></span><br><span class="line">shocks[<span class="hljs-string">&apos;d_unemp&apos;</span>] = <span class="hljs-number">0</span></span><br><span class="line">shocks[<span class="hljs-string">&apos;ln_consumer_confidence&apos;</span>] = df[<span class="hljs-string">&apos;ln_consumer_confidence&apos;</span>].mean()</span><br><span class="line"></span><br><span class="line">no_hikes_shocks = shocks.copy()</span><br><span class="line">no_hikes_shocks[<span class="hljs-string">&apos;d_ln_m2&apos;</span>] = df.iloc[<span class="hljs-number">-4</span>:][<span class="hljs-string">&apos;d_ln_m2&apos;</span>].mean()</span><br><span class="line">no_hikes_shocks[<span class="hljs-string">&apos;d_dff&apos;</span>] = <span class="hljs-number">0.0</span></span><br><span class="line"></span><br><span class="line">four_hikes_shocks =shocks.copy()</span><br><span class="line">four_hikes_shocks[[<span class="hljs-string">&apos;d_ln_m2&apos;</span>,<span class="hljs-string">&apos;d_dff&apos;</span>]] = df.loc[<span class="hljs-string">&apos;2014-10-01&apos;</span>:<span class="hljs-string">&apos;2017-07-01&apos;</span>,[<span class="hljs-string">&apos;d_ln_m2&apos;</span>,<span class="hljs-string">&apos;d_dff&apos;</span>]].values</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Here&#x2019;s how the money aggregates is going to be like if assuming no tapering until 2024, which would be of course totally insane&#x2026;</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># change of log(real m2) and change of fed fund rate</span></span><br><span class="line">no_hikes_shocks[[<span class="hljs-string">&apos;d_ln_m2&apos;</span>,<span class="hljs-string">&apos;d_dff&apos;</span>]]</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th &#123;
+    vertical-align: top;
+&#125;
+
+.dataframe thead th &#123;
+    text-align: right;
+&#125;</code></pre>
+<p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>d_ln_m2</th>
+      <th>d_dff</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2021-04-01</th>
+      <td>0.02268</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2021-07-01</th>
+      <td>0.02268</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2021-10-01</th>
+      <td>0.02268</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2022-01-01</th>
+      <td>0.02268</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2022-04-01</th>
+      <td>0.02268</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2022-07-01</th>
+      <td>0.02268</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2022-10-01</th>
+      <td>0.02268</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2023-01-01</th>
+      <td>0.02268</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2023-04-01</th>
+      <td>0.02268</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2023-07-01</th>
+      <td>0.02268</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2023-10-01</th>
+      <td>0.02268</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2024-01-01</th>
+      <td>0.02268</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<p>Here&#x2019;s a more likely path assumes that the fed would stop expanding its balance sheet from the forth quarter of 2021 and hike once in 2022 and three times at the end 2023 and beginning of 2024. This path is quite aggressive.</p>
+<p>(By the way, when central banks expend their balance sheets i.e., increase their net asset position, they literally buy assets or reduce their liability through money creation, which means writing checks to themselves.)</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># hike schedule - historical simulation using 2014-2017 data</span></span><br><span class="line"><span class="hljs-comment">## change of log(real m2) and change of fed fund rate</span></span><br><span class="line">four_hikes_shocks[[<span class="hljs-string">&apos;d_ln_m2&apos;</span>,<span class="hljs-string">&apos;d_dff&apos;</span>]]</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th &#123;
+    vertical-align: top;
+&#125;
+
+.dataframe thead th &#123;
+    text-align: right;
+&#125;</code></pre>
+<p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>d_ln_m2</th>
+      <th>d_dff</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2021-04-01</th>
+      <td>0.015029</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <th>2021-07-01</th>
+      <td>0.025704</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <th>2021-10-01</th>
+      <td>0.003989</td>
+      <td>0.02</td>
+    </tr>
+    <tr>
+      <th>2022-01-01</th>
+      <td>0.007853</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>2022-04-01</th>
+      <td>0.013799</td>
+      <td>0.03</td>
+    </tr>
+    <tr>
+      <th>2022-07-01</th>
+      <td>0.022938</td>
+      <td>0.20</td>
+    </tr>
+    <tr>
+      <th>2022-10-01</th>
+      <td>0.009184</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <th>2023-01-01</th>
+      <td>0.011144</td>
+      <td>0.02</td>
+    </tr>
+    <tr>
+      <th>2023-04-01</th>
+      <td>0.009073</td>
+      <td>0.06</td>
+    </tr>
+    <tr>
+      <th>2023-07-01</th>
+      <td>0.008134</td>
+      <td>0.25</td>
+    </tr>
+    <tr>
+      <th>2023-10-01</th>
+      <td>0.010906</td>
+      <td>0.25</td>
+    </tr>
+    <tr>
+      <th>2024-01-01</th>
+      <td>0.005544</td>
+      <td>0.20</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mid_no_hikes = vecm_fit.predict(steps=<span class="hljs-number">12</span>,exog_fc =no_hikes_shocks[exog])</span><br><span class="line">pred_mid_no_hikes = pd.DataFrame(np.exp(mid_no_hikes), columns=[<span class="hljs-string">&apos;pred_rc&apos;</span>,<span class="hljs-string">&apos;pred_rdy&apos;</span>,<span class="hljs-string">&apos;pred_rnw&apos;</span>], index = forecast_range)</span><br><span class="line"></span><br><span class="line">mid, lower_1se, upper_1se = vecm_fit.predict(steps=<span class="hljs-number">12</span>,alpha = <span class="hljs-number">0.32</span>, exog_fc =four_hikes_shocks[exog])</span><br><span class="line">_, lower_2se, upper_2se = vecm_fit.predict(steps=<span class="hljs-number">12</span>,alpha = <span class="hljs-number">0.05</span>, exog_fc =four_hikes_shocks[exog])</span><br><span class="line"></span><br><span class="line">pred_mid = pd.DataFrame(np.exp(mid), columns=[<span class="hljs-string">&apos;pred_rc&apos;</span>,<span class="hljs-string">&apos;pred_rdy&apos;</span>,<span class="hljs-string">&apos;pred_rnw&apos;</span>], index = forecast_range)</span><br><span class="line">pred_lower_1se = pd.DataFrame(np.exp(lower_1se), columns=[<span class="hljs-string">&apos;lower_1se_rc&apos;</span>,<span class="hljs-string">&apos;lower_1se_rdy&apos;</span>,<span class="hljs-string">&apos;lower_1se_rnw&apos;</span>], index = forecast_range)</span><br><span class="line">pred_upper_1se = pd.DataFrame(np.exp(upper_1se), columns=[<span class="hljs-string">&apos;upper_1se_rc&apos;</span>,<span class="hljs-string">&apos;upper_1se_rdy&apos;</span>,<span class="hljs-string">&apos;upper_1se_rnw&apos;</span>], index = forecast_range)</span><br><span class="line">pred_lower_2se = pd.DataFrame(np.exp(lower_2se), columns=[<span class="hljs-string">&apos;lower_2se_rc&apos;</span>,<span class="hljs-string">&apos;lower_2se_rdy&apos;</span>,<span class="hljs-string">&apos;lower_2se_rnw&apos;</span>], index = forecast_range)</span><br><span class="line">pred_upper_2se = pd.DataFrame(np.exp(upper_2se), columns=[<span class="hljs-string">&apos;upper_2se_rc&apos;</span>,<span class="hljs-string">&apos;upper_2se_rdy&apos;</span>,<span class="hljs-string">&apos;upper_2se_rnw&apos;</span>], index = forecast_range)</span><br><span class="line">pred = pd.concat([pred_mid, pred_lower_1se, pred_upper_1se, pred_lower_2se, pred_upper_2se],axis = <span class="hljs-number">1</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">plot_forecasts_given_different_paths</span>(<span class="hljs-params">df,pred1,pred2</span>):</span></span><br><span class="line">    fig, axes = plt.subplots(<span class="hljs-number">3</span>, <span class="hljs-number">1</span>, figsize=(<span class="hljs-number">10</span>,<span class="hljs-number">10</span>))</span><br><span class="line">    count=<span class="hljs-number">0</span></span><br><span class="line">    <span class="hljs-keyword">for</span> endog <span class="hljs-keyword">in</span> [<span class="hljs-string">&apos;rc&apos;</span>,<span class="hljs-string">&apos;rdy&apos;</span>,<span class="hljs-string">&apos;rnw&apos;</span>]:</span><br><span class="line">        col=count</span><br><span class="line">        ax=axes[col]</span><br><span class="line">        ax.set_title(endog)</span><br><span class="line">        ax.plot(df[endog], color=<span class="hljs-string">&apos;Black&apos;</span>,linewidth=<span class="hljs-number">1.2</span>,label=<span class="hljs-string">&quot;Observed&quot;</span>)</span><br><span class="line">        ax.plot(pred1[<span class="hljs-string">&apos;pred_&apos;</span>+endog],<span class="hljs-string">&apos;--&apos;</span>,color=<span class="hljs-string">&apos;tab:blue&apos;</span>, linewidth=<span class="hljs-number">1.5</span>,label=<span class="hljs-string">&quot;Forecast - no hikes&quot;</span>)</span><br><span class="line">        ax.plot(pred2[<span class="hljs-string">&apos;pred_&apos;</span>+endog],<span class="hljs-string">&apos;--&apos;</span>,color=<span class="hljs-string">&apos;tab:red&apos;</span>, linewidth=<span class="hljs-number">1.5</span>,label=<span class="hljs-string">&quot;Forecast - four hikes&quot;</span>)</span><br><span class="line">        ax.fill_between(pred2[<span class="hljs-string">&apos;pred_&apos;</span>+endog].index,pred2[<span class="hljs-string">&apos;lower_1se_&apos;</span>+endog],pred2[<span class="hljs-string">&apos;upper_1se_&apos;</span>+endog],alpha=<span class="hljs-number">0.07</span>,color=<span class="hljs-string">&quot;tab:red&quot;</span>)</span><br><span class="line">        ax.fill_between(pred2[<span class="hljs-string">&apos;pred_&apos;</span>+endog].index,pred2[<span class="hljs-string">&apos;lower_2se_&apos;</span>+endog],pred2[<span class="hljs-string">&apos;upper_2se_&apos;</span>+endog],alpha=<span class="hljs-number">0.07</span>,color=<span class="hljs-string">&quot;tab:red&quot;</span>)</span><br><span class="line">        ax.legend(loc =<span class="hljs-string">&apos;upper left&apos;</span>)</span><br><span class="line">        ax.axvline(x=datetime(<span class="hljs-number">2022</span>, <span class="hljs-number">7</span>, <span class="hljs-number">1</span>), color=<span class="hljs-string">&apos;tab:red&apos;</span>)</span><br><span class="line">        ax.axvline(x=datetime(<span class="hljs-number">2023</span>, <span class="hljs-number">7</span>, <span class="hljs-number">1</span>), color=<span class="hljs-string">&apos;tab:red&apos;</span>)</span><br><span class="line">        ax.axvline(x=datetime(<span class="hljs-number">2023</span>, <span class="hljs-number">10</span>, <span class="hljs-number">1</span>), color=<span class="hljs-string">&apos;tab:red&apos;</span>)</span><br><span class="line">        ax.axvline(x=datetime(<span class="hljs-number">2024</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>), color=<span class="hljs-string">&apos;tab:red&apos;</span>)</span><br><span class="line">        count+=<span class="hljs-number">1</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>In March 2020, in response to the economic impact of the pandemic, the Fed acted quickly having learned its lesson from the financial crisis and cut short-term interest rates to zero. It also restarted its large-scale asset purchases and since June 2020, the Fed has been buying 80 billion of Treasury securities and 40 billion of mortgage-backed securities each month, with its balance sheet swelling from 4.4 trillion to 8.6 trillion. The extreme monetary support combined with a huge fiscal stimulus package holds the U.S economy and shields American household incomes. Though plots won&#x2019;t be shown here, the model forecasts a much lower rdy and rnw if not taking into account the rapid increase of money base. Therefore, in the last 20 months, we all see the quick recovery of consumption and a rapid growth of asset prices, which is also reflected in the steeper slope of the third graph. However, as the economy rebounded, it may no longer need such extreme measures of support and keeping them in place could do more harm than good. For example, low mortgage rates have fueled a boom in house prices, but the problems that now afflict the economy are mostly supply issues while demand, which the bond buys most directly affects. Therefore, the policy makers may start to hit the brakes. That&#x2019;s also why we are seeing Fed officials talking about tapering the pace of its bond purchases and lately laying the groundwork for higher rates.</p>
+<h3 id="1-Growth-rates-return-to-normal"><a href="#1-Growth-rates-return-to-normal" class="headerlink" title="1. Growth rates return to normal"></a>1. Growth rates return to normal</h3><p><strong>First it&#x2019;s not surprising that real consumption, disposable income and household net wealth are projected to grow at milder rates comparing to those when the economy was bottoming out from the slump. As the stimulus aids wear off over time, one would expect the growth rates to normalize to pre-pandemic levels.</strong></p>
+<h3 id="2-Growth-differences-taking-expansionary-and-tight-monetary-policy"><a href="#2-Growth-differences-taking-expansionary-and-tight-monetary-policy" class="headerlink" title="2. Growth differences taking expansionary and tight monetary policy"></a>2. Growth differences taking expansionary and tight monetary policy</h3><p><strong>Secondly, assuming a tighter monetary policy to come, we project that the growth rate of real consumption throughout 2023 would slow down to 2.2% from 3.0%. The real income and net wealth of households would decrease from 3.9% and 9.1% to 2.4% and 6.5% respectively. At the end of 2023, all three measures would be lower than those come from the first path - that the Fed sticks to its current rate target and asset buying pace. In fact the amounts would be lowered by 1.8%, 3.3% and 4.8% respectively.</strong></p>
+<h3 id="3-Foreseeable-shallow-decline-in-mid-2022"><a href="#3-Foreseeable-shallow-decline-in-mid-2022" class="headerlink" title="3. Foreseeable shallow decline in mid 2022"></a>3. Foreseeable shallow decline in mid 2022</h3><p><strong>Thirdly, we also notice that in the middle of 2022, the private consumption and household income would show a temporary and shallow decline and then grow at an annual rate again coming close to the path observed just before the pandemic.</strong> Likely this is caused by the tightening of policy in 2022. So far, Powell has announced that the fed will begin tapering this month, the first step toward pulling back on the massive amount of help it had been providing markets and the economy. One the fiscal side, though public programs to support households and businesses have been the most powerful engine of recovery from the hit, governments of the major economies now are hitting the brakes. The money they&#x2019; ll pull out of their economies in 2022 amounts to 2.5 percentage points of the world&#x2019;s GDP, five times bigger than anything that happened during the turn to austerity after the 2008 crisis, according to UBS estimates. The fiscal tightening - the withdrawal of pandemic spending will likely have more impact on the global economy next year.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plot_forecasts_given_different_paths(df.iloc[<span class="hljs-number">220</span>:],pred_mid_no_hikes,pred)</span><br></pre></td></tr></tbody></table></figure>
+
+<img src="http://yumeng-li.github.io/VECM_files/VECM_105_0.png">
+
+</body></html>
+    
+    </div>
+    
+    
+    <div class="columns is-mobile is-multiline article-nav">
+        <span class="column is-12-mobile is-half-desktop  article-nav-prev">
+            
+            <a href="/2025/12/11/legacy/">A Hands-On Exercise in Using Alternative Data to Analyze Deals</a>
+            
+        </span>
+        <span class="column is-12-mobile is-half-desktop  article-nav-next">
+            
+            <a href="/2021/11/16/VECM/">Predicting Post-Pandemic Consumption Behaviors Given Potential Paths of Monetary Policy, Part 1 -- Economic Theories, Structural Breaks and Stationarity</a>
+            
+        </span>
+    </div>
+    
+</article>
+
+
+
+
+    </div>
+</section>
+    <footer class="footer">
+    <div class="container">
+        <div class="columns content">
+            <div class="column is-narrow has-text-centered">
+                &copy; 2025 Yumeng Li&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
+                        target="_blank" rel="noopener" href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
+            </div>
+            <div class="column is-hidden-mobile"></div>
+
+            
+            <div class="column is-narrow">
+                <div class="columns is-mobile is-multiline is-centered">
+                
+                    
+                <a class="column is-narrow has-text-black" title="GitHub" target="_blank" rel="noopener" href="https://github.com/ppoffice/hexo-theme-minos">
+                    
+                    GitHub
+                    
+                </a>
+                
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</footer>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
+
+<!-- test if the browser is outdated -->
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" target="_blank" rel="noopener" href="http://outdatedbrowser.com/">Update my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // plugin function, place inside DOM ready function
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        })
+    });
+</script>
+
+<script>
+    window.FontAwesomeConfig = {
+        searchPseudoElements: true
+    }
+    moment.locale("en-AU");
+</script>
+
+
+    
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+    MathJax.Hub.Config({
+        "HTML-CSS": {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+</script>
+
+    
+    
+    
+    
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/js/lightgallery-all.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/js/jquery.justifiedGallery.min.js"></script>
+<script>
+    (function ($) {
+        $(document).ready(function () {
+            if (typeof($.fn.lightGallery) === 'function') {
+                $('.article.gallery').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof($.fn.justifiedGallery) === 'function') {
+                $('.justified-gallery').justifiedGallery();
+            }
+        });
+    })(jQuery);
+</script>
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <style>
+        .hljs {
+            position: relative;
+        }
+
+        .hljs .clipboard-btn {
+            float: right;
+            color: #9a9a9a;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .hljs .clipboard-btn:hover {
+          color: #8a8a8a;
+        }
+
+        .hljs > .clipboard-btn {
+            display: none;
+            position: absolute;
+            right: 4px;
+            top: 4px;
+        }
+
+        .hljs:hover > .clipboard-btn {
+            display: inline;
+        }
+
+        .hljs > figcaption > .clipboard-btn {
+            margin-right: 4px;
+        }
+    </style>
+    <script>
+      $(document).ready(function () {
+        $('figure.hljs').each(function(i, figure) {
+          var codeId = 'code-' + i;
+          var code = figure.querySelector('.code');
+          var copyButton = $('<button>Copy <i class="far fa-clipboard"></i></button>');
+          code.id = codeId;
+          copyButton.addClass('clipboard-btn');
+          copyButton.attr('data-clipboard-target-id', codeId);
+
+          var figcaption = figure.querySelector('figcaption');
+
+          if (figcaption) {
+            figcaption.append(copyButton[0]);
+          } else {
+            figure.prepend(copyButton[0]);
+          }
+        })
+
+        var clipboard = new ClipboardJS('.clipboard-btn', {
+          target: function(trigger) {
+            return document.getElementById(trigger.getAttribute('data-clipboard-target-id'));
+          }
+        });
+        clipboard.on('success', function(e) {
+          e.clearSelection();
+        })
+      })
+    </script>
+
+    
+    
+
+    
+
+
+
+<script src="/js/script.js"></script>
+
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-mask"></div>
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="Type something..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+    
+</body>
+</html>

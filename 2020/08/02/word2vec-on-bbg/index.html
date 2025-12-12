@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+<head>
+    <meta charset="utf-8">
+<title>Training Word Embedding on Bloomberg News - The Practical Quant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css">
+
+
+
+
+<meta name="description" content="">
+
+
+
+
+
+    <meta name="description" content="While working from home (stuck at home indeed), I get a bit more time, so revisited some old deep learning notes last month. Would it be awesome if I can come up with a project to play with? As we all">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Training Word Embedding on Bloomberg News">
+<meta property="og:url" content="http://yoursite.com/2020/08/02/word2vec-on-bbg/index.html">
+<meta property="og:site_name" content="The Practical Quant">
+<meta property="og:description" content="While working from home (stuck at home indeed), I get a bit more time, so revisited some old deep learning notes last month. Would it be awesome if I can come up with a project to play with? As we all">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yumeng-li.github.io/pics/embeddingVectors.png">
+<meta property="article:published_time" content="2020-08-02T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-12T03:46:02.376Z">
+<meta property="article:author" content="Yumeng Li">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yumeng-li.github.io/pics/embeddingVectors.png">
+
+
+
+
+
+<link rel="icon" href="/favicon.png">
+
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ovo|Source+Code+Pro">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/css/justifiedGallery.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+<script defer src="//use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+
+<meta name="generator" content="Hexo 5.0.0"></head>
+<body>
+    
+<nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item navbar-logo" href="/">
+                
+                    
+                    THE PRACTICAL QUANT
+                    
+                
+            </a>
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <div class="navbar-menu navbar-start">
+            
+            <a class="navbar-item "
+               href="/archives">Archives</a>
+            
+            <a class="navbar-item "
+               href="/categories">Category</a>
+            
+            <a class="navbar-item "
+               target="_blank" rel="noopener" href="http://allaboutmacros.com/">Blog</a>
+            
+            <a class="navbar-item "
+               target="_blank" rel="noopener" href="https://www.linkedin.com/in/emmelineli/">Linkedin</a>
+            
+        </div>
+        
+        <div class="navbar-menu navbar-end">
+            
+            <a class="navbar-item search" title="Search" href="javascript:;">
+                <i class="fas fa-search"></i>
+            </a>
+            
+            
+            
+            <a class="navbar-item" title="GitHub" target="_blank" rel="noopener" href="https://github.com/ppoffice/hexo-theme-minos">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+               
+            
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+    <div class="container">
+    <article class="article content gallery" itemscope itemprop="blogPost">
+    <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
+        
+            Training Word Embedding on Bloomberg News
+        
+    </h1>
+    <div class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile">
+        <span class="column is-narrow">
+            <time datetime="2020-08-02T16:00:00.000Z" itemprop="datePublished">Aug 2 2020</time>
+        </span>
+        
+        <span class="column is-narrow article-category">
+            <i class="far fa-folder"></i>
+            <a class="article-category-link" href="/categories/NLP/">NLP</a>
+        </span>
+        
+        
+        <span class="column is-narrow">
+            
+            
+            9 minutes read (About 1350 words)
+        </span>
+        
+    </div>
+    <div class="article-entry is-size-6-mobile" itemprop="articleBody">
+    
+        <html><head></head><body><p>While working from home (stuck at home indeed), I get a bit more time, so revisited some old deep learning notes last month. Would it be awesome if I can come up with a project to play with? As we all know knowledge would go rusty if lack of use!</p>
+<p>Initially, I was thinking about a machine translator using Attention Models, because I was once asked in an interview. The fund showed a particular interest in developing such a tool for the purpose of distributing research reports to non-English-speaking countries. But I was completely set back by the data sets asking for literally thousands of dollars&#x2026; While if labeled dataset is that expensive, why not run some unsurprised learning? Training word2vec doesn&#x2019;t sound like a bad idea. I&#x2019;ve been writing some views on FICC (fixed income, currencies, and commodities) on my other <a target="_blank" rel="noopener" href="https://yumengsblog.com/">non-geeky-at-all blog</a>. Won&#x2019;t it be fun to run word embeddings on Bloomberg news, see if people talk about the right things when they analyze inflation and gold prices?</p>
+<p>So here we go, rock and roll!</p>
+<p>First it&#x2019;s a bit introduction to word embedding. The term refers to a set of techniques in natural language processing that can map words into high dimensional vectors of real numbers. The vectors/embeddings can be seen as featurized representations of words, which preserve semantic properties, hence are commonly used as inputs in NLP tasks.</p>
+<p>Here is an example, </p>
+<img src="http://yumeng-li.github.io/pics/embeddingVectors.png" alt="embedding vectors" width="450">
+
+<p>While in real cases, the dimension of vectors is usually a lot higher.</p>
+<p>We will use a tool called word2vec to convert words into embeddings, <a target="_blank" rel="noopener" href="https://radimrehurek.com/gensim/">gensim</a> has it implemented in a very easy-to-use way. </p>
+<blockquote>
+<p>Word2vec is a technique for natural language processing. The word2vec algorithm uses a neural network model to learn word associations from a large corpus of text. Once trained, such a model can detect synonymous words or suggest additional words for a partial sentence.</p>
+</blockquote>
+<p>More explanation on word2vec can be found <a target="_blank" rel="noopener" href="https://www.wikiwand.com/en/Word2vec">here</a>.</p>
+<h2 id="Creating-Corpus"><a href="#Creating-Corpus" class="headerlink" title="Creating Corpus"></a>Creating Corpus</h2><h3 id="Scarping-Addresses-of-Bloomberg-Articles"><a href="#Scarping-Addresses-of-Bloomberg-Articles" class="headerlink" title="Scarping Addresses of Bloomberg Articles"></a>Scarping Addresses of Bloomberg Articles</h3><p>I would like to run the embeddings only on the most recent posts, so first need to grab their urls through a search page.</p>
+<p>Import the libraries,</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">import requests</span><br><span class="line">import string</span><br><span class="line">import numpy as np</span><br><span class="line">import gensim.models.word2vec as word2vec</span><br><span class="line">from bs4 import BeautifulSoup</span><br><span class="line">from time import sleep</span><br></pre></td></tr></tbody></table></figure>
+<p>A function that can scrape the urls of articles that show up in the top p pages related to a specific topic,</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">def scrape_bloomberg_urls(subject, maxPage, headers):</span><br><span class="line">    urls = []</span><br><span class="line">    <span class="hljs-keyword">for</span> p <span class="hljs-keyword">in</span> range(1,maxPage):</span><br><span class="line">        searchUrl = <span class="hljs-string">&apos;https://www.bloomberg.com/search?query=&apos;</span> + subject + <span class="hljs-string">&apos;&amp;sort=relevance:desc&apos;</span> + <span class="hljs-string">&apos;&amp;page=&apos;</span> + str(p)</span><br><span class="line">        response = requests.get(searchUrl, headers=headers)</span><br><span class="line">        soup = BeautifulSoup(response.content, <span class="hljs-string">&apos;html.parser&apos;</span>)</span><br><span class="line">        regex = re.compile(<span class="hljs-string">&apos;.*headline.*&apos;</span>)</span><br><span class="line">        <span class="hljs-keyword">for</span> tag <span class="hljs-keyword">in</span> soup.findAll(<span class="hljs-string">&apos;a&apos;</span>, {<span class="hljs-string">&quot;class&quot;</span> : regex}, href = True):</span><br><span class="line">            href = tag.attrs[<span class="hljs-string">&apos;href&apos;</span>]</span><br><span class="line">            <span class="hljs-keyword">if</span> <span class="hljs-string">&apos;/news/articles/&apos;</span> <span class="hljs-keyword">in</span> href and href not <span class="hljs-keyword">in</span> urls:</span><br><span class="line">                urls.append(href)            </span><br><span class="line">    <span class="hljs-built_in">return</span> urls</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Set up headers to pass to the request, websites have gone crazy about blocking robots,</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">headers = {</span><br><span class="line">    <span class="hljs-string">&apos;user-agent&apos;</span>: <span class="hljs-string">&apos;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36&apos;</span>,</span><br><span class="line">    <span class="hljs-string">&apos;referrer&apos;</span>: <span class="hljs-string">&apos;https://google.com&apos;</span>,</span><br><span class="line">    <span class="hljs-string">&apos;Accept&apos;</span>: <span class="hljs-string">&apos;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8&apos;</span>,</span><br><span class="line">    <span class="hljs-string">&apos;Accept-Encoding&apos;</span>: <span class="hljs-string">&apos;gzip, deflate, br&apos;</span>,</span><br><span class="line">    <span class="hljs-string">&apos;Accept-Language&apos;</span>: <span class="hljs-string">&apos;en-US,en;q=0.9&apos;</span>,</span><br><span class="line">    <span class="hljs-string">&apos;Pragma&apos;</span>: <span class="hljs-string">&apos;no-cache&apos;</span>}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>We get 155 articles here, not a large dataset so it may give us weird results, but should be good enough for an exercise,</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">In: len(urls)</span><br><span class="line">Out: 155</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">In: urls[:5]</span><br><span class="line">Out: </span><br><span class="line">[<span class="hljs-string">&apos;https://www.bloomberg.com/news/articles/2020-08-07/inflation-trend-a-friend-in-real-yield-contest-seasia-rates&apos;</span>,</span><br><span class="line"> <span class="hljs-string">&apos;https://www.bloomberg.com/news/articles/2020-08-06/blackrock-joins-crescendo-of-inflation-warnings-amid-virus-fight&apos;</span>,</span><br><span class="line"> <span class="hljs-string">&apos;https://www.bloomberg.com/news/articles/2020-08-06/china-inflation-rate-headed-for-0-on-cooling-food-prices-chart&apos;</span>,</span><br><span class="line"> <span class="hljs-string">&apos;https://www.bloomberg.com/news/articles/2020-08-06/inflation-binds-czechs-after-fast-rate-cuts-decision-day-guide&apos;</span>,</span><br><span class="line"> <span class="hljs-string">&apos;https://www.bloomberg.com/news/articles/2020-08-07/jpmorgan-rejects-threat-to-dollar-status-flagged-by-goldman&apos;</span>]</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="Parsing-Articles"><a href="#Parsing-Articles" class="headerlink" title="Parsing Articles"></a>Parsing Articles</h3><p>This step is to parse articles through the urls and save the corpus into a local text file.</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">def parse_article(urls, headers):</span><br><span class="line">    corpus = []</span><br><span class="line">    <span class="hljs-keyword">for</span> url <span class="hljs-keyword">in</span> urls:</span><br><span class="line">        response = requests.get(url, headers=headers)</span><br><span class="line">        soup = BeautifulSoup(response.content,<span class="hljs-string">&apos;lxml&apos;</span>)</span><br><span class="line">        <span class="hljs-keyword">for</span> tag <span class="hljs-keyword">in</span> soup.find_all(<span class="hljs-string">&apos;p&apos;</span>):</span><br><span class="line">            content = tag.get_text()</span><br><span class="line">            cleanedContent = content.tra nslate(str.maketrans(<span class="hljs-string">&apos;&apos;</span>, <span class="hljs-string">&apos;&apos;</span>, string.punctuation)).lower()</span><br><span class="line">            corpus.append(cleanedContent)</span><br><span class="line">        seconds = np.random.randint(low=5, high=20)</span><br><span class="line">        sleep(seconds)</span><br><span class="line">    <span class="hljs-built_in">return</span> corpus</span><br></pre></td></tr></tbody></table></figure>
+<p>A function serves as a writer,</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">def write_to_txt(outdir, subject, contentList):</span><br><span class="line">    outputfile = f<span class="hljs-string">&apos;{outdir}/{subject}.txt&apos;</span></span><br><span class="line">    with open(outputfile, <span class="hljs-string">&apos;a&apos;</span>) as file:</span><br><span class="line">        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> contentList:</span><br><span class="line">            file.write(f<span class="hljs-string">&apos;{i}\n&apos;</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Run the functions,</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">corpus = parse_article(urls, headers)</span><br><span class="line">write_to_txt(<span class="hljs-string">&apos;Documents/Blog/&apos;</span>, <span class="hljs-string">&apos;corpus&apos;</span>, corpus)</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="Training-the-Model"><a href="#Training-the-Model" class="headerlink" title="Training the Model"></a>Training the Model</h2><p>Now that we have created the corpus, let&#x2019;s train the model using word2vec from gensim.</p>
+<p>Gensim has a cool function <em>LineSentence</em> that can directly read sentences from a text file with one sentence a line. Now you probably get why I had the corpus saved this way.</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sentences = word2vec.LineSentence(<span class="hljs-string">&apos;corpus.txt&apos;</span>)</span><br><span class="line">model = word2vec.Word2Vec(sentences, min_count=10, workers=8, iter=500, window=15, size=300, negative=50)</span><br></pre></td></tr></tbody></table></figure>
+<p>The model I choose is using the <a target="_blank" rel="noopener" href="https://www.wikiwand.com/en/N-gram">Skip-Gram</a> algorithm with Negative Sampling. Hyper-parameters above are what I find work well, see below for their definitions, just in case you would like to tune them yourself,</p>
+<blockquote>
+<ul>
+<li>size &#x2013; Dimensionality of the word vectors.</li>
+<li>window &#x2013; Maximum distance between the current and predicted word within a sentence.</li>
+<li>min_count &#x2013; Ignores all words with total frequency lower than this.</li>
+<li>workers &#x2013; Use these many worker threads to train the model (=faster training with multicore machines).</li>
+<li>negative  &#x2013; If &gt; 0, negative sampling will be used, the int for negative specifies how many &#x201C;noise words&#x201D; should be drawn (usually between 5-20). If set to 0, no negative sampling is used.</li>
+</ul>
+</blockquote>
+<h2 id="Checking-Out-the-Results"><a href="#Checking-Out-the-Results" class="headerlink" title="Checking Out the Results"></a>Checking Out the Results</h2><p>The goal of this exercise to find out what people talk about when they analyze inflation expectation (basically what currently drives the stock market, TIPS and metals to roar higher and higher) and gold (my favorite and probably the most promising asset in the next 10 years).</p>
+<p>Word2vev model can find words that have been used in a similar context with the word we care about. Here we employ a method <em>most_similar</em> to reveal them.</p>
+<p>Let&#x2019;s first check out the words people usually mention when they talk about inflation. I print out the top 20 words. The meaningful ones are,</p>
+<ul>
+<li>&#x201C;target&#x201D;, &#x201C;bank&#x2019;s&#x201D;, &#x201C;bank&#x201D; - of course central banks target on inflation and their monetary policies shape expectations.</li>
+<li>&#x201C;nominal&#x201D;, &#x201C;negative&#x201D;, &#x201C;yields&#x201D; - words usually describing rates, make sense.</li>
+<li>&#x201C;food&#x201D; - measure of inflation.</li>
+<li>&#x201C;employment&#x201D; - make a lot sense if you remember the Phillips curve.</li>
+</ul>
+<p>The results are actually very good, authors did understand and explain inflations well.</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">In: model.wv.most_similar(<span class="hljs-string">&apos;inflation&apos;</span>,topn=20)</span><br><span class="line">Out:</span><br><span class="line">[(<span class="hljs-string">&apos;target&apos;</span>, 0.25702178478240967),</span><br><span class="line"> (<span class="hljs-string">&apos;strip&apos;</span>, 0.18441016972064972),</span><br><span class="line"> (<span class="hljs-string">&apos;securities&apos;</span>, 0.18246109783649445),</span><br><span class="line"> (<span class="hljs-string">&apos;full&apos;</span>, 0.16774789988994598),</span><br><span class="line"> (<span class="hljs-string">&apos;nominal&apos;</span>, 0.16606125235557556),</span><br><span class="line"> (<span class="hljs-string">&apos;bank&#x2019;s&apos;</span>, 0.162990003824234),</span><br><span class="line"> (<span class="hljs-string">&apos;yields&apos;</span>, 0.15935908257961273),</span><br><span class="line"> (<span class="hljs-string">&apos;negative&apos;</span>, 0.15806841850280762),</span><br><span class="line"> (<span class="hljs-string">&apos;remain&apos;</span>, 0.15371079742908478),</span><br><span class="line"> (<span class="hljs-string">&apos;levels&apos;</span>, 0.14426037669181824),</span><br><span class="line"> (<span class="hljs-string">&apos;well&apos;</span>, 0.1438026875257492),</span><br><span class="line"> (<span class="hljs-string">&apos;current&apos;</span>, 0.13828279078006744),</span><br><span class="line"> (<span class="hljs-string">&apos;attractive&apos;</span>, 0.13690069317817688),</span><br><span class="line"> (<span class="hljs-string">&apos;showed&apos;</span>, 0.1277044713497162),</span><br><span class="line"> (<span class="hljs-string">&apos;bank&apos;</span>, 0.12733221054077148),</span><br><span class="line"> (<span class="hljs-string">&apos;food&apos;</span>, 0.12377716600894928),</span><br><span class="line"> (<span class="hljs-string">&apos;similar&apos;</span>, 0.11955425888299942),</span><br><span class="line"> (<span class="hljs-string">&apos;the&apos;</span>, 0.11911500245332718),</span><br><span class="line"> (<span class="hljs-string">&apos;employment&apos;</span>, 0.11866464465856552),</span><br><span class="line"> (<span class="hljs-string">&apos;keep&apos;</span>, 0.11818670481443405)]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Then let&#x2019;s try it for gold. It&#x2019;s good to see silver rank top, the two metals do hold a strong correlation despite the natures of them are very different, gold generally behaves as a bond of real rates, while silver should be viewed more as a commodity. (People make mistakes on this, see <a target="_blank" rel="noopener" href="https://www.investopedia.com/articles/optioninvestor/09/silver-thursday-hunt-brothers.asp">the story of Hunt Brothers</a>)</p>
+<p>Other words are just descriptive, focusing on telling readers what&#x2019;s going on in the markets. While this is not helpful, Bloomberg! People want to know why, you may want to talk more about real rates, inflation expectations, debt and global growth in the future.</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">In: model.wv.most_similar(<span class="hljs-string">&apos;gold&apos;</span>,topn=30)</span><br><span class="line">Out:</span><br><span class="line">[(<span class="hljs-string">&apos;gold&#x2019;s&apos;</span>, 0.26054084300994873),</span><br><span class="line"> (<span class="hljs-string">&apos;silver&apos;</span>, 0.25277888774871826),</span><br><span class="line"> (<span class="hljs-string">&apos;ounce&apos;</span>, 0.2523342967033386),</span><br><span class="line"> (<span class="hljs-string">&apos;bullion&apos;</span>, 0.2294640988111496),</span><br><span class="line"> (<span class="hljs-string">&apos;2300&apos;</span>, 0.22592982649803162),</span><br><span class="line"> (<span class="hljs-string">&apos;spot&apos;</span>, 0.2171008288860321),</span><br><span class="line"> (<span class="hljs-string">&apos;climbing&apos;</span>, 0.19733953475952148),</span><br><span class="line"> (<span class="hljs-string">&apos;metal&apos;</span>, 0.1939847469329834),</span><br><span class="line"> (<span class="hljs-string">&apos;comex&apos;</span>, 0.19371576607227325),</span><br><span class="line"> (<span class="hljs-string">&apos;rally&apos;</span>, 0.18643531203269958),</span><br><span class="line"> (<span class="hljs-string">&apos;exchangetraded&apos;</span>, 0.1859540343284607),</span><br><span class="line"> (<span class="hljs-string">&apos;a&apos;</span>, 0.18539577722549438),</span><br><span class="line"> (<span class="hljs-string">&apos;delivery&apos;</span>, 0.17595867812633514),</span><br><span class="line"> (<span class="hljs-string">&apos;reaching&apos;</span>, 0.1702871322631836),</span><br><span class="line"> (<span class="hljs-string">&apos;strip&apos;</span>, 0.16905872523784637),</span><br><span class="line"> (<span class="hljs-string">&apos;posted&apos;</span>, 0.16247007250785828),</span><br><span class="line"> (<span class="hljs-string">&apos;lows&apos;</span>, 0.16047437489032745),</span><br><span class="line"> (<span class="hljs-string">&apos;as&apos;</span>, 0.1585429608821869),</span><br><span class="line"> (<span class="hljs-string">&apos;analysis&apos;</span>, 0.1577225774526596),</span><br><span class="line"> (<span class="hljs-string">&apos;2011&apos;</span>, 0.15711694955825806),</span><br><span class="line"> (<span class="hljs-string">&apos;precious&apos;</span>, 0.15656355023384094),</span><br><span class="line"> (<span class="hljs-string">&apos;threat&apos;</span>, 0.1542907953262329),</span><br><span class="line"> (<span class="hljs-string">&apos;more&apos;</span>, 0.1541929841041565),</span><br><span class="line"> (<span class="hljs-string">&apos;drive&apos;</span>, 0.15310749411582947),</span><br><span class="line"> (<span class="hljs-string">&apos;every&apos;</span>, 0.1524747610092163),</span><br><span class="line"> (<span class="hljs-string">&apos;analyst&apos;</span>, 0.1517343521118164),</span><br><span class="line"> (<span class="hljs-string">&apos;managing&apos;</span>, 0.14977654814720154),</span><br><span class="line"> (<span class="hljs-string">&apos;price&apos;</span>, 0.1497490406036377),</span><br><span class="line"> (<span class="hljs-string">&apos;amounts&apos;</span>, 0.14969849586486816),</span><br><span class="line"> (<span class="hljs-string">&apos;backed&apos;</span>, 0.1450338065624237)]</span><br></pre></td></tr></tbody></table></figure></body></html>
+    
+    </div>
+    
+    
+    <div class="columns is-mobile is-multiline article-nav">
+        <span class="column is-12-mobile is-half-desktop  article-nav-prev">
+            
+            <a href="/2021/09/21/projectcovid/">Project Covid Admissions Based on Vaccine Progress, Part 1 -- From Simple Linear Regression to Weighted Time Series Regression</a>
+            
+        </span>
+        <span class="column is-12-mobile is-half-desktop is-hidden-mobile article-nav-next">
+            
+        </span>
+    </div>
+    
+</article>
+
+
+
+
+    </div>
+</section>
+    <footer class="footer">
+    <div class="container">
+        <div class="columns content">
+            <div class="column is-narrow has-text-centered">
+                &copy; 2025 Yumeng Li&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
+                        target="_blank" rel="noopener" href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
+            </div>
+            <div class="column is-hidden-mobile"></div>
+
+            
+            <div class="column is-narrow">
+                <div class="columns is-mobile is-multiline is-centered">
+                
+                    
+                <a class="column is-narrow has-text-black" title="GitHub" target="_blank" rel="noopener" href="https://github.com/ppoffice/hexo-theme-minos">
+                    
+                    GitHub
+                    
+                </a>
+                
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</footer>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
+
+<!-- test if the browser is outdated -->
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" target="_blank" rel="noopener" href="http://outdatedbrowser.com/">Update my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // plugin function, place inside DOM ready function
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        })
+    });
+</script>
+
+<script>
+    window.FontAwesomeConfig = {
+        searchPseudoElements: true
+    }
+    moment.locale("en-AU");
+</script>
+
+
+    
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+    MathJax.Hub.Config({
+        "HTML-CSS": {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+</script>
+
+    
+    
+    
+    
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/js/lightgallery-all.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/js/jquery.justifiedGallery.min.js"></script>
+<script>
+    (function ($) {
+        $(document).ready(function () {
+            if (typeof($.fn.lightGallery) === 'function') {
+                $('.article.gallery').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof($.fn.justifiedGallery) === 'function') {
+                $('.justified-gallery').justifiedGallery();
+            }
+        });
+    })(jQuery);
+</script>
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <style>
+        .hljs {
+            position: relative;
+        }
+
+        .hljs .clipboard-btn {
+            float: right;
+            color: #9a9a9a;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .hljs .clipboard-btn:hover {
+          color: #8a8a8a;
+        }
+
+        .hljs > .clipboard-btn {
+            display: none;
+            position: absolute;
+            right: 4px;
+            top: 4px;
+        }
+
+        .hljs:hover > .clipboard-btn {
+            display: inline;
+        }
+
+        .hljs > figcaption > .clipboard-btn {
+            margin-right: 4px;
+        }
+    </style>
+    <script>
+      $(document).ready(function () {
+        $('figure.hljs').each(function(i, figure) {
+          var codeId = 'code-' + i;
+          var code = figure.querySelector('.code');
+          var copyButton = $('<button>Copy <i class="far fa-clipboard"></i></button>');
+          code.id = codeId;
+          copyButton.addClass('clipboard-btn');
+          copyButton.attr('data-clipboard-target-id', codeId);
+
+          var figcaption = figure.querySelector('figcaption');
+
+          if (figcaption) {
+            figcaption.append(copyButton[0]);
+          } else {
+            figure.prepend(copyButton[0]);
+          }
+        })
+
+        var clipboard = new ClipboardJS('.clipboard-btn', {
+          target: function(trigger) {
+            return document.getElementById(trigger.getAttribute('data-clipboard-target-id'));
+          }
+        });
+        clipboard.on('success', function(e) {
+          e.clearSelection();
+        })
+      })
+    </script>
+
+    
+    
+
+    
+
+
+
+<script src="/js/script.js"></script>
+
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-mask"></div>
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="Type something..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+    
+</body>
+</html>

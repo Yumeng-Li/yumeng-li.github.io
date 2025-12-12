@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+<head>
+    <meta charset="utf-8">
+<title>Project Covid Admissions Based on Vaccine Progress, Part 2 -- Generalized Linear Models, From Poisson Regression to Negative Binomial Regression - The Practical Quant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css">
+
+
+
+
+<meta name="description" content="">
+
+
+
+
+
+    <meta name="description" content="In the last blog, we try to use linear regressions to model hospital admissions and vaccinations. The findings were the linear model tend to over-estimating how fast the admission rate is increasing o">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Project Covid Admissions Based on Vaccine Progress, Part 2 -- Generalized Linear Models, From Poisson Regression to Negative Binomial Regression">
+<meta property="og:url" content="http://yoursite.com/2021/09/26/projectcovidGLM/index.html">
+<meta property="og:site_name" content="The Practical Quant">
+<meta property="og:description" content="In the last blog, we try to use linear regressions to model hospital admissions and vaccinations. The findings were the linear model tend to over-estimating how fast the admission rate is increasing o">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yumeng-li.github.io/projectcovidGLM_files/projectcovidGLM_30_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/projectcovidGLM_files/projectcovidGLM_32_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/projectcovidGLM_files/projectcovidGLM_37_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/projectcovidGLM_files/projectcovidGLM_49_1.png">
+<meta property="og:image" content="http://yumeng-li.github.io/projectcovidGLM_files/projectcovidGLM_52_1.png">
+<meta property="og:image" content="http://yumeng-li.github.io/projectcovidGLM_files/projectcovidGLM_61_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/projectcovidGLM_files/projectcovidGLM_63_0.png">
+<meta property="article:published_time" content="2021-09-26T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-12T03:45:31.175Z">
+<meta property="article:author" content="Yumeng Li">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yumeng-li.github.io/projectcovidGLM_files/projectcovidGLM_30_0.png">
+
+
+
+
+
+<link rel="icon" href="/favicon.png">
+
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ovo|Source+Code+Pro">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/css/justifiedGallery.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+<script defer src="//use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+
+<meta name="generator" content="Hexo 5.0.0"></head>
+<body>
+    
+<nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item navbar-logo" href="/">
+                
+                    
+                    THE PRACTICAL QUANT
+                    
+                
+            </a>
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <div class="navbar-menu navbar-start">
+            
+            <a class="navbar-item "
+               href="/archives">Archives</a>
+            
+            <a class="navbar-item "
+               href="/categories">Category</a>
+            
+            <a class="navbar-item "
+               target="_blank" rel="noopener" href="http://allaboutmacros.com/">Blog</a>
+            
+            <a class="navbar-item "
+               target="_blank" rel="noopener" href="https://www.linkedin.com/in/emmelineli/">Linkedin</a>
+            
+        </div>
+        
+        <div class="navbar-menu navbar-end">
+            
+            <a class="navbar-item search" title="Search" href="javascript:;">
+                <i class="fas fa-search"></i>
+            </a>
+            
+            
+            
+            <a class="navbar-item" title="GitHub" target="_blank" rel="noopener" href="https://github.com/ppoffice/hexo-theme-minos">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+               
+            
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+    <div class="container">
+    <article class="article content gallery" itemscope itemprop="blogPost">
+    <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
+        
+            Project Covid Admissions Based on Vaccine Progress, Part 2 -- Generalized Linear Models, From Poisson Regression to Negative Binomial Regression
+        
+    </h1>
+    <div class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile">
+        <span class="column is-narrow">
+            <time datetime="2021-09-26T16:00:00.000Z" itemprop="datePublished">Sep 26 2021</time>
+        </span>
+        
+        <span class="column is-narrow article-category">
+            <i class="far fa-folder"></i>
+            <a class="article-category-link" href="/categories/Applied-Statistics/">Applied Statistics</a>
+        </span>
+        
+        
+        <span class="column is-narrow">
+            
+            
+            18 minutes read (About 2705 words)
+        </span>
+        
+    </div>
+    <div class="article-entry is-size-6-mobile" itemprop="articleBody">
+    
+        <html><head></head><body><p>In the last blog, we try to use linear regressions to model hospital admissions and vaccinations. The findings were the linear model tend to over-estimating how fast the admission rate is increasing on the higher range of vaccination rates, and residual variance is negatively correlated with vaccinations rates, suggesting heteroskedasticity. But it&#x2019;s easy-peasy for <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Generalized_linear_model">Generalized linear models</a> to fix those issues. GLM generalizes linear regression, 1. by allowing the linear model to be related to the response variable via a link function, 2. by allowing for the response variable to have an error distribution other than the normal distribution so that the magnitude of the variance of each measurement can change as a function of its predicted value.</p>
+<h2 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h2><figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np</span><br><span class="line"><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd</span><br><span class="line"><span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt</span><br><span class="line"><span class="hljs-keyword">import</span> matplotlib.colors</span><br><span class="line"><span class="hljs-keyword">import</span> seaborn <span class="hljs-keyword">as</span> sns</span><br><span class="line"><span class="hljs-keyword">import</span> statsmodels.api <span class="hljs-keyword">as</span> sm</span><br><span class="line"><span class="hljs-keyword">from</span> statsmodels.discrete.discrete_model <span class="hljs-keyword">import</span> Poisson</span><br><span class="line"><span class="hljs-keyword">from</span> statsmodels.discrete.discrete_model <span class="hljs-keyword">import</span> NegativeBinomial</span><br><span class="line"><span class="hljs-keyword">import</span> sys</span><br><span class="line"><span class="hljs-keyword">import</span> covid_analysis <span class="hljs-keyword">as</span> covid</span><br></pre></td></tr></tbody></table></figure>
+
+<p>The data I use includes hospital admissions and vaccinations from the CDC website, and the most up-to-date populations by state from the US Census Bureau.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data_dir=<span class="hljs-string">&quot;../data&quot;</span></span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">hospitalizations=pd.read_csv(<span class="hljs-string">f&quot;<span class="hljs-subst">{data_dir}</span>/covid_hospitalizations.csv&quot;</span>,parse_dates=[<span class="hljs-string">&quot;date&quot;</span>])</span><br><span class="line">vaccinations=pd.read_csv(<span class="hljs-string">f&quot;<span class="hljs-subst">{data_dir}</span>/covid_vaccinations.csv&quot;</span>,parse_dates=[<span class="hljs-string">&quot;date&quot;</span>])</span><br><span class="line">population=pd.read_csv(<span class="hljs-string">f&quot;<span class="hljs-subst">{data_dir}</span>/population.csv&quot;</span>)</span><br><span class="line"></span><br><span class="line">event=<span class="hljs-string">&quot;admissions&quot;</span></span><br><span class="line">data=hospitalizations</span><br><span class="line"></span><br><span class="line">data=data.merge(vaccinations,on=[<span class="hljs-string">&quot;date&quot;</span>,<span class="hljs-string">&quot;state&quot;</span>])</span><br><span class="line">data=data.merge(population,on=<span class="hljs-string">&quot;state&quot;</span>)</span><br><span class="line">data[<span class="hljs-string">&quot;vaccinated&quot;</span>]=data[<span class="hljs-string">&quot;vaccinated&quot;</span>]/data[<span class="hljs-string">&quot;population&quot;</span>]</span><br><span class="line">data.head()</span><br></pre></td></tr></tbody></table></figure>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th &#123;
+    vertical-align: top;
+&#125;
+
+.dataframe thead th &#123;
+    text-align: right;
+&#125;</code></pre>
+<p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>date</th>
+      <th>state</th>
+      <th>used_beds</th>
+      <th>admissions</th>
+      <th>vaccinated</th>
+      <th>population</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2021-06-10</td>
+      <td>MT</td>
+      <td>66.0</td>
+      <td>16.0</td>
+      <td>0.397597</td>
+      <td>1080577</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2021-06-21</td>
+      <td>MT</td>
+      <td>57.0</td>
+      <td>13.0</td>
+      <td>0.411614</td>
+      <td>1080577</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2021-08-05</td>
+      <td>MT</td>
+      <td>149.0</td>
+      <td>23.0</td>
+      <td>0.440153</td>
+      <td>1080577</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2021-07-15</td>
+      <td>MT</td>
+      <td>62.0</td>
+      <td>9.0</td>
+      <td>0.431722</td>
+      <td>1080577</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2021-08-21</td>
+      <td>MT</td>
+      <td>224.0</td>
+      <td>59.0</td>
+      <td>0.449196</td>
+      <td>1080577</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<h2 id="Poisson-Regression"><a href="#Poisson-Regression" class="headerlink" title="Poisson Regression"></a>Poisson Regression</h2><p>Like what we did with the linear regression, we can choose either to use the  <strong>Poisson Regression</strong> model from <a target="_blank" rel="noopener" href="https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Poisson.html">statsmodels</a>, or the GLM from the same lib. The two will give us the exact same estimations and statistics.</p>
+<h3 id="Model-Definition"><a href="#Model-Definition" class="headerlink" title="Model Definition"></a>Model Definition</h3><p>We have data from multiple dates, so it makes sense to incorporate Time as an extra variable.</p>
+<p>\begin{eqnarray}<br>    &amp;\eta_i &amp;=c + \beta_1 x_i  + \beta_2 t_i + \beta_3 t_i^2 \newline<br>    \mathbb{E}(y_i|x_i) =&amp; \lambda_iP_i &amp;= e^{\eta_i }P_i \newline<br>    &amp;p(y_i|x_i) &amp; = \text{Poisson}(y;\lambda_i P_i)<br>\end{eqnarray}<br>where </p>
+<ul>
+<li>Each observation $i$ represents a single state at one particular date.</li>
+<li>$y_i$ is the number of hospital admissions on that state.</li>
+<li>$x_i$ is the percentage of the state population fully vaccinated that state.</li>
+<li>$t_i$ is the number of days elapsed since the beginning of the training period.</li>
+<li>$P_i$ is the population of the  state.</li>
+<li>the parameters $c$ and $\beta_1,\beta_2,\beta_3$ will be fitted to the observed data to maximize agreement with the model</li>
+</ul>
+<p>We including coefficients for $t$ and $t^2$ the dependence of the admission rate on time can have some curvature and does not need to be linear.</p>
+<p>This can be fitter as a <strong>linear model</strong> where the inputs are $x_i$, $t_i$ and $t_i^2$</p>
+<p>First we select the training period:</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">start_train=<span class="hljs-string">&quot;2021-07-15&quot;</span></span><br><span class="line">end_train=<span class="hljs-string">&quot;2021-08-15&quot;</span></span><br><span class="line">train_data=data[(data[<span class="hljs-string">&apos;date&apos;</span>] &gt;= start_train) &amp; (data[<span class="hljs-string">&apos;date&apos;</span>] &lt;= end_train)].copy()</span><br><span class="line">date0=train_data[<span class="hljs-string">&quot;date&quot;</span>].min()</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Then a 7-day testing period:</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">test_period=<span class="hljs-number">7</span> <span class="hljs-comment"># days</span></span><br><span class="line">test_end=pd.Timestamp(end_train)+pd.DateOffset(days=test_period)</span><br><span class="line">test_data=data[(data[<span class="hljs-string">&quot;date&quot;</span>]&gt;end_train) &amp; (data[<span class="hljs-string">&quot;date&quot;</span>]&lt;=test_end)].copy()</span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">X_train,P_train=covid.define_variables(train_data,date0)</span><br><span class="line">Y_train=train_data[event]</span><br><span class="line">X_test,P_test=covid.define_variables(test_data,date0)</span><br><span class="line">Y_test=test_data[event]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Fit the model to the train data,</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mod=Poisson(Y_train,X_train,exposure=P_train.values)</span><br><span class="line">res=mod.fit()</span><br><span class="line">res.summary()</span><br></pre></td></tr></tbody></table></figure>
+
+<pre><code>Optimization terminated successfully.
+         Current function value: 32.115992
+         Iterations 6</code></pre>
+<table class="simpletable">
+<caption>Poisson Regression Results</caption>
+<tbody><tr>
+  <th>Dep. Variable:</th>      <td>admissions</td>    <th>  No. Observations:  </th>  <td>  1632</td> 
+</tr>
+<tr>
+  <th>Model:</th>                <td>Poisson</td>     <th>  Df Residuals:      </th>  <td>  1628</td> 
+</tr>
+<tr>
+  <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>  <td>     3</td> 
+</tr>
+<tr>
+  <th>Date:</th>            <td>Sun, 26 Sep 2021</td> <th>  Pseudo R-squ.:     </th>  <td>0.4493</td> 
+</tr>
+<tr>
+  <th>Time:</th>                <td>19:44:49</td>     <th>  Log-Likelihood:    </th> <td> -52413.</td>
+</tr>
+<tr>
+  <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th> <td> -95175.</td>
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>    <th>  LLR p-value:       </th>  <td> 0.000</td> 
+</tr>
+</tbody></table>
+<table class="simpletable">
+<tbody><tr>
+       <td></td>         <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P&gt;|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>vaccinated</th> <td>   -6.7589</td> <td>    0.030</td> <td> -225.710</td> <td> 0.000</td> <td>   -6.818</td> <td>   -6.700</td>
+</tr>
+<tr>
+  <th>T</th>          <td>    0.0750</td> <td>    0.001</td> <td>   75.492</td> <td> 0.000</td> <td>    0.073</td> <td>    0.077</td>
+</tr>
+<tr>
+  <th>T2</th>         <td>   -0.0009</td> <td> 2.84e-05</td> <td>  -31.349</td> <td> 0.000</td> <td>   -0.001</td> <td>   -0.001</td>
+</tr>
+<tr>
+  <th>const</th>      <td>   -8.4423</td> <td>    0.015</td> <td> -547.566</td> <td> 0.000</td> <td>   -8.473</td> <td>   -8.412</td>
+</tr>
+</tbody></table>
+
+
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mod=sm.GLM(Y_train,X_train,exposure=P_train,family=sm.families.Poisson(sm.families.links.log()))</span><br><span class="line">glm_res=mod.fit()</span><br><span class="line">glm_res.summary()</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<table class="simpletable">
+<caption>Generalized Linear Model Regression Results</caption>
+<tbody><tr>
+  <th>Dep. Variable:</th>      <td>admissions</td>    <th>  No. Observations:  </th>  <td>  1632</td> 
+</tr>
+<tr>
+  <th>Model:</th>                  <td>GLM</td>       <th>  Df Residuals:      </th>  <td>  1628</td> 
+</tr>
+<tr>
+  <th>Model Family:</th>         <td>Poisson</td>     <th>  Df Model:          </th>  <td>     3</td> 
+</tr>
+<tr>
+  <th>Link Function:</th>          <td>log</td>       <th>  Scale:             </th> <td>  1.0000</td>
+</tr>
+<tr>
+  <th>Method:</th>                <td>IRLS</td>       <th>  Log-Likelihood:    </th> <td> -52413.</td>
+</tr>
+<tr>
+  <th>Date:</th>            <td>Sun, 26 Sep 2021</td> <th>  Deviance:          </th> <td>  95443.</td>
+</tr>
+<tr>
+  <th>Time:</th>                <td>19:44:50</td>     <th>  Pearson chi2:      </th> <td>1.26e+05</td>
+</tr>
+<tr>
+  <th>No. Iterations:</th>          <td>6</td>        <th>                     </th>     <td> </td>   
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>    <th>                     </th>     <td> </td>   
+</tr>
+</tbody></table>
+<table class="simpletable">
+<tbody><tr>
+       <td></td>         <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P&gt;|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>vaccinated</th> <td>   -6.7589</td> <td>    0.030</td> <td> -225.710</td> <td> 0.000</td> <td>   -6.818</td> <td>   -6.700</td>
+</tr>
+<tr>
+  <th>T</th>          <td>    0.0750</td> <td>    0.001</td> <td>   75.492</td> <td> 0.000</td> <td>    0.073</td> <td>    0.077</td>
+</tr>
+<tr>
+  <th>T2</th>         <td>   -0.0009</td> <td> 2.84e-05</td> <td>  -31.349</td> <td> 0.000</td> <td>   -0.001</td> <td>   -0.001</td>
+</tr>
+<tr>
+  <th>const</th>      <td>   -8.4423</td> <td>    0.015</td> <td> -547.566</td> <td> 0.000</td> <td>   -8.473</td> <td>   -8.412</td>
+</tr>
+</tbody></table>
+
+
+
+<p>Poisson regression is fit by maximum likelihood, there are several <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Logistic_regression#Pseudo-R-squared">choices of <strong>Pseudo R-square</strong></a><br>Here, what statsmodels implements for poisson regression is McFadden $R_{McF}^2$ that is defined as ratio of log likelihood for the fitted model and log likelihood of a model fitted to just a constant.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># Pseudo R-squ McF</span></span><br><span class="line">res.prsquared</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>0.4492953669633617</code></pre>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res.llf, res.llnull</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>(-52413.29834953645, -95174.97258108124)</code></pre>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-number">1</span>-res.llf/res.llnull</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>0.4492953669633617</code></pre>
+<p>Certainly, we can implement other measures of the Pseudo R-square ourselves. Here I did $R_{L}^2$, which is deviance-based. It&#x2019;s the most analogous index to the squared multiple correlations in linear regression. We will stick to it in our analysis from now on.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">poisson_deviance</span>(<span class="hljs-params">y,y_pred</span>):</span></span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>*np.sum(y*np.log(np.maximum(y,<span class="hljs-number">1e-12</span>)/y_pred)-(y-y_pred))</span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mu_train=Y_train.sum()/P_train.sum()</span><br><span class="line">Y_pred=glm_res.predict(X_train,exposure=P_train)</span><br><span class="line"></span><br><span class="line">deviance=poisson_deviance(Y_train,Y_pred)</span><br><span class="line">null_deviance=poisson_deviance(Y_train,mu_train*P_train)</span><br><span class="line">R2=<span class="hljs-number">1</span>-deviance/null_deviance</span><br><span class="line"><span class="hljs-comment"># Pseudo R-squ</span></span><br><span class="line">R2</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>0.4725915412837366</code></pre>
+<p>If you don&#x2019;t want bother yourself with the mathematical formulas, here&#x2019;s a simpler way (my favorite as the laziest person ever). Just fit the model with a constant, and take the log-likelihood/deviance as your null case.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mod=sm.GLM(Y_train,X_train[<span class="hljs-string">&apos;const&apos;</span>],exposure=P_train,family=sm.families.Poisson(sm.families.links.log()))</span><br><span class="line">res_null=mod.fit()</span><br><span class="line"><span class="hljs-comment"># deviance for a const fit model</span></span><br><span class="line">res_null.deviance</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>180966.73552551522</code></pre>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># null deviance from our math formula</span></span><br><span class="line">null_deviance</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>180966.7355255152</code></pre>
+<p>After all, the R-squared we have for now is 0.473.</p>
+<p>Next let&#x2019;s check on how the model predicts. </p>
+<h3 id="Extrapolation-of-Time-trends"><a href="#Extrapolation-of-Time-trends" class="headerlink" title="Extrapolation of Time trends"></a>Extrapolation of Time trends</h3><p>Remember what we saw last time with the linear model? Its projection was a straight line. But the poisson model is telling us a different story, that the admissions will flatten out assuming the current vaccination rate. Well, it is onto something, isn&#x2019;t it?</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">covid.plot_time_extrapolation(train_data,glm_res,event,date0)</span><br></pre></td></tr></tbody></table></figure>
+
+<img src="http://yumeng-li.github.io/projectcovidGLM_files/projectcovidGLM_30_0.png">
+
+
+
+<h3 id="In-sample-model-Fit"><a href="#In-sample-model-Fit" class="headerlink" title="In-sample model Fit"></a>In-sample model Fit</h3><p>To better evaluate the model fit, we visualize the real observations and model predictions. Here&#x2019;s some snapshots of the fit for a few selected dates on the training period.</p>
+<p>As we can see, curves from the poisson regression model fits the data much better than the linear model, indicating the correlation between admissions and vaccinations are not linear.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">covid.plot_time_facets(train_data,glm_res,event,date0)</span><br></pre></td></tr></tbody></table></figure>
+
+
+<img src="http://yumeng-li.github.io/projectcovidGLM_files/projectcovidGLM_32_0.png">
+
+
+<p>But is this enough? Certainly not, let&#x2019;s verify the deviance residuals by visualizing them,</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">plot_deviance_residuals</span>(<span class="hljs-params">data,event,res</span>):</span></span><br><span class="line">    P=data[<span class="hljs-string">&quot;population&quot;</span>]</span><br><span class="line">    <span class="hljs-comment"># Create two subplots and unpack the output array immediately</span></span><br><span class="line">    f, (ax1, ax2) = plt.subplots(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>,sharex=<span class="hljs-literal">True</span>,figsize=(<span class="hljs-number">16</span>,<span class="hljs-number">4</span>))</span><br><span class="line">    norm=matplotlib.colors.LogNorm(vmin=<span class="hljs-number">100</span>_000, vmax=P.max(), clip=<span class="hljs-literal">False</span>)</span><br><span class="line">    m=ax1.scatter(data[<span class="hljs-string">&quot;vaccinated&quot;</span>],data[event]/data[<span class="hljs-string">&quot;population&quot;</span>]*<span class="hljs-number">100</span>_000,</span><br><span class="line">                c=P,norm=norm,cmap=<span class="hljs-string">&quot;Blues&quot;</span>,label=event)</span><br><span class="line">    plt.colorbar(m,label=<span class="hljs-string">&quot;State Population&quot;</span>)</span><br><span class="line">    x=np.linspace(<span class="hljs-number">0.3</span>,<span class="hljs-number">0.75</span>,<span class="hljs-number">201</span>)</span><br><span class="line">    x= pd.DataFrame({<span class="hljs-string">&apos;vaccinated&apos;</span>:x, <span class="hljs-string">&apos;T&apos;</span>:<span class="hljs-number">31</span>, <span class="hljs-string">&apos;T2&apos;</span>:<span class="hljs-number">31</span>*<span class="hljs-number">31</span>})</span><br><span class="line">    x[<span class="hljs-string">&quot;const&quot;</span>]=np.ones(<span class="hljs-number">201</span>)</span><br><span class="line">    y_pred=res.predict(x)</span><br><span class="line">    ax1.plot(x.vaccinated, y_pred*<span class="hljs-number">100</span>_000,<span class="hljs-string">&quot;k--&quot;</span>,label=<span class="hljs-string">&quot;predicted&quot;</span>) </span><br><span class="line">    </span><br><span class="line">    idx = data.index</span><br><span class="line">    ax2.scatter(data[<span class="hljs-string">&quot;vaccinated&quot;</span>], res.resid_deviance[idx],</span><br><span class="line">                c=P,norm=norm,cmap=<span class="hljs-string">&quot;Blues&quot;</span>,label=event)</span><br><span class="line">    ax2.set_title(<span class="hljs-string">&quot;Residuals&quot;</span>)</span><br><span class="line">    ax2.set_xlabel(<span class="hljs-string">&quot;vaccination&quot;</span>)</span><br><span class="line">    ax2.set_ylabel(<span class="hljs-string">&quot;residual&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment"># select outlier state</span></span><br><span class="line">    outlier_idx=np.argpartition(np.array(res.resid_deviance[idx]), <span class="hljs-number">-2</span>)[<span class="hljs-number">-2</span>:]</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> outlier_idx:</span><br><span class="line">        outlier=data.iloc[i]</span><br><span class="line">        ax1.annotate(outlier[<span class="hljs-string">&quot;state&quot;</span>],(outlier[<span class="hljs-string">&quot;vaccinated&quot;</span>]+<span class="hljs-number">0.01</span>,outlier[event]/outlier[<span class="hljs-string">&quot;population&quot;</span>]*<span class="hljs-number">100</span>_000))</span><br><span class="line">        ax2.annotate(outlier[<span class="hljs-string">&quot;state&quot;</span>],(outlier[<span class="hljs-string">&quot;vaccinated&quot;</span>]+<span class="hljs-number">0.01</span>,res.resid_deviance[idx].iloc[i]))</span><br></pre></td></tr></tbody></table></figure>
+
+<p>The date I choose is Aug.15,</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">offset=<span class="hljs-number">9</span> </span><br><span class="line">interested_date=data[<span class="hljs-string">&quot;date&quot;</span>].max()-pd.offsets.Day(offset)</span><br><span class="line">interested_data=data[data[<span class="hljs-string">&quot;date&quot;</span>]==interested_date]</span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plot_deviance_residuals(interested_data,event,glm_res)</span><br></pre></td></tr></tbody></table></figure>
+
+<img src="http://yumeng-li.github.io/projectcovidGLM_files/projectcovidGLM_37_0.png">
+
+
+
+<p>The deviance residuals are defined as the signed square roots of the unit deviances, representing the contributions of individual samples to the deviance. The deviance indicates the extent to which the likelihood of the saturated model exceeds the likelihood of the proposed model. If the proposed model has a good fit, the deviance will be small. If the proposed model has a bad fit, the deviance will be high. </p>
+<p>Thus, the deviance residuals are analogous to the conventional residuals: when they are squared, we obtain the sum of squares that we use for assessing the fit of the model. However, while the sum of squares is the residual sum of squares for linear models, for GLMs, this is the deviance.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">deviance=poisson_deviance(Y_train,Y_pred)</span><br><span class="line">sum_of_squared_deviance_residuals = sum(glm_res.resid_deviance**<span class="hljs-number">2</span>)</span><br><span class="line">deviance, sum_of_squared_deviance_residuals</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>(95443.38706242564, 95443.38706242583)</code></pre>
+<p>In a <em>properly specified model</em>, the deviance is approximately chi-square distributed with n-k-1 degrees of freedom, and the deviance residuals would be independent, standard normal random variables, i.e., ~ norm(0,1). So we would expect the residuals to be mostly in range of  -1 to 1, and rarely fall outside the &#xB1; 3 limits.</p>
+<p>However, the model residuals are 10 times larger than expected and we say there is <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Overdispersion"><strong>overdispersion</strong></a>. If overdispersion is present in a dataset, the estimated standard errors and test statistics, the overall goodness-of-fit will be distorted and adjustments must be made. </p>
+<p>A more appropriate model will be a Negative Binomial regression.</p>
+<h2 id="Model-Prediction"><a href="#Model-Prediction" class="headerlink" title="Model Prediction"></a>Model Prediction</h2><p>We will now use the model <strong>without recalibrating</strong> to make predictions about admission rates on new data.</p>
+<p>This is <strong>out of sample</strong> evaluation. It is the only way to make sure the model really works.</p>
+<h3 id="Out-of-Sample-R-2"><a href="#Out-of-Sample-R-2" class="headerlink" title="Out of Sample $R^2$"></a>Out of Sample $R^2$</h3><figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">test_admission_mean=Y_test.sum()/P_test.sum()</span><br><span class="line">Y_pred=glm_res.predict(X_test,exposure=P_test)</span><br><span class="line"></span><br><span class="line">null_deviance_test=poisson_deviance(Y_test,P_test*test_admission_mean)</span><br><span class="line">deviance_test=poisson_deviance(Y_test,Y_pred)</span><br><span class="line">R2 = <span class="hljs-number">1</span>-deviance_test/null_deviance_test</span><br><span class="line">R2</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>0.371917369051069</code></pre>
+<p>Out of sample $R^2$ is worse than for the in sample (approx. 0.473). I think we&#x2019;ll all agree, predicting the future is hard.</p>
+<h2 id="Negative-Binomial-Regression"><a href="#Negative-Binomial-Regression" class="headerlink" title="Negative Binomial Regression"></a>Negative Binomial Regression</h2><h3 id="Model-Definition-1"><a href="#Model-Definition-1" class="headerlink" title="Model Definition"></a>Model Definition</h3><p>We have data from multiple dates, so it makes sense to incorporate Time as a extra variable.</p>
+<p>\begin{eqnarray}<br>    &amp;\eta_i &amp;=c + \beta_1 x_i  + \beta_2 t_i + \beta_3 t_i^2 \newline<br>      \mathbb{E}(y_i|x_i) =&amp; \lambda_i P_i &amp;= e^{\eta_i } P_i \newline<br>    &amp;p(y_i|x_i) &amp; = \text{NB}(y_i; \lambda_i P_i, \alpha)<br>\end{eqnarray}<br>where </p>
+<ul>
+<li>Each observation $i$ represents a single state at one particular date.</li>
+<li>$y_i$ is the number of hospital admissions on that state.</li>
+<li>$x_i$ is the percentage of the state population fully vaccinated that state.</li>
+<li>$t_i$ is the number of days elapsed since the beginning of the training period.</li>
+<li>$P_i$ is the population of the  state.</li>
+<li>the parameters $c$ and $\beta_1,\beta_2,\beta_3$ will be fitted to the observed data to maximize agreement with the model</li>
+</ul>
+<p>We including coefficients for $t$ and $t^2$ the dependence of the admission rate on time can have some curvature and does not need to be linear.</p>
+<p>This can be fitter as a <strong>linear model</strong> where the inputs are $x_i$, $t_i$ and $t_i^2$</p>
+<h4 id="Variance-Comparison-to-Poisson-Model"><a href="#Variance-Comparison-to-Poisson-Model" class="headerlink" title="Variance Comparison to Poisson Model"></a>Variance Comparison to Poisson Model</h4><p>Introducing a free additional parameter $\alpha$ give more accurate models than simple parametric models like the Poisson distribution by allowing the mean and variance to be different, unlike the Poisson. The negative binomial distribution has a variance $\hat{y}+\hat{y}^2\alpha$ . This can make the distribution a useful overdispersed alternative to the Poisson distribution.</p>
+<p>As we can see, with an extra parameter $\alpha$ to control the variance, the expected variance of observations is larger with the Negative Binomial Model than with the Poisson model.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">alpha = <span class="hljs-number">0.5</span></span><br><span class="line">y_hat=np.linspace(<span class="hljs-number">0</span>,<span class="hljs-number">10</span>,<span class="hljs-number">201</span>)</span><br><span class="line">plt.plot(y_hat,y_hat,<span class="hljs-string">&quot;k--&quot;</span>,label=<span class="hljs-string">&quot;Poisson&quot;</span>)</span><br><span class="line">plt.plot(y_hat,y_hat+alpha*y_hat**<span class="hljs-number">2</span>,<span class="hljs-string">&quot;k-&quot;</span>,linewidth=<span class="hljs-number">3</span>,label=<span class="hljs-string">&quot;Negative Binomial&quot;</span>)</span><br><span class="line">plt.xlabel(<span class="hljs-string">r&quot;$\hat{y}$&quot;</span>)</span><br><span class="line">plt.ylabel(<span class="hljs-string">r&quot;Var($y|\hat{y}$)&quot;</span>)</span><br><span class="line">plt.legend()</span><br></pre></td></tr></tbody></table></figure>
+
+
+<img src="http://yumeng-li.github.io/projectcovidGLM_files/projectcovidGLM_49_1.png">
+
+
+<h4 id="Choosing-alpha"><a href="#Choosing-alpha" class="headerlink" title="Choosing $\alpha$"></a>Choosing $\alpha$</h4><p>Negative Binomial is a GLM model with an extra parameter $\alpha$ that we must choose by maximizing the log likelihood. </p>
+<p>The train/test data we fit to the Negative Binomial Regression is the same as what we create at start.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">lls=[]</span><br><span class="line">alphas=np.linspace(<span class="hljs-number">0.1</span>,<span class="hljs-number">0.5</span>,<span class="hljs-number">500</span>)</span><br><span class="line"><span class="hljs-keyword">for</span> alpha <span class="hljs-keyword">in</span> alphas:</span><br><span class="line">    glm_model=sm.GLM(Y_train,X_train,exposure=P_train,family=sm.families.NegativeBinomial(sm.families.links.log(),alpha=alpha))</span><br><span class="line">    glm_res=glm_model.fit()</span><br><span class="line">    ll=glm_res.llf</span><br><span class="line">    lls.append(ll)</span><br><span class="line">plt.semilogx(alphas,lls) </span><br><span class="line">plt.xlabel(<span class="hljs-string">r&quot;$\alpha$&quot;</span>)</span><br><span class="line">plt.ylabel(<span class="hljs-string">&quot;Log Likelihood&quot;</span>)</span><br><span class="line">alpha=alphas[np.argmax(lls)]</span><br><span class="line">print(<span class="hljs-string">&quot;alpha&quot;</span>,alpha)</span><br></pre></td></tr></tbody></table></figure>
+
+<pre><code>alpha 0.3004008016032064</code></pre>
+<img src="http://yumeng-li.github.io/projectcovidGLM_files/projectcovidGLM_52_1.png">
+
+
+<p>The best alpha is 0.3004 given a run of 500 times. Or easier, we can go for the  <strong>Negative Regression</strong> model from <a target="_blank" rel="noopener" href="https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Poisson.html">statsmodels</a>, which can do the dirty work, optimizing alpha for us.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">#mod=sm.GLM(Y_train,X_train,exposure=P_train,family=nb)</span></span><br><span class="line">mod=NegativeBinomial(Y_train,X_train,exposure=P_train)</span><br><span class="line">res=mod.fit(method=<span class="hljs-string">&quot;lbfgs&quot;</span>)</span><br><span class="line">res.summary()</span><br></pre></td></tr></tbody></table></figure>
+
+<pre><code>/opt/anaconda3/lib/python3.7/site-packages/statsmodels/discrete/discrete_model.py:2642: RuntimeWarning: divide by zero encountered in log
+  llf = coeff + size*np.log(prob) + endog*np.log(1-prob)
+/opt/anaconda3/lib/python3.7/site-packages/statsmodels/discrete/discrete_model.py:2642: RuntimeWarning: invalid value encountered in multiply
+  llf = coeff + size*np.log(prob) + endog*np.log(1-prob)
+/opt/anaconda3/lib/python3.7/site-packages/statsmodels/base/model.py:568: ConvergenceWarning: Maximum Likelihood optimization failed to converge. Check mle_retvals
+  ConvergenceWarning)</code></pre>
+<table class="simpletable">
+<caption>NegativeBinomial Regression Results</caption>
+<tbody><tr>
+  <th>Dep. Variable:</th>      <td>admissions</td>    <th>  No. Observations:  </th>  <td>  1632</td> 
+</tr>
+<tr>
+  <th>Model:</th>           <td>NegativeBinomial</td> <th>  Df Residuals:      </th>  <td>  1628</td> 
+</tr>
+<tr>
+  <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>  <td>     3</td> 
+</tr>
+<tr>
+  <th>Date:</th>            <td>Sun, 26 Sep 2021</td> <th>  Pseudo R-squ.:     </th>  <td>0.08843</td>
+</tr>
+<tr>
+  <th>Time:</th>                <td>20:24:21</td>     <th>  Log-Likelihood:    </th> <td> -7946.2</td>
+</tr>
+<tr>
+  <th>converged:</th>             <td>False</td>      <th>  LL-Null:           </th> <td> -8717.1</td>
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>    <th>  LLR p-value:       </th>  <td> 0.000</td> 
+</tr>
+</tbody></table>
+<table class="simpletable">
+<tbody><tr>
+       <td></td>         <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P&gt;|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>vaccinated</th> <td>   -6.7968</td> <td>    0.179</td> <td>  -38.019</td> <td> 0.000</td> <td>   -7.147</td> <td>   -6.446</td>
+</tr>
+<tr>
+  <th>T</th>          <td>    0.0525</td> <td>    0.006</td> <td>    8.645</td> <td> 0.000</td> <td>    0.041</td> <td>    0.064</td>
+</tr>
+<tr>
+  <th>T2</th>         <td>   -0.0002</td> <td>    0.000</td> <td>   -1.262</td> <td> 0.207</td> <td>   -0.001</td> <td>    0.000</td>
+</tr>
+<tr>
+  <th>const</th>      <td>   -8.4877</td> <td>    0.092</td> <td>  -92.109</td> <td> 0.000</td> <td>   -8.668</td> <td>   -8.307</td>
+</tr>
+<tr>
+  <th>alpha</th>      <td>    0.3025</td> <td>    0.011</td> <td>   26.621</td> <td> 0.000</td> <td>    0.280</td> <td>    0.325</td>
+</tr>
+</tbody></table>
+
+
+
+<p>The alpha values are close,</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">p=res.params</span><br><span class="line">nb=sm.families.NegativeBinomial(alpha=p[<span class="hljs-string">&quot;alpha&quot;</span>])</span><br><span class="line">nb.alpha</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>0.3024936677385029</code></pre>
+<p><strong>Compared to Poisson:</strong><br><strong>- The regression coefficients are very similar.</strong><br><strong>- The confidence intervals are much wider.</strong><br><strong>- The t statistics are smaller because we assume a larger variance of residuals.</strong></p>
+<p><strong>In summary, switching from Poisson to Negative Binominal yields stable coefficient estimates, but a higher chance for the null hepothesis to be rejected and more reliable confidence intervals.</strong></p>
+<p>The <code>statsmodel.family.NegativeBinomial</code> object knows how to compute deviance, and we use it to calculate the R squared,</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mu_train=Y_train.sum()/P_train.sum()</span><br><span class="line">Y_pred=res.predict(X_train,exposure=P_train)</span><br><span class="line">deviance=nb.deviance(Y_train,Y_pred)</span><br><span class="line">null_deviance=nb.deviance(Y_train,mu_train*P_train)</span><br><span class="line">R2=<span class="hljs-number">1</span>-deviance/null_deviance</span><br><span class="line">R2</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>0.5937123540474427</code></pre>
+<h3 id="In-sample-model-Fit-1"><a href="#In-sample-model-Fit-1" class="headerlink" title="In-sample model Fit"></a>In-sample model Fit</h3><figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">covid.plot_time_facets(train_data,res,event,date0)</span><br></pre></td></tr></tbody></table></figure>
+
+<img src="http://yumeng-li.github.io/projectcovidGLM_files/projectcovidGLM_61_0.png">
+
+
+<p>Then most excitingly, let&#x2019;s check out the deviance residuals again. The residuals are now well behaved, randomly fall into the range of -1 to 1. Though FL, KY and a few other states seem to be outliers. But no worries, we will address them in our next blog, using a more advanced method - mixed models.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plot_deviance_residuals(interested_data,event,glm_res)</span><br></pre></td></tr></tbody></table></figure>
+
+<img src="http://yumeng-li.github.io/projectcovidGLM_files/projectcovidGLM_63_0.png">
+
+
+<h2 id="Model-Prediction-1"><a href="#Model-Prediction-1" class="headerlink" title="Model Prediction"></a>Model Prediction</h2><p>Finally, always take a look at the out-of-sample fit. </p>
+<p>Though the R squared is not as good as the in-sample, but there&#x2019;s still an improvement comparing to Poisson regression and the linear regressions.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">test_admission_mean=Y_test.sum()/P_test.sum()</span><br><span class="line">Y_pred=res.predict(X_test,exposure=P_test)</span><br><span class="line"></span><br><span class="line">null_deviance_test=nb.deviance(Y_test,P_test*test_admission_mean)</span><br><span class="line">deviance_test=nb.deviance(Y_test,Y_pred)</span><br><span class="line">R2 = <span class="hljs-number">1</span>-deviance_test/null_deviance_test</span><br><span class="line">R2</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>0.4595499732848517</code></pre>
+</body></html>
+    
+    </div>
+    
+    
+    <div class="columns is-mobile is-multiline article-nav">
+        <span class="column is-12-mobile is-half-desktop  article-nav-prev">
+            
+            <a href="/2021/10/02/projectcovidmixed/">Project Covid Admissions Based on Vaccine Progress, Part 3 -- Mixed-effect models and Bayesian Inference</a>
+            
+        </span>
+        <span class="column is-12-mobile is-half-desktop  article-nav-next">
+            
+            <a href="/2021/09/21/projectcovid/">Project Covid Admissions Based on Vaccine Progress, Part 1 -- From Simple Linear Regression to Weighted Time Series Regression</a>
+            
+        </span>
+    </div>
+    
+</article>
+
+
+
+
+    </div>
+</section>
+    <footer class="footer">
+    <div class="container">
+        <div class="columns content">
+            <div class="column is-narrow has-text-centered">
+                &copy; 2025 Yumeng Li&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
+                        target="_blank" rel="noopener" href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
+            </div>
+            <div class="column is-hidden-mobile"></div>
+
+            
+            <div class="column is-narrow">
+                <div class="columns is-mobile is-multiline is-centered">
+                
+                    
+                <a class="column is-narrow has-text-black" title="GitHub" target="_blank" rel="noopener" href="https://github.com/ppoffice/hexo-theme-minos">
+                    
+                    GitHub
+                    
+                </a>
+                
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</footer>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
+
+<!-- test if the browser is outdated -->
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" target="_blank" rel="noopener" href="http://outdatedbrowser.com/">Update my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // plugin function, place inside DOM ready function
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        })
+    });
+</script>
+
+<script>
+    window.FontAwesomeConfig = {
+        searchPseudoElements: true
+    }
+    moment.locale("en-AU");
+</script>
+
+
+    
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+    MathJax.Hub.Config({
+        "HTML-CSS": {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+</script>
+
+    
+    
+    
+    
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/js/lightgallery-all.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/js/jquery.justifiedGallery.min.js"></script>
+<script>
+    (function ($) {
+        $(document).ready(function () {
+            if (typeof($.fn.lightGallery) === 'function') {
+                $('.article.gallery').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof($.fn.justifiedGallery) === 'function') {
+                $('.justified-gallery').justifiedGallery();
+            }
+        });
+    })(jQuery);
+</script>
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <style>
+        .hljs {
+            position: relative;
+        }
+
+        .hljs .clipboard-btn {
+            float: right;
+            color: #9a9a9a;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .hljs .clipboard-btn:hover {
+          color: #8a8a8a;
+        }
+
+        .hljs > .clipboard-btn {
+            display: none;
+            position: absolute;
+            right: 4px;
+            top: 4px;
+        }
+
+        .hljs:hover > .clipboard-btn {
+            display: inline;
+        }
+
+        .hljs > figcaption > .clipboard-btn {
+            margin-right: 4px;
+        }
+    </style>
+    <script>
+      $(document).ready(function () {
+        $('figure.hljs').each(function(i, figure) {
+          var codeId = 'code-' + i;
+          var code = figure.querySelector('.code');
+          var copyButton = $('<button>Copy <i class="far fa-clipboard"></i></button>');
+          code.id = codeId;
+          copyButton.addClass('clipboard-btn');
+          copyButton.attr('data-clipboard-target-id', codeId);
+
+          var figcaption = figure.querySelector('figcaption');
+
+          if (figcaption) {
+            figcaption.append(copyButton[0]);
+          } else {
+            figure.prepend(copyButton[0]);
+          }
+        })
+
+        var clipboard = new ClipboardJS('.clipboard-btn', {
+          target: function(trigger) {
+            return document.getElementById(trigger.getAttribute('data-clipboard-target-id'));
+          }
+        });
+        clipboard.on('success', function(e) {
+          e.clearSelection();
+        })
+      })
+    </script>
+
+    
+    
+
+    
+
+
+
+<script src="/js/script.js"></script>
+
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-mask"></div>
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="Type something..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+    
+</body>
+</html>

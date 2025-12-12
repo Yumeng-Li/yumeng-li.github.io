@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+<head>
+    <meta charset="utf-8">
+<title>A Hands-On Exercise in Using Alternative Data to Analyze Deals - The Practical Quant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css">
+
+
+
+
+<meta name="description" content="">
+
+
+
+
+
+    <meta name="description" content="When I first look at these credit investment opportunities, the challenge was immediately clear. Our team was evaluating two legacy services chains in Florida, yet almost none of the analytical infras">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A Hands-On Exercise in Using Alternative Data to Analyze Deals">
+<meta property="og:url" content="http://yoursite.com/2025/12/11/legacy/index.html">
+<meta property="og:site_name" content="The Practical Quant">
+<meta property="og:description" content="When I first look at these credit investment opportunities, the challenge was immediately clear. Our team was evaluating two legacy services chains in Florida, yet almost none of the analytical infras">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yumeng-li.github.io/legacy_files/legacy_16_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/legacy_files/legacy_18_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/legacy_files/legacy_20_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/legacy_files/legacy_39_0.png">
+<meta property="article:published_time" content="2025-12-11T17:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-12T03:33:46.206Z">
+<meta property="article:author" content="Yumeng Li">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yumeng-li.github.io/legacy_files/legacy_16_0.png">
+
+
+
+
+
+<link rel="icon" href="/favicon.png">
+
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ovo|Source+Code+Pro">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/css/justifiedGallery.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+<script defer src="//use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+
+<meta name="generator" content="Hexo 5.0.0"></head>
+<body>
+    
+<nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item navbar-logo" href="/">
+                
+                    
+                    THE PRACTICAL QUANT
+                    
+                
+            </a>
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <div class="navbar-menu navbar-start">
+            
+            <a class="navbar-item "
+               href="/archives">Archives</a>
+            
+            <a class="navbar-item "
+               href="/categories">Category</a>
+            
+            <a class="navbar-item "
+               target="_blank" rel="noopener" href="http://allaboutmacros.com/">Blog</a>
+            
+            <a class="navbar-item "
+               target="_blank" rel="noopener" href="https://www.linkedin.com/in/emmelineli/">Linkedin</a>
+            
+        </div>
+        
+        <div class="navbar-menu navbar-end">
+            
+            <a class="navbar-item search" title="Search" href="javascript:;">
+                <i class="fas fa-search"></i>
+            </a>
+            
+            
+            
+            <a class="navbar-item" title="GitHub" target="_blank" rel="noopener" href="https://github.com/ppoffice/hexo-theme-minos">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+               
+            
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+    <div class="container">
+    <article class="article content gallery" itemscope itemprop="blogPost">
+    <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
+        
+            A Hands-On Exercise in Using Alternative Data to Analyze Deals
+        
+    </h1>
+    <div class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile">
+        <span class="column is-narrow">
+            <time datetime="2025-12-11T17:00:00.000Z" itemprop="datePublished">Dec 11 2025</time>
+        </span>
+        
+        <span class="column is-narrow article-category">
+            <i class="far fa-folder"></i>
+            <a class="article-category-link" href="/categories/Alternative-Data/">Alternative Data</a>
+        </span>
+        
+        
+        <span class="column is-narrow">
+            
+            
+            36 minutes read (About 5389 words)
+        </span>
+        
+    </div>
+    <div class="article-entry is-size-6-mobile" itemprop="articleBody">
+    
+        <html><head></head><body><p>When I first look at these credit investment opportunities, the challenge was immediately clear. Our team was evaluating two legacy services chains in Florida, yet almost none of the analytical infrastructure one might expect&#x2014;standardized operating metrics, historical statements, market share data&#x2014;was available. Unlike more transparent service sectors, this industry provides no obvious datapoints to anchor intuition or build a conventional model.</p>
+<p>But the nice thing about data work is: if you don&#x2019;t have intuition, you can build a framework.</p>
+<p>This post walks through a simple, self-contained demo on how I used alternative data to compare two legacy service chains for a hypothetical private credit investment. All data here are simulated and anonymized; the goal is not to value real companies, but to show how to turn a &#x201C;no idea where to start&#x201D; situation into a structured, defensible analysis. My hope is that it provides inspiration for approaching private-credit opportunities in niche service industries where traditional information is limited.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chain_attributes.head()</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th &#123;
+    vertical-align: top;
+&#125;
+
+.dataframe thead th &#123;
+    text-align: right;
+&#125;</code></pre>
+<p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>chain</th>
+      <th>name</th>
+      <th>address</th>
+      <th>zip</th>
+      <th>usps_zip_pref_state</th>
+      <th>latitude</th>
+      <th>longitude</th>
+      <th>revenue</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Eternal Rest Services</td>
+      <td>Seawinds Funeral Home &amp; Crematory - Sebastian</td>
+      <td>735 S Fleming St, Sebastian</td>
+      <td>32958</td>
+      <td>FL</td>
+      <td>27.7913</td>
+      <td>-80.4838</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Eternal Rest Services</td>
+      <td>Lewis-Ray Mortuary Inc</td>
+      <td>1595 S Hopkins Ave, Titusville</td>
+      <td>32780</td>
+      <td>FL</td>
+      <td>28.5964</td>
+      <td>-80.8076</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Eternal Rest Services</td>
+      <td>Beth David Memorial Gardens / Levitt Weinstein...</td>
+      <td>3201 N 72nd Ave, Hollywood</td>
+      <td>33024</td>
+      <td>FL</td>
+      <td>26.0373</td>
+      <td>-80.2325</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Eternal Rest Services</td>
+      <td>Sorensen Funeral Home</td>
+      <td>3180 30th Ave N, St. Petersburg</td>
+      <td>33713</td>
+      <td>FL</td>
+      <td>27.7988</td>
+      <td>-82.6770</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Eternal Rest Services</td>
+      <td>Brewer &amp; Sons Funeral Homes - Spring Hill Chapel</td>
+      <td>4450 Commercial Way, Spring Hill</td>
+      <td>34606</td>
+      <td>FL</td>
+      <td>28.4939</td>
+      <td>-82.5962</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<h2 id="Confronting-an-opaque-sector-with-minimal-initial-intuition"><a href="#Confronting-an-opaque-sector-with-minimal-initial-intuition" class="headerlink" title="Confronting an opaque sector with minimal initial intuition"></a>Confronting an opaque sector with minimal initial intuition</h2><p>My first attempt at framing the problem was straightforward but ultimately insufficient. I began with the assumption that local population size should correlate with demand, and therefore revenue, in a necessity-based service. The logic felt self-evident.</p>
+<p>Yet once I tested this idea against the reference dataset where one comparable chain provided actual revenue data&#x2014;the relationship collapsed almost immediately. Dense ZIP codes did not necessarily produce higher revenue, and several low-population regions performed unexpectedly well. This mismatch signaled that the core driver of performance was not simply &#x201C;how many people live nearby.&#x201D; It forced a re-examination of what demand actually means in this context.</p>
+<h2 id="Refining-the-definition-of-demand"><a href="#Refining-the-definition-of-demand" class="headerlink" title="Refining the definition of demand"></a>Refining the definition of demand</h2><p>A more nuanced view is that not all population contributes equally to demand. To approximate the actual service need in each market, I began assembling a dataset that did not exist in any ready-made form. I pulled <strong>age-bucket distributions from the American Community Survey at the ZIP-code level</strong>, then matched each location to its corresponding county in order to merge in <strong>CDC crude mortality rates by age group</strong>. Only after aligning these disparate geographies&#x2014;coordinates &#x2192; ZIP &#x2192; county&#x2014;was it possible to compute a more meaningful proxy: the expected number of annual events within each location&#x2019;s true catchment area.</p>
+<h3 id="Gathering-useful-alternative-data"><a href="#Gathering-useful-alternative-data" class="headerlink" title="Gathering useful alternative data"></a>Gathering useful alternative data</h3><figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd</span><br><span class="line"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np</span><br><span class="line"><span class="hljs-keyword">import</span> statsmodels.formula.api <span class="hljs-keyword">as</span> smf</span><br><span class="line"><span class="hljs-keyword">import</span> statsmodels.api <span class="hljs-keyword">as</span> sm</span><br><span class="line"><span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt </span><br><span class="line"><span class="hljs-keyword">import</span> cartopy.crs <span class="hljs-keyword">as</span> ccrs</span><br><span class="line"><span class="hljs-keyword">import</span> cartopy.feature <span class="hljs-keyword">as</span> cfeature</span><br><span class="line"><span class="hljs-keyword">from</span> math <span class="hljs-keyword">import</span> radians, cos, sin, asin, sqrt</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># Load the datasets</span></span><br><span class="line">chain_attributes = pd.read_csv(<span class="hljs-string">&apos;chain_attributes.csv&apos;</span>,dtype={<span class="hljs-string">&apos;zip&apos;</span>: str})</span><br><span class="line">zipcode_county_mapping = pd.read_csv(<span class="hljs-string">&apos;zipcode_county_mapping.csv&apos;</span>,dtype={<span class="hljs-string">&apos;zipcode&apos;</span>: str})</span><br><span class="line"><span class="hljs-comment"># the American Community Survey (ACS). Downloaded from https://data.census.gov/table/ACSDP5Y2023.DP05?t=Older+Population&amp;g=040XX00US12$8600000</span></span><br><span class="line">dp03 = pd.read_csv(<span class="hljs-string">&apos;DP03_by_county.csv&apos;</span>)</span><br><span class="line">dp05 = pd.read_csv(<span class="hljs-string">&apos;DP05_by_county.csv&apos;</span>)</span><br><span class="line"><span class="hljs-comment">#CDC crude mortality rates by age group by county. Downloaded from https://wonder.cdc.gov/controller/datarequest/D76;jsessionid=6FAF78721C8F4B417A0EF2BBEDE8</span></span><br><span class="line">crude = pd.read_csv(<span class="hljs-string">&apos;crude_rate.csv&apos;</span>,dtype={<span class="hljs-string">&apos;county code&apos;</span>: str})</span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># clean up ACS data</span></span><br><span class="line">dp = pd.merge(dp03, dp05, on=[<span class="hljs-string">&apos;Geography&apos;</span>, <span class="hljs-string">&apos;Geographic Area Name&apos;</span>], how=<span class="hljs-string">&apos;outer&apos;</span>)</span><br><span class="line">dp.columns = [<span class="hljs-string">&apos;Geography&apos;</span>, <span class="hljs-string">&apos;Geographic Area Name&apos;</span>, <span class="hljs-string">&apos;Median household income&apos;</span>,<span class="hljs-string">&apos;Mean household income&apos;</span>] + [<span class="hljs-string">&apos;Population &apos;</span>+ str(age) <span class="hljs-keyword">for</span> age <span class="hljs-keyword">in</span> dp.columns[<span class="hljs-number">4</span>:]]</span><br><span class="line">dp[<span class="hljs-string">&apos;county&apos;</span>] = dp.iloc[:, <span class="hljs-number">1</span>].apply(<span class="hljs-keyword">lambda</span> x: x.split(<span class="hljs-string">&apos;, &apos;</span>)[<span class="hljs-number">0</span>].replace(<span class="hljs-string">&apos; County&apos;</span>, <span class="hljs-string">&apos;&apos;</span>))</span><br><span class="line">dp[<span class="hljs-string">&apos;state&apos;</span>] = dp.iloc[:, <span class="hljs-number">1</span>].apply(<span class="hljs-keyword">lambda</span> x: x.split(<span class="hljs-string">&apos;, &apos;</span>)[<span class="hljs-number">1</span>])</span><br><span class="line">dp[<span class="hljs-string">&apos;county code&apos;</span>] = dp.iloc[:, <span class="hljs-number">0</span>].apply(<span class="hljs-keyword">lambda</span> x: x.split(<span class="hljs-string">&apos;US&apos;</span>)[<span class="hljs-number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># clean up crude rate data</span></span><br><span class="line"><span class="hljs-comment"># Pivot the data to reorganize by county and county code, with Ten-Year Age Groups and Crude Rates as columns</span></span><br><span class="line">pivoted_crude = crude.pivot_table(index=[<span class="hljs-string">&apos;county code&apos;</span>], </span><br><span class="line">                                columns=<span class="hljs-string">&apos;Ten-Year Age Groups&apos;</span>, </span><br><span class="line">                                values=<span class="hljs-string">&apos;Crude Rate Per 100,000&apos;</span>, </span><br><span class="line">                                aggfunc=<span class="hljs-string">&apos;first&apos;</span>)</span><br><span class="line">pivoted_crude.reset_index(inplace=<span class="hljs-literal">True</span>)</span><br><span class="line">pivoted_crude.columns = [<span class="hljs-string">&apos;county code&apos;</span>] + [<span class="hljs-string">&apos;Crude Rate &apos;</span>+ str(age) <span class="hljs-keyword">for</span> age <span class="hljs-keyword">in</span> pivoted_crude.columns[<span class="hljs-number">1</span>:]]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Merge attributes with zip-county map</span></span><br><span class="line">data = pd.merge(chain_attributes, zipcode_county_mapping, left_on=<span class="hljs-string">&apos;zip&apos;</span>, right_on=<span class="hljs-string">&apos;zipcode&apos;</span>, how=<span class="hljs-string">&apos;left&apos;</span>)</span><br><span class="line"><span class="hljs-comment"># Merge data with DP03 and DP05 based on the state/county columns</span></span><br><span class="line">data = pd.merge(data, dp, on=[<span class="hljs-string">&apos;state&apos;</span>,<span class="hljs-string">&apos;county&apos;</span>], how=<span class="hljs-string">&apos;left&apos;</span>)</span><br><span class="line"><span class="hljs-comment"># Merge data with crude rate based on the county column</span></span><br><span class="line">data = pd.merge(data, pivoted_crude, on=[<span class="hljs-string">&apos;county code&apos;</span>], how=<span class="hljs-string">&apos;left&apos;</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Check and display the rows that were not merged</span></span><br><span class="line">unmerged_rows = data[data[<span class="hljs-string">&apos;Geography&apos;</span>].isna()]</span><br><span class="line"><span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> unmerged_rows.empty:</span><br><span class="line">    print(<span class="hljs-string">f&quot;There are <span class="hljs-subst">{len(unmerged_rows)}</span> rows that did not merge successfully.&quot;</span>)</span><br><span class="line"><span class="hljs-keyword">else</span>:</span><br><span class="line">    print(<span class="hljs-string">&quot;All rows have been successfully merged.&quot;</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<pre><code>All rows have been successfully merged.</code></pre>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># Drop columns that will not be used</span></span><br><span class="line">df = data.drop([<span class="hljs-string">&apos;state_fips&apos;</span>,<span class="hljs-string">&apos;state_abbr&apos;</span>, <span class="hljs-string">&apos;zipcode&apos;</span>,<span class="hljs-string">&apos;Geography&apos;</span>, <span class="hljs-string">&apos;Geographic Area Name&apos;</span>], axis=<span class="hljs-number">1</span>)</span><br><span class="line">df = df.drop([<span class="hljs-string">&apos;Population Under 5 years&apos;</span>, <span class="hljs-string">&apos;Population 5 to 9 years&apos;</span>,</span><br><span class="line">               <span class="hljs-string">&apos;Population 10 to 14 years&apos;</span>, <span class="hljs-string">&apos;Population 15 to 19 years&apos;</span>,</span><br><span class="line">               <span class="hljs-string">&apos;Population 20 to 24 years&apos;</span>, <span class="hljs-string">&apos;Population 25 to 34 years&apos;</span>,</span><br><span class="line">               <span class="hljs-string">&apos;Population 35 to 44 years&apos;</span>, <span class="hljs-string">&apos;Population 45 to 54 years&apos;</span>,</span><br><span class="line">               <span class="hljs-string">&apos;Population 55 to 59 years&apos;</span>, <span class="hljs-string">&apos;Population 60 to 64 years&apos;</span>,</span><br><span class="line">               <span class="hljs-string">&apos;Crude Rate 1-4 years&apos;</span>, <span class="hljs-string">&apos;Crude Rate 15-24 years&apos;</span>,</span><br><span class="line">               <span class="hljs-string">&apos;Crude Rate 25-34 years&apos;</span>, <span class="hljs-string">&apos;Crude Rate 35-44 years&apos;</span>,</span><br><span class="line">               <span class="hljs-string">&apos;Crude Rate 45-54 years&apos;</span>, <span class="hljs-string">&apos;Crude Rate 5-14 years&apos;</span>,</span><br><span class="line">               <span class="hljs-string">&apos;Crude Rate 55-64 years&apos;</span>,<span class="hljs-string">&apos;Crude Rate &lt; 1 year&apos;</span>,<span class="hljs-string">&apos;Crude Rate Not Stated&apos;</span>], axis=<span class="hljs-number">1</span>)</span><br><span class="line"><span class="hljs-comment"># correct data types</span></span><br><span class="line">df[[<span class="hljs-string">&apos;Crude Rate 65-74 years&apos;</span>,<span class="hljs-string">&apos;Crude Rate 75-84 years&apos;</span>, <span class="hljs-string">&apos;Crude Rate 85+ years&apos;</span>,<span class="hljs-string">&apos;Median household income&apos;</span>, <span class="hljs-string">&apos;Mean household income&apos;</span>]]= df[[<span class="hljs-string">&apos;Crude Rate 65-74 years&apos;</span>,<span class="hljs-string">&apos;Crude Rate 75-84 years&apos;</span>, <span class="hljs-string">&apos;Crude Rate 85+ years&apos;</span>,<span class="hljs-string">&apos;Median household income&apos;</span>, <span class="hljs-string">&apos;Mean household income&apos;</span>]].astype(<span class="hljs-string">&apos;float&apos;</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>I translated demographic structure into an estimate of actual annual events. Mortality data from the CDC are reported as crude rates per 100,000 people for each age bracket, so the calculation effectively becomes a weighted sum of age-specific risk. For each ZIP, I multiplied the population in each senior age group by the corresponding crude mortality rate, scaled the result back to actual counts, and then aggregated across age brackets. The resulting field&#x2014;Estimated deaths&#x2014;provides a first-order approximation of the true service demand in each catchment area.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># estimated death = population * crude rate</span></span><br><span class="line">df[<span class="hljs-string">&apos;Estimated deaths 65 to 74 years&apos;</span>] = ((df[<span class="hljs-string">&apos;Population 65 to 74 years&apos;</span>] * df[<span class="hljs-string">&apos;Crude Rate 65-74 years&apos;</span>]) / <span class="hljs-number">100000</span>).round(<span class="hljs-number">0</span>)</span><br><span class="line">df[<span class="hljs-string">&apos;Estimated deaths 75 to 84 years&apos;</span>] = ((df[<span class="hljs-string">&apos;Population 75 to 84 years&apos;</span>] * df[<span class="hljs-string">&apos;Crude Rate 75-84 years&apos;</span>]) / <span class="hljs-number">100000</span>).round(<span class="hljs-number">0</span>)</span><br><span class="line">df[<span class="hljs-string">&apos;Estimated deaths 85 years and over&apos;</span>] = ((df[<span class="hljs-string">&apos;Population 85 years and over&apos;</span>] * df[<span class="hljs-string">&apos;Crude Rate 85+ years&apos;</span>]) / <span class="hljs-number">100000</span>).round(<span class="hljs-number">0</span>)</span><br><span class="line">df[<span class="hljs-string">&apos;Estimated deaths&apos;</span>] = (df[<span class="hljs-string">&apos;Estimated deaths 65 to 74 years&apos;</span>] + df[<span class="hljs-string">&apos;Estimated deaths 75 to 84 years&apos;</span>]+ df[<span class="hljs-string">&apos;Estimated deaths 85 years and over&apos;</span>]).round(<span class="hljs-number">0</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>This proxy proved substantially closer to the underlying demand function than raw population counts when comparing with one chain in a different state but with actual revenue data. But while the measure improved explanatory power, it still did not explain why sites with nearly identical expected-event profiles performed so differently. Revenue dispersion within the reference chain remained wide. It became clear that another structural factor&#x2014;something demographic data alone could not capture&#x2014;was driving the variation.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">df[[<span class="hljs-string">&apos;zip&apos;</span>,  <span class="hljs-string">&apos;Population 65 to 74 years&apos;</span>,<span class="hljs-string">&apos;Crude Rate 65-74 years&apos;</span>, <span class="hljs-string">&apos;Population 75 to 84 years&apos;</span>,<span class="hljs-string">&apos;Crude Rate 75-84 years&apos;</span>,</span><br><span class="line">       <span class="hljs-string">&apos;Population 85 years and over&apos;</span>, <span class="hljs-string">&apos;Crude Rate 85+ years&apos;</span>, <span class="hljs-string">&apos;Estimated deaths&apos;</span>, <span class="hljs-string">&apos;revenue&apos;</span>]][<span class="hljs-number">50</span>:<span class="hljs-number">60</span>]</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th &#123;
+    vertical-align: top;
+&#125;
+
+.dataframe thead th &#123;
+    text-align: right;
+&#125;</code></pre>
+<p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>zip</th>
+      <th>Population 65 to 74 years</th>
+      <th>Crude Rate 65-74 years</th>
+      <th>Population 75 to 84 years</th>
+      <th>Crude Rate 75-84 years</th>
+      <th>Population 85 years and over</th>
+      <th>Crude Rate 85+ years</th>
+      <th>Estimated deaths</th>
+      <th>revenue</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>50</th>
+      <td>28105</td>
+      <td>82170</td>
+      <td>1667.1</td>
+      <td>35797</td>
+      <td>4417.0</td>
+      <td>14314</td>
+      <td>13249.3</td>
+      <td>4848.0</td>
+      <td>1443785.90</td>
+    </tr>
+    <tr>
+      <th>51</th>
+      <td>28715</td>
+      <td>33804</td>
+      <td>1673.3</td>
+      <td>15735</td>
+      <td>4515.7</td>
+      <td>7033</td>
+      <td>14083.6</td>
+      <td>2267.0</td>
+      <td>1142504.96</td>
+    </tr>
+    <tr>
+      <th>52</th>
+      <td>28301</td>
+      <td>25938</td>
+      <td>2324.2</td>
+      <td>12208</td>
+      <td>5129.5</td>
+      <td>4598</td>
+      <td>13700.4</td>
+      <td>1859.0</td>
+      <td>933859.23</td>
+    </tr>
+    <tr>
+      <th>53</th>
+      <td>27292</td>
+      <td>18861</td>
+      <td>2247.5</td>
+      <td>9673</td>
+      <td>5438.5</td>
+      <td>3306</td>
+      <td>15263.5</td>
+      <td>1455.0</td>
+      <td>1104161.22</td>
+    </tr>
+    <tr>
+      <th>54</th>
+      <td>27604</td>
+      <td>89427</td>
+      <td>1405.2</td>
+      <td>39811</td>
+      <td>4244.9</td>
+      <td>14816</td>
+      <td>13564.1</td>
+      <td>4957.0</td>
+      <td>902405.14</td>
+    </tr>
+    <tr>
+      <th>55</th>
+      <td>30134</td>
+      <td>11119</td>
+      <td>2198.6</td>
+      <td>4615</td>
+      <td>5267.5</td>
+      <td>1732</td>
+      <td>15275.1</td>
+      <td>752.0</td>
+      <td>1046596.19</td>
+    </tr>
+    <tr>
+      <th>56</th>
+      <td>30046</td>
+      <td>68686</td>
+      <td>1472.3</td>
+      <td>28960</td>
+      <td>4319.0</td>
+      <td>7830</td>
+      <td>14309.8</td>
+      <td>3382.0</td>
+      <td>783832.30</td>
+    </tr>
+    <tr>
+      <th>57</th>
+      <td>30092</td>
+      <td>68686</td>
+      <td>1472.3</td>
+      <td>28960</td>
+      <td>4319.0</td>
+      <td>7830</td>
+      <td>14309.8</td>
+      <td>3382.0</td>
+      <td>1305180.42</td>
+    </tr>
+    <tr>
+      <th>58</th>
+      <td>31404</td>
+      <td>29473</td>
+      <td>1966.1</td>
+      <td>14405</td>
+      <td>4595.0</td>
+      <td>4936</td>
+      <td>13413.5</td>
+      <td>1903.0</td>
+      <td>1264724.73</td>
+    </tr>
+    <tr>
+      <th>59</th>
+      <td>30060</td>
+      <td>64020</td>
+      <td>1532.7</td>
+      <td>28231</td>
+      <td>4505.9</td>
+      <td>9642</td>
+      <td>14546.6</td>
+      <td>3656.0</td>
+      <td>946321.92</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">### plot comparison of revenue vs. estimated death</span></span><br><span class="line">df_legacy_fl = df[(df[<span class="hljs-string">&apos;chain&apos;</span>] == <span class="hljs-string">&apos;Legacy Memorial Services&apos;</span>) &amp; (df[<span class="hljs-string">&apos;state&apos;</span>] == <span class="hljs-string">&apos;Florida&apos;</span>)].copy()</span><br><span class="line"><span class="hljs-comment"># Sort (descending) by revenue, so the highest-revenue location appears first</span></span><br><span class="line">df_legacy_fl.sort_values(by=<span class="hljs-string">&apos;revenue&apos;</span>, ascending=<span class="hljs-literal">False</span>, inplace=<span class="hljs-literal">True</span>)</span><br><span class="line">df_legacy_fl.reset_index(drop=<span class="hljs-literal">True</span>, inplace=<span class="hljs-literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Create the Plot</span></span><br><span class="line">x = np.arange(len(df_legacy_fl))  <span class="hljs-comment"># x-coordinates for each home</span></span><br><span class="line">fig, ax1 = plt.subplots(figsize=(<span class="hljs-number">10</span>, <span class="hljs-number">4</span>))</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Bar Chart for Revenue </span></span><br><span class="line">bar_width = <span class="hljs-number">0.6</span></span><br><span class="line">ax1.bar(x, df_legacy_fl[<span class="hljs-string">&apos;revenue&apos;</span>], width=bar_width, label=<span class="hljs-string">&apos;Revenue&apos;</span>)</span><br><span class="line">ax1.set_ylabel(<span class="hljs-string">&quot;Revenue (USD)&quot;</span>)</span><br><span class="line">ax1.set_xlabel(<span class="hljs-string">&quot;Home (Sorted by Revenue)&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># For aesthetic labeling, show home indices or names:</span></span><br><span class="line">ax1.set_xticks(x)</span><br><span class="line">ax1.set_xticklabels(x + <span class="hljs-number">1</span>) </span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Line Plot for Estimated Death</span></span><br><span class="line">ax2 = ax1.twinx()  <span class="hljs-comment"># create a twin axis sharing the same x-axis</span></span><br><span class="line">ax2.plot(x, df_legacy_fl[<span class="hljs-string">&apos;Estimated deaths&apos;</span>], color = <span class="hljs-string">&apos;black&apos;</span>, marker=<span class="hljs-string">&apos;o&apos;</span>, linewidth=<span class="hljs-number">1</span>, label=<span class="hljs-string">&apos;Estimated Death&apos;</span>)</span><br><span class="line">ax2.set_ylabel(<span class="hljs-string">&quot;Estimated Death&quot;</span>)</span><br><span class="line"></span><br><span class="line">plt.title(<span class="hljs-string">&quot;Comparison of Revenue vs. Estimated Death\n(Legacy Memorial Services - Florida Homes)&quot;</span>)</span><br><span class="line">plt.tight_layout()</span><br><span class="line">plt.show()</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<img src="http://yumeng-li.github.io/legacy_files/legacy_16_0.png">
+
+
+
+<p>The turning point occurred when I spatially mapped all sites and overlaid nearby competitors. Only then did the inconsistencies resolve.</p>
+<p>Two locations with nearly identical demographic and demand characteristics behaved very differently when their competitive environments diverged. A near-monopoly footprint materially outperformed markets with multiple service providers.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">### plot locations on FL map to see the competitive dynamic</span></span><br><span class="line">df_fl = df[df[<span class="hljs-string">&apos;state&apos;</span>] == <span class="hljs-string">&apos;Florida&apos;</span>]</span><br><span class="line">colors = {</span><br><span class="line">    <span class="hljs-string">&apos;Eternal Rest Services&apos;</span>: <span class="hljs-string">&apos;red&apos;</span>,</span><br><span class="line">    <span class="hljs-string">&apos;Forever Peace Homes&apos;</span>: <span class="hljs-string">&apos;blue&apos;</span>,</span><br><span class="line">    <span class="hljs-string">&apos;Legacy Memorial Services&apos;</span>: <span class="hljs-string">&apos;green&apos;</span></span><br><span class="line">}</span><br><span class="line"><span class="hljs-keyword">if</span> <span class="hljs-string">&apos;chain&apos;</span> <span class="hljs-keyword">in</span> df_fl.columns:</span><br><span class="line">    df_fl[<span class="hljs-string">&apos;color&apos;</span>] = df_fl[<span class="hljs-string">&apos;chain&apos;</span>].map(colors)</span><br><span class="line"><span class="hljs-keyword">else</span>:</span><br><span class="line">    df_fl[<span class="hljs-string">&apos;color&apos;</span>] = <span class="hljs-string">&apos;purple&apos;</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Create a Matplotlib figure with a Cartopy projection</span></span><br><span class="line">plt.figure(figsize=(<span class="hljs-number">10</span>, <span class="hljs-number">8</span>))</span><br><span class="line">ax = plt.axes(projection=ccrs.PlateCarree())</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Set the geographic extent to cover Florida</span></span><br><span class="line">ax.set_extent([<span class="hljs-number">-88</span>, <span class="hljs-number">-80</span>, <span class="hljs-number">24</span>, <span class="hljs-number">32</span>], crs=ccrs.PlateCarree())</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Add map features for context: coastlines, national borders, and state boundaries</span></span><br><span class="line">ax.add_feature(cfeature.COASTLINE)</span><br><span class="line">ax.add_feature(cfeature.BORDERS, linestyle=<span class="hljs-string">&apos;:&apos;</span>)</span><br><span class="line">ax.add_feature(cfeature.STATES, edgecolor=<span class="hljs-string">&apos;gray&apos;</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Plot the Florida home locations</span></span><br><span class="line"><span class="hljs-keyword">if</span> <span class="hljs-string">&apos;chain&apos;</span> <span class="hljs-keyword">in</span> df_fl.columns:</span><br><span class="line">    <span class="hljs-keyword">for</span> chain, group <span class="hljs-keyword">in</span> df_fl.groupby(<span class="hljs-string">&apos;chain&apos;</span>):</span><br><span class="line">        ax.scatter(</span><br><span class="line">            group[<span class="hljs-string">&apos;longitude&apos;</span>],</span><br><span class="line">            group[<span class="hljs-string">&apos;latitude&apos;</span>],</span><br><span class="line">            label=chain,</span><br><span class="line">            color=colors.get(chain, <span class="hljs-string">&apos;purple&apos;</span>),</span><br><span class="line">            s=<span class="hljs-number">100</span>,</span><br><span class="line">            alpha=<span class="hljs-number">0.7</span>,</span><br><span class="line">            edgecolor=<span class="hljs-string">&apos;k&apos;</span>,</span><br><span class="line">            transform=ccrs.PlateCarree()</span><br><span class="line">        )</span><br><span class="line"><span class="hljs-keyword">else</span>:</span><br><span class="line">    ax.scatter(</span><br><span class="line">        df_fl[<span class="hljs-string">&apos;longitude&apos;</span>],</span><br><span class="line">        df_fl[<span class="hljs-string">&apos;latitude&apos;</span>],</span><br><span class="line">        label=<span class="hljs-string">&apos;Funeral Home&apos;</span>,</span><br><span class="line">        color=<span class="hljs-string">&apos;purple&apos;</span>,</span><br><span class="line">        s=<span class="hljs-number">100</span>,</span><br><span class="line">        alpha=<span class="hljs-number">0.7</span>,</span><br><span class="line">        edgecolor=<span class="hljs-string">&apos;k&apos;</span>,</span><br><span class="line">        transform=ccrs.PlateCarree()</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">plt.title(<span class="hljs-string">&quot;Funeral Home Locations in Florida&quot;</span>)</span><br><span class="line">plt.legend()</span><br><span class="line">plt.show()</span><br></pre></td></tr></tbody></table></figure>
+
+<pre><code>/var/folders/8t/vzks7t793bq9w_c_km9_4f2h0000gn/T/ipykernel_63287/4228247440.py:16: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df_fl[&apos;color&apos;] = df_fl[&apos;chain&apos;].map(colors)</code></pre>
+<img src="http://yumeng-li.github.io/legacy_files/legacy_18_0.png">
+
+
+
+<p>The map below visualizes the reference chain across Florida, and it quickly illustrates why demographic data alone could not explain revenue dispersion. Each bubble represents a county, with bubble size proportional to estimated annual events (derived from senior population &#xD7; county-level mortality rates) and bubble color reflecting actual 2023 revenue for the nearest location.</p>
+<p>What immediately stands out is the lack of a clean relationship between demand potential and realized performance. Several counties with sizeable senior populations and high expected-event estimates (large bubbles) exhibit only mid-range revenues. Conversely, some moderately sized markets but without any competitors nearby outperform expectations despite smaller demand pools.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">### further plot estimated death and revenue for &quot;Legacy Memorial Services&quot;</span></span><br><span class="line">fig = plt.figure(figsize=(<span class="hljs-number">12</span>, <span class="hljs-number">10</span>))</span><br><span class="line">ax = plt.axes(projection=ccrs.PlateCarree())</span><br><span class="line"></span><br><span class="line">ax.set_extent([<span class="hljs-number">-88</span>, <span class="hljs-number">-78</span>, <span class="hljs-number">24</span>, <span class="hljs-number">32</span>], crs=ccrs.PlateCarree())</span><br><span class="line"></span><br><span class="line">ax.add_feature(cfeature.COASTLINE)</span><br><span class="line">ax.add_feature(cfeature.BORDERS, linestyle=<span class="hljs-string">&apos;:&apos;</span>)</span><br><span class="line">ax.add_feature(cfeature.STATES, edgecolor=<span class="hljs-string">&apos;black&apos;</span>)</span><br><span class="line"></span><br><span class="line">chains = df_fl[<span class="hljs-string">&apos;chain&apos;</span>].unique()</span><br><span class="line">chain_colors = {</span><br><span class="line">    <span class="hljs-string">&quot;Eternal Rest Services&quot;</span>: <span class="hljs-string">&quot;red&quot;</span>,</span><br><span class="line">    <span class="hljs-string">&quot;Forever Peace Homes&quot;</span>: <span class="hljs-string">&quot;blue&quot;</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> chain <span class="hljs-keyword">in</span> chains:</span><br><span class="line">    <span class="hljs-keyword">if</span> chain != <span class="hljs-string">&quot;Legacy Memorial Services&quot;</span>:</span><br><span class="line">        <span class="hljs-comment"># For the other chains, plot points in a fixed color.</span></span><br><span class="line">        chain_df = df_fl[df_fl[<span class="hljs-string">&apos;chain&apos;</span>] == chain]</span><br><span class="line">        ax.scatter(chain_df[<span class="hljs-string">&apos;longitude&apos;</span>], chain_df[<span class="hljs-string">&apos;latitude&apos;</span>],</span><br><span class="line">                   color=chain_colors.get(chain, <span class="hljs-string">&quot;gray&quot;</span>),</span><br><span class="line">                   s=<span class="hljs-number">50</span>,</span><br><span class="line">                   label=chain,</span><br><span class="line">                   transform=ccrs.PlateCarree())</span><br><span class="line">        </span><br><span class="line"><span class="hljs-comment"># For &quot;Legacy Memorial Services&quot;, use the estimated death as the marker size and revenue for its color.</span></span><br><span class="line">legacy_df = df_fl[df_fl[<span class="hljs-string">&apos;chain&apos;</span>] == <span class="hljs-string">&quot;Legacy Memorial Services&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Set a scale factor for the estimated death to get marker sizes (adjust as needed)</span></span><br><span class="line">size_factor = <span class="hljs-number">0.3</span></span><br><span class="line">marker_sizes = legacy_df[<span class="hljs-string">&apos;Estimated deaths&apos;</span>] * size_factor</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Scatter the Legacy points with a colormap for revenue.</span></span><br><span class="line">legacy_scatter = ax.scatter(legacy_df[<span class="hljs-string">&apos;longitude&apos;</span>], legacy_df[<span class="hljs-string">&apos;latitude&apos;</span>],</span><br><span class="line">                            c=legacy_df[<span class="hljs-string">&apos;revenue&apos;</span>], s=marker_sizes,</span><br><span class="line">                            cmap=<span class="hljs-string">&apos;RdYlGn&apos;</span>, alpha=<span class="hljs-number">0.6</span>, edgecolor=<span class="hljs-string">&apos;k&apos;</span>,</span><br><span class="line">                            label=<span class="hljs-string">&quot;Legacy Memorial Services&quot;</span>,</span><br><span class="line">                            transform=ccrs.PlateCarree())</span><br><span class="line"></span><br><span class="line">cbar = plt.colorbar(legacy_scatter, ax=ax, orientation=<span class="hljs-string">&apos;vertical&apos;</span>, shrink=<span class="hljs-number">0.7</span>)</span><br><span class="line">cbar.set_label(<span class="hljs-string">&quot;Revenue&quot;</span>)</span><br><span class="line">plt.title(<span class="hljs-string">&quot;Legacy Memorial Services\n(bubble size = Estimated Death of County, bubble color = Revenue)&quot;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<img src="http://yumeng-li.github.io/legacy_files/legacy_20_0.png">
+
+
+
+<p>This led to a critical insight:</p>
+<p><strong>Performance is driven less by total demand and more by demand per available provider.</strong></p>
+<p>To quantify this, I constructed a measure that ultimately became central to the analysis:<br>&#x201C;death share,&#x201D; defined as expected annual events divided by the number of competitors within a defined radius.</p>
+<p>While conceptually simple, it captured competitive intensity more effectively than any other variable and proved to be the strongest empirical predictor of revenue.</p>
+<p>First, I reconstructed local market structure directly from geospatial coordinates. The first step was implementing a haversine function, a standard method for calculating great-circle distances between two points on the Earth&#x2019;s surface. With this, each site could be compared to every other location in the dataset to determine whether it falls within a reasonable competitive radius.</p>
+<p>For this analysis, I used a ten-mile radius as a practical proxy for the area in which consumers are likely to consider alternatives. By converting that radius to kilometers and iterating through all pairs of coordinates, I was able to count, for each site, how many competing providers operate within that local catchment. The resulting competitors_within_10_miles field became a foundational feature: it quantifies the local supply environment and captures the structural headwinds&#x2014;or advantages&#x2014;that shape a site&#x2019;s revenue potential.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># Define the haversine function to calculate distance between two coordinates</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">haversine_distance</span>(<span class="hljs-params">lat1, lon1, lat2, lon2</span>):</span></span><br><span class="line">    <span class="hljs-string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="hljs-string">    Calculate the great-circle distance between two points on Earth using the haversine formula.</span></span><br><span class="line"><span class="hljs-string">    </span></span><br><span class="line"><span class="hljs-string">    Parameters:</span></span><br><span class="line"><span class="hljs-string">    lat1, lon1 : float</span></span><br><span class="line"><span class="hljs-string">        Latitude and longitude of the first point in decimal degrees.</span></span><br><span class="line"><span class="hljs-string">    lat2, lon2 : float</span></span><br><span class="line"><span class="hljs-string">        Latitude and longitude of the second point in decimal degrees.</span></span><br><span class="line"><span class="hljs-string">    </span></span><br><span class="line"><span class="hljs-string">    Returns:</span></span><br><span class="line"><span class="hljs-string">    float</span></span><br><span class="line"><span class="hljs-string">        Distance between the two points in kilometers.</span></span><br><span class="line"><span class="hljs-string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="hljs-comment"># Convert decimal degrees to radians</span></span><br><span class="line">    lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-comment"># Compute differences</span></span><br><span class="line">    dlat = lat2 - lat1</span><br><span class="line">    dlon = lon2 - lon1</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-comment"># Haversine formula</span></span><br><span class="line">    a = sin(dlat / <span class="hljs-number">2</span>)**<span class="hljs-number">2</span> + cos(lat1) * cos(lat2) * sin(dlon / <span class="hljs-number">2</span>)**<span class="hljs-number">2</span></span><br><span class="line">    c = <span class="hljs-number">2</span> * asin(sqrt(a))</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-comment"># Earth&apos;s radius in kilometers</span></span><br><span class="line">    km = <span class="hljs-number">6371</span> * c</span><br><span class="line">    <span class="hljs-keyword">return</span> km</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Specify the search radius</span></span><br><span class="line">search_radius_miles = <span class="hljs-number">10</span></span><br><span class="line"><span class="hljs-comment"># Convert the search radius from miles to kilometers</span></span><br><span class="line">search_radius_km = search_radius_miles * <span class="hljs-number">1.60934</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Initialize a list to hold the count of competitors for each location</span></span><br><span class="line">competitor_counts = []</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Loop through each location in the DataFrame</span></span><br><span class="line"><span class="hljs-keyword">for</span> i, row_i <span class="hljs-keyword">in</span> df.iterrows():</span><br><span class="line">    lat_i = row_i[<span class="hljs-string">&apos;latitude&apos;</span>]</span><br><span class="line">    lon_i = row_i[<span class="hljs-string">&apos;longitude&apos;</span>]</span><br><span class="line">    count_competitors = <span class="hljs-number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="hljs-comment"># Compare location i with every other location j in the DataFrame</span></span><br><span class="line">    <span class="hljs-keyword">for</span> j, row_j <span class="hljs-keyword">in</span> df.iterrows():</span><br><span class="line">        <span class="hljs-keyword">if</span> i == j:</span><br><span class="line">            <span class="hljs-keyword">continue</span>  <span class="hljs-comment"># Skip comparing the location with itself.</span></span><br><span class="line">        lat_j = row_j[<span class="hljs-string">&apos;latitude&apos;</span>]</span><br><span class="line">        lon_j = row_j[<span class="hljs-string">&apos;longitude&apos;</span>]</span><br><span class="line">        </span><br><span class="line">        <span class="hljs-comment"># Calculate the distance between the two locations</span></span><br><span class="line">        distance_km = haversine_distance(lat_i, lon_i, lat_j, lon_j)</span><br><span class="line">        </span><br><span class="line">        <span class="hljs-comment"># If the distance is within the search radius, count it as a competitor</span></span><br><span class="line">        <span class="hljs-keyword">if</span> distance_km &lt;= search_radius_km:</span><br><span class="line">            count_competitors += <span class="hljs-number">1</span></span><br><span class="line">            </span><br><span class="line">    competitor_counts.append(count_competitors)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Add the computed competitor counts to the DataFrame</span></span><br><span class="line">df[<span class="hljs-string">&apos;competitors_within_10_miles&apos;</span>] = competitor_counts</span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df[[<span class="hljs-string">&apos;name&apos;</span>,<span class="hljs-string">&apos;competitors_within_10_miles&apos;</span>]].head(<span class="hljs-number">10</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th &#123;
+    vertical-align: top;
+&#125;
+
+.dataframe thead th &#123;
+    text-align: right;
+&#125;</code></pre>
+<p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>competitors_within_10_miles</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Seawinds Funeral Home &amp; Crematory - Sebastian</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Lewis-Ray Mortuary Inc</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Beth David Memorial Gardens / Levitt Weinstein...</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Sorensen Funeral Home</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Brewer &amp; Sons Funeral Homes - Spring Hill Chapel</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Fairchild Funeral Home-Crmtry</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Memorial Plan Flagler Memorial Park</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>All County Funeral Home &amp; Crematory</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Affordable Cremations by Baldwin Brothers</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Neptune Society</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<p>Once competition was quantified, the next logical step was to translate local demand into something economically meaningful: how much of that demand a given site could reasonably capture. Estimated annual events alone are insufficient because two locations with identical demand can perform very differently if one operates in a near-monopoly environment while the other is surrounded by multiple providers. To reflect this, I constructed a simple but powerful measure of implied market share.</p>
+<p>For each age group&#x2014;and for total expected events&#x2014;I divided the estimated annual deaths by the number of competitors within a ten-mile radius (plus one, to include the site itself). This produces an approximate &#x201C;demand-per-provider&#x201D; metric, or what I refer to analytically as death share. While coarse by design, this adjustment captures the structural effect of market fragmentation: the more providers sharing the same catchment, the smaller the realistic opportunity set for each individual location.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># estimate maket share for each location by dividing estimated death by number of competitors in 10 miles</span></span><br><span class="line">df[<span class="hljs-string">&apos;Estimated deaths share 65 to 74 years&apos;</span>] = (df[<span class="hljs-string">&apos;Estimated deaths 65 to 74 years&apos;</span>]/(df[<span class="hljs-string">&apos;competitors_within_10_miles&apos;</span>]+<span class="hljs-number">1</span>)).round(<span class="hljs-number">0</span>)</span><br><span class="line">df[<span class="hljs-string">&apos;Estimated deaths share 75 to 84 years&apos;</span>] = (df[<span class="hljs-string">&apos;Estimated deaths 75 to 84 years&apos;</span>]/(df[<span class="hljs-string">&apos;competitors_within_10_miles&apos;</span>]+<span class="hljs-number">1</span>)).round(<span class="hljs-number">0</span>)</span><br><span class="line">df[<span class="hljs-string">&apos;Estimated deaths share 85 years and over&apos;</span>] = (df[<span class="hljs-string">&apos;Estimated deaths 85 years and over&apos;</span>]/(df[<span class="hljs-string">&apos;competitors_within_10_miles&apos;</span>]+<span class="hljs-number">1</span>)).round(<span class="hljs-number">0</span>)</span><br><span class="line">df[<span class="hljs-string">&apos;Estimated deaths share&apos;</span>] = (df[<span class="hljs-string">&apos;Estimated deaths&apos;</span>]/(df[<span class="hljs-string">&apos;competitors_within_10_miles&apos;</span>]+<span class="hljs-number">1</span>)).round(<span class="hljs-number">0</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Learning-the-revenue-function-from-a-reference-chain"><a href="#Learning-the-revenue-function-from-a-reference-chain" class="headerlink" title="Learning the revenue function from a reference chain"></a>Learning the revenue function from a reference chain</h3><p>Because neither of the two target chains disclosed revenue, the only way to infer the economic structure of the industry was to learn it from the reference operator with known revenue across its Florida locations. The goal was not to build a sophisticated forecasting model, but rather to identify a stable, interpretable mapping between local market characteristics and realized revenue.</p>
+<p>I began by isolating the Florida subset of Legacy Memorial and merging in the features I had engineered earlier&#x2014;competitive density, household income, and various age-adjusted demand metrics. To understand how much revenue each location generated relative to its local opportunity set, I calculated a simple ratio: revenue per unit of estimated demand share. Conceptually, this expresses how much value a site captures from each unit of its adjusted demand pool.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># filter &apos;Legacy Memorial Services&apos; homes in FL</span></span><br><span class="line">df_lms_fl = df[(df[<span class="hljs-string">&apos;state&apos;</span>] == <span class="hljs-string">&apos;Florida&apos;</span>)&amp;(df[<span class="hljs-string">&apos;chain&apos;</span>] == <span class="hljs-string">&apos;Legacy Memorial Services&apos;</span>)].copy()</span><br><span class="line">df_lms_fl[[<span class="hljs-string">&apos;chain&apos;</span>, <span class="hljs-string">&apos;name&apos;</span>,<span class="hljs-string">&apos;zip&apos;</span>,<span class="hljs-string">&apos;county&apos;</span>,<span class="hljs-string">&apos;revenue&apos;</span>,<span class="hljs-string">&apos;competitors_within_10_miles&apos;</span>, <span class="hljs-string">&apos;Mean household income&apos;</span>,</span><br><span class="line">           <span class="hljs-string">&apos;Estimated deaths share 65 to 74 years&apos;</span>,<span class="hljs-string">&apos;Estimated deaths share 75 to 84 years&apos;</span>,</span><br><span class="line">           <span class="hljs-string">&apos;Estimated deaths share 85 years and over&apos;</span>, <span class="hljs-string">&apos;Estimated deaths share&apos;</span>]]</span><br><span class="line"><span class="hljs-comment"># calculate rev generated per estimated deaths share (market share)</span></span><br><span class="line">df_lms_fl[<span class="hljs-string">&apos;rev per death&apos;</span>] = (df_lms_fl[<span class="hljs-string">&apos;revenue&apos;</span>]/df_lms_fl[<span class="hljs-string">&apos;Estimated deaths share&apos;</span>]).round(<span class="hljs-number">0</span>)</span><br><span class="line">df_lms_fl[[<span class="hljs-string">&apos;chain&apos;</span>, <span class="hljs-string">&apos;name&apos;</span>,<span class="hljs-string">&apos;zip&apos;</span>,<span class="hljs-string">&apos;county&apos;</span>,<span class="hljs-string">&apos;revenue&apos;</span>,<span class="hljs-string">&apos;competitors_within_10_miles&apos;</span>, <span class="hljs-string">&apos;Mean household income&apos;</span>,</span><br><span class="line">           <span class="hljs-string">&apos;Estimated deaths share 65 to 74 years&apos;</span>,<span class="hljs-string">&apos;Estimated deaths share 75 to 84 years&apos;</span>,</span><br><span class="line">           <span class="hljs-string">&apos;Estimated deaths share 85 years and over&apos;</span>, <span class="hljs-string">&apos;Estimated deaths share&apos;</span>,<span class="hljs-string">&apos;rev per death&apos;</span>]]</span><br><span class="line"><span class="hljs-comment"># Baldwin Fairchild Funeral Home seems an outlier</span></span><br><span class="line"><span class="hljs-comment"># further looked into the matter and found that Seminole is the smallest county in FL</span></span><br><span class="line"><span class="hljs-comment"># Using county population to estimate market share may not be representive </span></span><br><span class="line"><span class="hljs-comment"># So adding the population of the closest neighbor county Orange to its share to improve accuracy</span></span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th &#123;
+    vertical-align: top;
+&#125;
+
+.dataframe thead th &#123;
+    text-align: right;
+&#125;</code></pre>
+<p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>chain</th>
+      <th>name</th>
+      <th>zip</th>
+      <th>county</th>
+      <th>revenue</th>
+      <th>competitors_within_10_miles</th>
+      <th>Mean household income</th>
+      <th>Estimated deaths share 65 to 74 years</th>
+      <th>Estimated deaths share 75 to 84 years</th>
+      <th>Estimated deaths share 85 years and over</th>
+      <th>Estimated deaths share</th>
+      <th>rev per death</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>40</th>
+      <td>Legacy Memorial Services</td>
+      <td>Lohman Funeral Home Ormond</td>
+      <td>32174</td>
+      <td>Volusia</td>
+      <td>1423140.28</td>
+      <td>0</td>
+      <td>87233.0</td>
+      <td>1575.0</td>
+      <td>2030.0</td>
+      <td>2160.0</td>
+      <td>5765.0</td>
+      <td>247.0</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>Legacy Memorial Services</td>
+      <td>Russell Allen Wright, Sr. Mortuary LLC</td>
+      <td>32405</td>
+      <td>Bay</td>
+      <td>729434.16</td>
+      <td>0</td>
+      <td>92641.0</td>
+      <td>449.0</td>
+      <td>483.0</td>
+      <td>416.0</td>
+      <td>1348.0</td>
+      <td>541.0</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>Legacy Memorial Services</td>
+      <td>Gendron Funeral &amp; Cremation Services Inc.</td>
+      <td>33901</td>
+      <td>Lee</td>
+      <td>904327.89</td>
+      <td>3</td>
+      <td>102290.0</td>
+      <td>378.0</td>
+      <td>592.0</td>
+      <td>648.0</td>
+      <td>1618.0</td>
+      <td>559.0</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>Legacy Memorial Services</td>
+      <td>Caballero Rivero Hialeah</td>
+      <td>33010</td>
+      <td>Miami-Dade</td>
+      <td>1060401.51</td>
+      <td>3</td>
+      <td>102498.0</td>
+      <td>908.0</td>
+      <td>1310.0</td>
+      <td>1872.0</td>
+      <td>4090.0</td>
+      <td>259.0</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>Legacy Memorial Services</td>
+      <td>Alexander Funeral Home Inc</td>
+      <td>33881</td>
+      <td>Polk</td>
+      <td>1175491.50</td>
+      <td>1</td>
+      <td>84031.0</td>
+      <td>792.0</td>
+      <td>1037.0</td>
+      <td>1046.0</td>
+      <td>2875.0</td>
+      <td>409.0</td>
+    </tr>
+    <tr>
+      <th>45</th>
+      <td>Legacy Memorial Services</td>
+      <td>Baldwin Fairchild Funeral Home</td>
+      <td>32714</td>
+      <td>Seminole</td>
+      <td>1189375.91</td>
+      <td>2</td>
+      <td>111625.0</td>
+      <td>233.0</td>
+      <td>308.0</td>
+      <td>390.0</td>
+      <td>931.0</td>
+      <td>1278.0</td>
+    </tr>
+    <tr>
+      <th>46</th>
+      <td>Legacy Memorial Services</td>
+      <td>Sound Choice Cremation</td>
+      <td>34232</td>
+      <td>Sarasota</td>
+      <td>1221708.98</td>
+      <td>0</td>
+      <td>120022.0</td>
+      <td>1014.0</td>
+      <td>1788.0</td>
+      <td>2461.0</td>
+      <td>5263.0</td>
+      <td>232.0</td>
+    </tr>
+    <tr>
+      <th>47</th>
+      <td>Legacy Memorial Services</td>
+      <td>Christian Family Funeral</td>
+      <td>32503</td>
+      <td>Escambia</td>
+      <td>1142915.31</td>
+      <td>1</td>
+      <td>88025.0</td>
+      <td>378.0</td>
+      <td>434.0</td>
+      <td>502.0</td>
+      <td>1314.0</td>
+      <td>870.0</td>
+    </tr>
+    <tr>
+      <th>48</th>
+      <td>Legacy Memorial Services</td>
+      <td>Smith-Youngs Funeral Home, Inc.</td>
+      <td>33756</td>
+      <td>Pinellas</td>
+      <td>1056734.64</td>
+      <td>3</td>
+      <td>101629.0</td>
+      <td>600.0</td>
+      <td>785.0</td>
+      <td>987.0</td>
+      <td>2372.0</td>
+      <td>446.0</td>
+    </tr>
+    <tr>
+      <th>49</th>
+      <td>Legacy Memorial Services</td>
+      <td>Riverside Gordon Memorial Chapels</td>
+      <td>33162</td>
+      <td>Miami-Dade</td>
+      <td>989213.10</td>
+      <td>4</td>
+      <td>102498.0</td>
+      <td>726.0</td>
+      <td>1048.0</td>
+      <td>1498.0</td>
+      <td>3272.0</td>
+      <td>302.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<p>At this point, one location&#x2014;Baldwin Fairchild Funeral Home in Seminole County&#x2014;stood out as a clear outlier. Its implied revenue-per-share figure was substantially higher than that of other sites. A closer look revealed that Seminole is the smallest county in Florida, meaning that computing expected events strictly within county boundaries understates the true catchment area. In practice, residents often cross county lines for this category of services, especially when adjacent counties are significantly larger.</p>
+<p>To correct for this geographical artifact, I expanded the demand base for Seminole locations by incorporating senior population from neighboring Orange County. This adjustment created a more realistic representation of the actual market size accessible to those sites.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># add the population of the closest neighbor county Orange to locations in Seminole</span></span><br><span class="line">pop_cols = [<span class="hljs-string">&apos;Population 65 to 74 years&apos;</span>, <span class="hljs-string">&apos;Population 75 to 84 years&apos;</span>,<span class="hljs-string">&apos;Population 85 years and over&apos;</span>, </span><br><span class="line">            <span class="hljs-string">&apos;Estimated deaths 65 to 74 years&apos;</span>, <span class="hljs-string">&apos;Estimated deaths 75 to 84 years&apos;</span>,<span class="hljs-string">&apos;Estimated deaths 85 years and over&apos;</span>, <span class="hljs-string">&apos;Estimated deaths&apos;</span>]</span><br><span class="line">df.loc[<span class="hljs-number">45</span>, pop_cols] += df.loc[<span class="hljs-number">39</span>, pop_cols]</span><br><span class="line">df.loc[<span class="hljs-number">9</span>, pop_cols] += df.loc[<span class="hljs-number">39</span>, pop_cols]</span><br><span class="line">df.loc[df[<span class="hljs-string">&apos;county&apos;</span>] == <span class="hljs-string">&apos;Seminole&apos;</span>, pop_cols]</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th &#123;
+    vertical-align: top;
+&#125;
+
+.dataframe thead th &#123;
+    text-align: right;
+&#125;</code></pre>
+<p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Population 65 to 74 years</th>
+      <th>Population 75 to 84 years</th>
+      <th>Population 85 years and over</th>
+      <th>Estimated deaths 65 to 74 years</th>
+      <th>Estimated deaths 75 to 84 years</th>
+      <th>Estimated deaths 85 years and over</th>
+      <th>Estimated deaths</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>9</th>
+      <td>157525</td>
+      <td>74102</td>
+      <td>29533</td>
+      <td>2545.0</td>
+      <td>3104.0</td>
+      <td>3701.0</td>
+      <td>9350.0</td>
+    </tr>
+    <tr>
+      <th>45</th>
+      <td>157525</td>
+      <td>74102</td>
+      <td>29533</td>
+      <td>2545.0</td>
+      <td>3104.0</td>
+      <td>3701.0</td>
+      <td>9350.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<p>After correcting the denominator for Seminole, the revenue-per-share metric became remarkably consistent across the reference chain&#x2019;s locations. This stability provided exactly what I needed: a proportionality constant linking adjusted demand to realized revenue.</p>
+<p>In other words, the reference chain supplied a set of empirical weights that could be transplanted onto the two target portfolios. With these weights in hand, I could estimate the economic potential of each site&#x2014;even in the absence of disclosed financials&#x2014;and ultimately compare the attractiveness of the two acquisition candidates.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># recalculate estimated deaths share based on updated data</span></span><br><span class="line">df[<span class="hljs-string">&apos;Estimated deaths share 65 to 74 years&apos;</span>] = (df[<span class="hljs-string">&apos;Estimated deaths 65 to 74 years&apos;</span>]/(df[<span class="hljs-string">&apos;competitors_within_10_miles&apos;</span>]+<span class="hljs-number">1</span>)).round(<span class="hljs-number">0</span>)</span><br><span class="line">df[<span class="hljs-string">&apos;Estimated deaths share 75 to 84 years&apos;</span>] = (df[<span class="hljs-string">&apos;Estimated deaths 75 to 84 years&apos;</span>]/(df[<span class="hljs-string">&apos;competitors_within_10_miles&apos;</span>]+<span class="hljs-number">1</span>)).round(<span class="hljs-number">0</span>)</span><br><span class="line">df[<span class="hljs-string">&apos;Estimated deaths share 85 years and over&apos;</span>] = (df[<span class="hljs-string">&apos;Estimated deaths 85 years and over&apos;</span>]/(df[<span class="hljs-string">&apos;competitors_within_10_miles&apos;</span>]+<span class="hljs-number">1</span>)).round(<span class="hljs-number">0</span>)</span><br><span class="line">df[<span class="hljs-string">&apos;Estimated deaths share&apos;</span>] = (df[<span class="hljs-string">&apos;Estimated deaths&apos;</span>]/(df[<span class="hljs-string">&apos;competitors_within_10_miles&apos;</span>]+<span class="hljs-number">1</span>)).round(<span class="hljs-number">0</span>)</span><br><span class="line"></span><br><span class="line">df_lms_fl = df[(df[<span class="hljs-string">&apos;state&apos;</span>] == <span class="hljs-string">&apos;Florida&apos;</span>)&amp;(df[<span class="hljs-string">&apos;chain&apos;</span>] == <span class="hljs-string">&apos;Legacy Memorial Services&apos;</span>)].copy()</span><br><span class="line">df_lms_fl[<span class="hljs-string">&apos;rev per death&apos;</span>] = (df_lms_fl[<span class="hljs-string">&apos;revenue&apos;</span>]/df_lms_fl[<span class="hljs-string">&apos;Estimated deaths share&apos;</span>]).round(<span class="hljs-number">0</span>)</span><br><span class="line">df_lms_fl[[<span class="hljs-string">&apos;chain&apos;</span>, <span class="hljs-string">&apos;name&apos;</span>,<span class="hljs-string">&apos;zip&apos;</span>,<span class="hljs-string">&apos;county&apos;</span>,<span class="hljs-string">&apos;revenue&apos;</span>,<span class="hljs-string">&apos;competitors_within_10_miles&apos;</span>, <span class="hljs-string">&apos;Mean household income&apos;</span>,</span><br><span class="line">           <span class="hljs-string">&apos;Estimated deaths share 65 to 74 years&apos;</span>,<span class="hljs-string">&apos;Estimated deaths share 75 to 84 years&apos;</span>,</span><br><span class="line">           <span class="hljs-string">&apos;Estimated deaths share 85 years and over&apos;</span>, <span class="hljs-string">&apos;Estimated deaths share&apos;</span>,<span class="hljs-string">&apos;rev per death&apos;</span>]]</span><br><span class="line"><span class="hljs-comment"># now rev generated per estimated deaths share is consistant across different locations</span></span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th &#123;
+    vertical-align: top;
+&#125;
+
+.dataframe thead th &#123;
+    text-align: right;
+&#125;</code></pre>
+<p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>chain</th>
+      <th>name</th>
+      <th>zip</th>
+      <th>county</th>
+      <th>revenue</th>
+      <th>competitors_within_10_miles</th>
+      <th>Mean household income</th>
+      <th>Estimated deaths share 65 to 74 years</th>
+      <th>Estimated deaths share 75 to 84 years</th>
+      <th>Estimated deaths share 85 years and over</th>
+      <th>Estimated deaths share</th>
+      <th>rev per death</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>40</th>
+      <td>Legacy Memorial Services</td>
+      <td>Lohman Funeral Home Ormond</td>
+      <td>32174</td>
+      <td>Volusia</td>
+      <td>1423140.28</td>
+      <td>0</td>
+      <td>87233.0</td>
+      <td>1575.0</td>
+      <td>2030.0</td>
+      <td>2160.0</td>
+      <td>5765.0</td>
+      <td>247.0</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>Legacy Memorial Services</td>
+      <td>Russell Allen Wright, Sr. Mortuary LLC</td>
+      <td>32405</td>
+      <td>Bay</td>
+      <td>729434.16</td>
+      <td>0</td>
+      <td>92641.0</td>
+      <td>449.0</td>
+      <td>483.0</td>
+      <td>416.0</td>
+      <td>1348.0</td>
+      <td>541.0</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>Legacy Memorial Services</td>
+      <td>Gendron Funeral &amp; Cremation Services Inc.</td>
+      <td>33901</td>
+      <td>Lee</td>
+      <td>904327.89</td>
+      <td>3</td>
+      <td>102290.0</td>
+      <td>378.0</td>
+      <td>592.0</td>
+      <td>648.0</td>
+      <td>1618.0</td>
+      <td>559.0</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>Legacy Memorial Services</td>
+      <td>Caballero Rivero Hialeah</td>
+      <td>33010</td>
+      <td>Miami-Dade</td>
+      <td>1060401.51</td>
+      <td>3</td>
+      <td>102498.0</td>
+      <td>908.0</td>
+      <td>1310.0</td>
+      <td>1872.0</td>
+      <td>4090.0</td>
+      <td>259.0</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>Legacy Memorial Services</td>
+      <td>Alexander Funeral Home Inc</td>
+      <td>33881</td>
+      <td>Polk</td>
+      <td>1175491.50</td>
+      <td>1</td>
+      <td>84031.0</td>
+      <td>792.0</td>
+      <td>1037.0</td>
+      <td>1046.0</td>
+      <td>2875.0</td>
+      <td>409.0</td>
+    </tr>
+    <tr>
+      <th>45</th>
+      <td>Legacy Memorial Services</td>
+      <td>Baldwin Fairchild Funeral Home</td>
+      <td>32714</td>
+      <td>Seminole</td>
+      <td>1189375.91</td>
+      <td>2</td>
+      <td>111625.0</td>
+      <td>848.0</td>
+      <td>1035.0</td>
+      <td>1234.0</td>
+      <td>3117.0</td>
+      <td>382.0</td>
+    </tr>
+    <tr>
+      <th>46</th>
+      <td>Legacy Memorial Services</td>
+      <td>Sound Choice Cremation</td>
+      <td>34232</td>
+      <td>Sarasota</td>
+      <td>1221708.98</td>
+      <td>0</td>
+      <td>120022.0</td>
+      <td>1014.0</td>
+      <td>1788.0</td>
+      <td>2461.0</td>
+      <td>5263.0</td>
+      <td>232.0</td>
+    </tr>
+    <tr>
+      <th>47</th>
+      <td>Legacy Memorial Services</td>
+      <td>Christian Family Funeral</td>
+      <td>32503</td>
+      <td>Escambia</td>
+      <td>1142915.31</td>
+      <td>1</td>
+      <td>88025.0</td>
+      <td>378.0</td>
+      <td>434.0</td>
+      <td>502.0</td>
+      <td>1314.0</td>
+      <td>870.0</td>
+    </tr>
+    <tr>
+      <th>48</th>
+      <td>Legacy Memorial Services</td>
+      <td>Smith-Youngs Funeral Home, Inc.</td>
+      <td>33756</td>
+      <td>Pinellas</td>
+      <td>1056734.64</td>
+      <td>3</td>
+      <td>101629.0</td>
+      <td>600.0</td>
+      <td>785.0</td>
+      <td>987.0</td>
+      <td>2372.0</td>
+      <td>446.0</td>
+    </tr>
+    <tr>
+      <th>49</th>
+      <td>Legacy Memorial Services</td>
+      <td>Riverside Gordon Memorial Chapels</td>
+      <td>33162</td>
+      <td>Miami-Dade</td>
+      <td>989213.10</td>
+      <td>4</td>
+      <td>102498.0</td>
+      <td>726.0</td>
+      <td>1048.0</td>
+      <td>1498.0</td>
+      <td>3272.0</td>
+      <td>302.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<p>By combining demographic variables, event-based demand estimates, income proxies, and competition measures, I allowed a simple regression model to reveal which characteristics truly mattered.</p>
+<p>The results were:</p>
+<ol>
+<li><p>Death share was the dominant explanatory factor.</p>
+</li>
+<li><p>Senior population contributed largely through its relationship to death share.</p>
+</li>
+<li><p>Household income, despite being intuitively appealing as a proxy for pricing power, exerted minimal influence in this dataset.</p>
+</li>
+</ol>
+<p>The muted role of income is less a substantive conclusion about the industry and more a feature of the simplified, simulated structure of this exercise. In this notebook, each location relies on county-level income data without adjusting for actual catchment boundaries. counties are administratively convenient but economically arbitrary; they often fail to reflect the true service footprint, especially in suburban or cross-county markets where consumers may travel several miles beyond their residential ZIP.</p>
+<p>In real underwriting work, analysts typically aggregate population and income across multi-ZIP catchments or construct custom polygons based on drive-time radii. That process&#x2014;while far more laborious&#x2014;yields a materially more accurate representation of the household base each site can access. Under such a framework, income variability tends to matter more: higher-income catchments support differentiated service tiers, greater upsell elasticity, and more stable spend per event. Here, because the analysis relies on a simplified approximation, income contributes little incremental signal beyond what competition already explains. </p>
+<p>The exercise nevertheless confirms a useful takeaway: when pricing dispersion is narrow and supply is unevenly distributed, market structure dominates household characteristics. The regression results remain directionally consistent with qualitative research showing that, in this sector, proximity and provider availability outweigh income-driven preference formation.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="hljs-string">&apos;income&apos;</span>] = df[<span class="hljs-string">&apos;Mean household income&apos;</span>]</span><br><span class="line">df[<span class="hljs-string">&apos;death_share&apos;</span>] = df[<span class="hljs-string">&apos;Estimated deaths share&apos;</span>]</span><br><span class="line">df_lms_fl = df[(df[<span class="hljs-string">&apos;state&apos;</span>] == <span class="hljs-string">&apos;Florida&apos;</span>)&amp;(df[<span class="hljs-string">&apos;chain&apos;</span>] == <span class="hljs-string">&apos;Legacy Memorial Services&apos;</span>)].copy()</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Set up predictors (X) and target (y)</span></span><br><span class="line">features = [<span class="hljs-string">&apos;income&apos;</span>, <span class="hljs-string">&apos;death_share&apos;</span>]</span><br><span class="line">X = df_lms_fl[features]</span><br><span class="line">y = df_lms_fl[<span class="hljs-string">&apos;revenue&apos;</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Add a constant term to include an intercept in the model</span></span><br><span class="line">X = sm.add_constant(X)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Fit the OLS Model</span></span><br><span class="line">formula = <span class="hljs-string">&apos;revenue ~  death_share + income&apos;</span></span><br><span class="line">model = smf.ols(formula, data=df_lms_fl).fit()</span><br><span class="line"><span class="hljs-comment"># Print the model summary</span></span><br><span class="line">print(model.summary())</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Predict Revenue for Other Chains</span></span><br><span class="line">X = df[features]</span><br><span class="line">X = sm.add_constant(X)</span><br><span class="line"><span class="hljs-comment"># Predict revenue using the fitted model</span></span><br><span class="line">df[<span class="hljs-string">&apos;predicted_revenue&apos;</span>] = model.predict(X).round()</span><br></pre></td></tr></tbody></table></figure>
+
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                revenue   R-squared:                       0.597
+Model:                            OLS   Adj. R-squared:                  0.481
+Method:                 Least Squares   F-statistic:                     5.178
+Date:                Sat, 12 Apr 2025   Prob (F-statistic):             0.0417
+Time:                        00:05:45   Log-Likelihood:                -130.67
+No. Observations:                  10   AIC:                             267.3
+Df Residuals:                       7   BIC:                             268.2
+Df Model:                           2                                         
+Covariance Type:            nonrobust                                         
+===============================================================================
+                  coef    std err          t      P&gt;|t|      [0.025      0.975]
+-------------------------------------------------------------------------------
+Intercept    1.219e+06   4.01e+05      3.042      0.019    2.71e+05    2.17e+06
+death_share    98.2885     30.567      3.215      0.015      26.009     170.568
+income         -4.3804      4.182     -1.048      0.330     -14.268       5.508
+==============================================================================
+Omnibus:                        0.129   Durbin-Watson:                   1.711
+Prob(Omnibus):                  0.938   Jarque-Bera (JB):                0.230
+Skew:                          -0.196   Prob(JB):                        0.891
+Kurtosis:                       2.369   Cond. No.                     9.25e+05
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 9.25e+05. This might indicate that there are
+strong multicollinearity or other numerical problems.
+
+
+/opt/anaconda3/lib/python3.12/site-packages/scipy/stats/_axis_nan_policy.py:531: UserWarning: kurtosistest only valid for n&gt;=20 ... continuing anyway, n=10
+  res = hypotest_fun_out(*samples, **kwds)</code></pre>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df_other = df.loc[df[<span class="hljs-string">&apos;chain&apos;</span>] != <span class="hljs-string">&apos;Legacy Memorial Services&apos;</span>,[<span class="hljs-string">&apos;chain&apos;</span>, <span class="hljs-string">&apos;name&apos;</span>,<span class="hljs-string">&apos;zip&apos;</span>,<span class="hljs-string">&apos;county&apos;</span>,<span class="hljs-string">&apos;Mean household income&apos;</span>, <span class="hljs-string">&apos;Estimated deaths share&apos;</span>, <span class="hljs-string">&apos;predicted_revenue&apos;</span>]]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>With a stable revenue-per-share relationship established from the reference chain, I applied this calibrated mapping to the two target portfolios. For each location, I used the engineered features developed earlier (estimated senior demand, competitive density, and adjusted death share) to compute its implied revenue contribution.</p>
+<p>This step effectively converted a qualitative location footprint into a quantifiable economic profile, allowing the two portfolios to be compared on a like-for-like basis despite the absence of financial disclosures.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">total_revenue_by_chain = df_other.groupby(<span class="hljs-string">&apos;chain&apos;</span>)[<span class="hljs-string">&apos;predicted_revenue&apos;</span>].sum()</span><br><span class="line">total_revenue_by_chain</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>chain
+Eternal Rest Services    22158799.0
+Forever Peace Homes      22932606.0
+Name: predicted_revenue, dtype: float64</code></pre>
+<p>Stepping back from the individual charts, a consistent story emerges across both portfolios. The relative attractiveness of each chain is driven less by headline population numbers and far more by where each location sits within the competitive and demographic landscape. Sites with moderate density and limited competition reliably rise to the top of the revenue distribution; those with constrained catchment areas or fragmented competitive markets tend to fall behind.</p>
+<p>Although Eternal Rest Services benefits from several monopoly-like locations, many of these assets are situated in counties with shallow senior populations, limiting their ability to translate exclusivity into sustainable economics. Conversely, Forever Peace Homes competes in denser and occasionally more contested areas, yet still delivers stronger revenue because its best locations sit at the intersection of healthy demand and manageable competition. The Miami cluster illustrates this clearly: even in a tighter competitive environment, the underlying demographics and service need create enough economic weight to outperform less populated regions further north.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">chains_of_interest = [<span class="hljs-string">&quot;Eternal Rest Services&quot;</span>, <span class="hljs-string">&quot;Forever Peace Homes&quot;</span>]</span><br><span class="line">fig, axs = plt.subplots(nrows=<span class="hljs-number">4</span>, ncols=<span class="hljs-number">2</span>, figsize=(<span class="hljs-number">16</span>, <span class="hljs-number">18</span>), sharex=<span class="hljs-literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Define age groups and colors for the stacked plot</span></span><br><span class="line">age_groups = [<span class="hljs-string">&apos;Population 65 to 74 years&apos;</span>, <span class="hljs-string">&apos;Population 75 to 84 years&apos;</span>,<span class="hljs-string">&apos;Population 85 years and over&apos;</span>]</span><br><span class="line">age_colors = [<span class="hljs-string">&apos;#a6cee3&apos;</span>, <span class="hljs-string">&apos;#1f78b4&apos;</span>, <span class="hljs-string">&apos;#b2df8a&apos;</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> col_idx, chain <span class="hljs-keyword">in</span> enumerate(chains_of_interest):</span><br><span class="line">    <span class="hljs-comment"># Filter for the current chain and sort by actual revenue descending</span></span><br><span class="line">    df_chain = df[df[<span class="hljs-string">&apos;chain&apos;</span>] == chain].copy()</span><br><span class="line">    df_chain = df_chain.sort_values(by=<span class="hljs-string">&apos;predicted_revenue&apos;</span>, ascending=<span class="hljs-literal">False</span>).reset_index(drop=<span class="hljs-literal">True</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-comment"># Create an index for homes (rank order)</span></span><br><span class="line">    x = np.arange(len(df_chain))</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-comment"># -----------------------------</span></span><br><span class="line">    <span class="hljs-comment"># Row 1: Bar Chart for Predicted Revenue</span></span><br><span class="line">    <span class="hljs-comment"># -----------------------------</span></span><br><span class="line">    axs[<span class="hljs-number">0</span>, col_idx].bar(x, df_chain[<span class="hljs-string">&apos;predicted_revenue&apos;</span>], color=<span class="hljs-string">&apos;green&apos;</span>)</span><br><span class="line">    axs[<span class="hljs-number">0</span>, col_idx].set_title(<span class="hljs-string">f&quot;<span class="hljs-subst">{chain}</span> - Predicted Revenue&quot;</span>)</span><br><span class="line">    axs[<span class="hljs-number">0</span>, col_idx].set_ylabel(<span class="hljs-string">&quot;Predicted Revenue&quot;</span>)</span><br><span class="line">    axs[<span class="hljs-number">0</span>, col_idx].set_xticks(x)</span><br><span class="line">    axs[<span class="hljs-number">0</span>, col_idx].set_xticklabels(x + <span class="hljs-number">1</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-comment"># -----------------------------</span></span><br><span class="line">    <span class="hljs-comment"># Row 2: Bar Chart for Estimated Death Share</span></span><br><span class="line">    <span class="hljs-comment"># -----------------------------</span></span><br><span class="line">    axs[<span class="hljs-number">1</span>, col_idx].bar(x, df_chain[<span class="hljs-string">&apos;Estimated deaths share&apos;</span>], color=<span class="hljs-string">&apos;red&apos;</span>)</span><br><span class="line">    axs[<span class="hljs-number">1</span>, col_idx].set_title(<span class="hljs-string">f&quot;<span class="hljs-subst">{chain}</span> - Estimated Death Share&quot;</span>)</span><br><span class="line">    axs[<span class="hljs-number">1</span>, col_idx].set_ylabel(<span class="hljs-string">&quot;Death Share&quot;</span>)</span><br><span class="line">    axs[<span class="hljs-number">1</span>, col_idx].set_xticks(x)</span><br><span class="line">    axs[<span class="hljs-number">1</span>, col_idx].set_xticklabels(x + <span class="hljs-number">1</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-comment"># -----------------------------</span></span><br><span class="line">    <span class="hljs-comment"># Row 3: Bar Chart for Competitors Within 10 Miles</span></span><br><span class="line">    <span class="hljs-comment"># -----------------------------</span></span><br><span class="line">    axs[<span class="hljs-number">2</span>, col_idx].bar(x, df_chain[<span class="hljs-string">&apos;competitors_within_10_miles&apos;</span>], color=<span class="hljs-string">&apos;orange&apos;</span>)</span><br><span class="line">    axs[<span class="hljs-number">2</span>, col_idx].set_title(<span class="hljs-string">f&quot;<span class="hljs-subst">{chain}</span> - Competitors (10 Miles)&quot;</span>)</span><br><span class="line">    axs[<span class="hljs-number">2</span>, col_idx].set_ylabel(<span class="hljs-string">&quot;Competitors&quot;</span>)</span><br><span class="line">    axs[<span class="hljs-number">2</span>, col_idx].set_xticks(x)</span><br><span class="line">    axs[<span class="hljs-number">2</span>, col_idx].set_xticklabels(x + <span class="hljs-number">1</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-comment"># -----------------------------</span></span><br><span class="line">    <span class="hljs-comment"># Row 4: Stacked Bar Chart for Population Demographics with Median Age Line</span></span><br><span class="line">    <span class="hljs-comment"># -----------------------------</span></span><br><span class="line">    bottom = np.zeros(len(df_chain))</span><br><span class="line">    <span class="hljs-keyword">for</span> age_group, color <span class="hljs-keyword">in</span> zip(age_groups, age_colors):</span><br><span class="line">        values = df_chain[age_group].values</span><br><span class="line">        axs[<span class="hljs-number">3</span>, col_idx].bar(x, values, bottom=bottom, color=color, label=age_group)</span><br><span class="line">        bottom += values</span><br><span class="line">    axs[<span class="hljs-number">3</span>, col_idx].set_title(<span class="hljs-string">f&quot;<span class="hljs-subst">{chain}</span> - Population Demographics&quot;</span>)</span><br><span class="line">    axs[<span class="hljs-number">3</span>, col_idx].set_ylabel(<span class="hljs-string">&quot;Population Count&quot;</span>)</span><br><span class="line">    axs[<span class="hljs-number">3</span>, col_idx].set_xticks(x)</span><br><span class="line">    axs[<span class="hljs-number">3</span>, col_idx].set_xticklabels(x + <span class="hljs-number">1</span>)</span><br><span class="line">    axs[<span class="hljs-number">3</span>, col_idx].legend(loc=<span class="hljs-string">&apos;upper left&apos;</span>, fontsize=<span class="hljs-string">&apos;small&apos;</span>)</span><br><span class="line"></span><br><span class="line">    ax2 = axs[<span class="hljs-number">3</span>, col_idx].twinx()</span><br><span class="line">    ax2.plot(x, df_chain[<span class="hljs-string">&apos;Population Median age (years)&apos;</span>], marker=<span class="hljs-string">&apos;o&apos;</span>, color=<span class="hljs-string">&apos;black&apos;</span>, linewidth=<span class="hljs-number">1</span>, label=<span class="hljs-string">&apos;Median Age&apos;</span>)</span><br><span class="line">    ax2.set_ylabel(<span class="hljs-string">&quot;Median Age&quot;</span>, color=<span class="hljs-string">&apos;black&apos;</span>)</span><br><span class="line">    ax2.tick_params(axis=<span class="hljs-string">&apos;y&apos;</span>, labelcolor=<span class="hljs-string">&apos;black&apos;</span>)</span><br><span class="line">    ax2.legend(loc=<span class="hljs-string">&apos;upper right&apos;</span>, fontsize=<span class="hljs-string">&apos;small&apos;</span>)</span><br><span class="line"><span class="hljs-keyword">for</span> ax <span class="hljs-keyword">in</span> axs[<span class="hljs-number">3</span>, :]:</span><br><span class="line">    ax.set_xlabel(<span class="hljs-string">&quot;Home (Rank Order)&quot;</span>)</span><br><span class="line"></span><br><span class="line">plt.tight_layout(rect=[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0.96</span>])</span><br><span class="line">plt.suptitle(<span class="hljs-string">&quot;Comparison of Key Attributes by Home for Each Chain&quot;</span>, fontsize=<span class="hljs-number">22</span>, y=<span class="hljs-number">1</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<img src="http://yumeng-li.github.io/legacy_files/legacy_39_0.png">
+
+
+
+<p>This simplified, simulated exercise obviously abstracts away many real-world complexities&#x2014;pricing tiers, referral patterns, operational differences, and localized brand effects. But the analytical path is instructive: by breaking the problem into demand, competition, and share of market opportunity, a coherent investment framework emerges even in a niche sector with sparse standardized data. In practice, the analysis would be enriched by catchment-level population aggregation, drive-time modeling, and income-segmented demand estimation, all of which tend to sharpen revenue mapping further.</p>
+<p>Yet even in this lightweight demonstration, the conclusion is clear:<br>the economics of legacy services are fundamentally spatial, and the winning portfolio is the one that consistently occupies strong demographic basins with structurally advantaged competitive positions.</p>
+<p>This project began as a blank slate&#x2014;no intuition, no industry metrics, no obvious path forward&#x2014;but ended with a defensible, data-driven view of portfolio quality. That is ultimately the value of alternative data in private-credit underwriting: when traditional signals are absent, rigorous structure can still be built from the ground up.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+</body></html>
+    
+    </div>
+    
+    
+    <div class="columns is-mobile is-multiline article-nav">
+        <span class="column is-12-mobile is-half-desktop is-hidden-mobile article-nav-prev">
+            
+        </span>
+        <span class="column is-12-mobile is-half-desktop  article-nav-next">
+            
+            <a href="/2022/01/11/VECM2/">Predicting Post-Pandemic Consumption Behaviors Given Potential Paths of Monetary Policy, Part 2 -- Cointegration, VAR/VECM and Forecast</a>
+            
+        </span>
+    </div>
+    
+</article>
+
+
+
+
+    </div>
+</section>
+    <footer class="footer">
+    <div class="container">
+        <div class="columns content">
+            <div class="column is-narrow has-text-centered">
+                &copy; 2025 Yumeng Li&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
+                        target="_blank" rel="noopener" href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
+            </div>
+            <div class="column is-hidden-mobile"></div>
+
+            
+            <div class="column is-narrow">
+                <div class="columns is-mobile is-multiline is-centered">
+                
+                    
+                <a class="column is-narrow has-text-black" title="GitHub" target="_blank" rel="noopener" href="https://github.com/ppoffice/hexo-theme-minos">
+                    
+                    GitHub
+                    
+                </a>
+                
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</footer>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
+
+<!-- test if the browser is outdated -->
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" target="_blank" rel="noopener" href="http://outdatedbrowser.com/">Update my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // plugin function, place inside DOM ready function
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        })
+    });
+</script>
+
+<script>
+    window.FontAwesomeConfig = {
+        searchPseudoElements: true
+    }
+    moment.locale("en-AU");
+</script>
+
+
+    
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+    MathJax.Hub.Config({
+        "HTML-CSS": {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+</script>
+
+    
+    
+    
+    
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/js/lightgallery-all.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/js/jquery.justifiedGallery.min.js"></script>
+<script>
+    (function ($) {
+        $(document).ready(function () {
+            if (typeof($.fn.lightGallery) === 'function') {
+                $('.article.gallery').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof($.fn.justifiedGallery) === 'function') {
+                $('.justified-gallery').justifiedGallery();
+            }
+        });
+    })(jQuery);
+</script>
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <style>
+        .hljs {
+            position: relative;
+        }
+
+        .hljs .clipboard-btn {
+            float: right;
+            color: #9a9a9a;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .hljs .clipboard-btn:hover {
+          color: #8a8a8a;
+        }
+
+        .hljs > .clipboard-btn {
+            display: none;
+            position: absolute;
+            right: 4px;
+            top: 4px;
+        }
+
+        .hljs:hover > .clipboard-btn {
+            display: inline;
+        }
+
+        .hljs > figcaption > .clipboard-btn {
+            margin-right: 4px;
+        }
+    </style>
+    <script>
+      $(document).ready(function () {
+        $('figure.hljs').each(function(i, figure) {
+          var codeId = 'code-' + i;
+          var code = figure.querySelector('.code');
+          var copyButton = $('<button>Copy <i class="far fa-clipboard"></i></button>');
+          code.id = codeId;
+          copyButton.addClass('clipboard-btn');
+          copyButton.attr('data-clipboard-target-id', codeId);
+
+          var figcaption = figure.querySelector('figcaption');
+
+          if (figcaption) {
+            figcaption.append(copyButton[0]);
+          } else {
+            figure.prepend(copyButton[0]);
+          }
+        })
+
+        var clipboard = new ClipboardJS('.clipboard-btn', {
+          target: function(trigger) {
+            return document.getElementById(trigger.getAttribute('data-clipboard-target-id'));
+          }
+        });
+        clipboard.on('success', function(e) {
+          e.clearSelection();
+        })
+      })
+    </script>
+
+    
+    
+
+    
+
+
+
+<script src="/js/script.js"></script>
+
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-mask"></div>
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="Type something..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+    
+</body>
+</html>

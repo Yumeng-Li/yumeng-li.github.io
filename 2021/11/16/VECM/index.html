@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+<head>
+    <meta charset="utf-8">
+<title>Predicting Post-Pandemic Consumption Behaviors Given Potential Paths of Monetary Policy, Part 1 -- Economic Theories, Structural Breaks and Stationarity - The Practical Quant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css">
+
+
+
+
+<meta name="description" content="">
+
+
+
+
+
+    <meta name="description" content="It&amp;#x2019;s official on Nov.3rd that the Federal Reserve is winding down its aggressive pandemic-era asset purchasing, or as what we call &amp;#x201C;tapering&amp;#x201D;. The announcement actually didn&amp;#x201">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Predicting Post-Pandemic Consumption Behaviors Given Potential Paths of Monetary Policy, Part 1 -- Economic Theories, Structural Breaks and Stationarity">
+<meta property="og:url" content="http://yoursite.com/2021/11/16/VECM/index.html">
+<meta property="og:site_name" content="The Practical Quant">
+<meta property="og:description" content="It&amp;#x2019;s official on Nov.3rd that the Federal Reserve is winding down its aggressive pandemic-era asset purchasing, or as what we call &amp;#x201C;tapering&amp;#x201D;. The announcement actually didn&amp;#x201">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yumeng-li.github.io/VECM_files/flowchart.png">
+<meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_14_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_15_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_16_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_19_1.png">
+<meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_26_1.png">
+<meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_27_1.png">
+<meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_29_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_32_1.png">
+<meta property="og:image" content="http://yumeng-li.github.io/VECM_files/VECM_44_1.png">
+<meta property="article:published_time" content="2021-11-16T17:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-12T03:46:28.624Z">
+<meta property="article:author" content="Yumeng Li">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yumeng-li.github.io/VECM_files/flowchart.png">
+
+
+
+
+
+<link rel="icon" href="/favicon.png">
+
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ovo|Source+Code+Pro">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/css/justifiedGallery.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+<script defer src="//use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+
+<meta name="generator" content="Hexo 5.0.0"></head>
+<body>
+    
+<nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item navbar-logo" href="/">
+                
+                    
+                    THE PRACTICAL QUANT
+                    
+                
+            </a>
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <div class="navbar-menu navbar-start">
+            
+            <a class="navbar-item "
+               href="/archives">Archives</a>
+            
+            <a class="navbar-item "
+               href="/categories">Category</a>
+            
+            <a class="navbar-item "
+               target="_blank" rel="noopener" href="http://allaboutmacros.com/">Blog</a>
+            
+            <a class="navbar-item "
+               target="_blank" rel="noopener" href="https://www.linkedin.com/in/emmelineli/">Linkedin</a>
+            
+        </div>
+        
+        <div class="navbar-menu navbar-end">
+            
+            <a class="navbar-item search" title="Search" href="javascript:;">
+                <i class="fas fa-search"></i>
+            </a>
+            
+            
+            
+            <a class="navbar-item" title="GitHub" target="_blank" rel="noopener" href="https://github.com/ppoffice/hexo-theme-minos">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+               
+            
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+    <div class="container">
+    <article class="article content gallery" itemscope itemprop="blogPost">
+    <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
+        
+            Predicting Post-Pandemic Consumption Behaviors Given Potential Paths of Monetary Policy, Part 1 -- Economic Theories, Structural Breaks and Stationarity
+        
+    </h1>
+    <div class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile">
+        <span class="column is-narrow">
+            <time datetime="2021-11-16T17:00:00.000Z" itemprop="datePublished">Nov 16 2021</time>
+        </span>
+        
+        <span class="column is-narrow article-category">
+            <i class="far fa-folder"></i>
+            <a class="article-category-link" href="/categories/Time-Series-Analysis/">Time Series Analysis</a>
+        </span>
+        
+        
+        <span class="column is-narrow">
+            
+            
+            29 minutes read (About 4355 words)
+        </span>
+        
+    </div>
+    <div class="article-entry is-size-6-mobile" itemprop="articleBody">
+    
+        <html><head></head><body><p>It&#x2019;s official on Nov.3rd that the Federal Reserve is winding down its aggressive pandemic-era asset purchasing, or as what we call &#x201C;tapering&#x201D;. The announcement actually didn&#x2019;t come out as a surprise since Fed officials had been laying the groundwork for policy tightening as the economy gradually recovered from the Covid19 slump. Furthermore, due to the lately surging inflation readings, we are seeing traders start to bet on faster Fed hikes. So it seems interesting to get some ideas of how the post-pandemic consumption behaviors of the American households would be, and quantify the potential impact of policy shifting on these behaviors using two classic time series models - the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Vector_autoregression">Vector Autoregression (VAR)</a> and the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Error_correction_model#VECM">Vector Error Correction Model (VECM)</a>. Tribute to Christopher Sims who first promoted the use of VAR in empirical macroeconomics. </p>
+<p>We will build the models following the steps below, </p>
+<img src="http://yumeng-li.github.io/VECM_files/flowchart.png">
+
+<p>And before we get onto that, I will introduce some of the economic theories behind predicting real consumption.</p>
+<h3 id="Economic-Intuitions-Behind"><a href="#Economic-Intuitions-Behind" class="headerlink" title="Economic Intuitions Behind"></a>Economic Intuitions Behind</h3><p>Let&#x2019;s first recap some of the main determinants of private consumption,</p>
+<ul>
+<li>Disposable Income (in the current period) (+)</li>
+<li>Expectations (consumer confidence indexes, employment growth) (+)</li>
+<li>Wealth (stock market performance, housing prices) (+)</li>
+<li>Uncertainty (precautionary saving) (-)</li>
+<li>Availability of Credit (+)</li>
+<li>Real Interest Rate (?)<br>&#xA0; &#xA0; - Substitution effect (-)<br>&#xA0; &#xA0; - Income effect (+)</li>
+</ul>
+<p>You might remember that perhaps the simplest theories of consumption, Keynesian theories of consumption, would link private consumption to <strong>disposable income</strong> in the current period, and of course positively. So as disposable income goes up, private consumption is expected to go up as well. More sophisticated, forward looking models would give more prominence or link consumption not to disposable income today but to <strong>expectations</strong> about the evolution of disposable income in the future. A number of indicators that can be used to gauge these expectations, for example, consumer confidence index, employment growth or my personally preferred - yield spreads. These can be used as a proxy for expectations for future income.</p>
+<p>Another variable thought to be important by economists in terms of explaining the behavior of private consumption is <strong>wealth</strong>. In that sense, for this wealth channel, the performance of the stock market or even the behavior of housing prices, would have an impact on private consumption.</p>
+<p>Another important factor is <strong>uncertainty</strong>, which would actually have a negative association with private consumption because it would create incentives for what the economists called precautionary saving. So agents will try to create a buffer to be able to fall back on in case a bad shock hits.</p>
+<p><strong>The availability of credit</strong> is also thought to be an important determinant with, obviously, a positive relationship.</p>
+<p>And finally, the <strong>real interest rate</strong> is also thought to be one of the important determinants of private consumption.<br>The effect of real interest on consumption can be a little bit ambiguous. Perhaps the most straightforward or direct effect<br>would be what economists call a substitution effect where, as interest rates go up, the incentives to consume are reduced. So agents will have, on the contrary, incentives to save more. And therefore, an increase in rates will be linked to a decrease in private consumption. But on the other hand, it is also possible that if consumers are net savers the increase in interest rates<br>might generate some additional income&#x2013; what economists call an income effect&#x2013;and this might actually lead to an increase in private consumption.</p>
+<h2 id="Getting-Data"><a href="#Getting-Data" class="headerlink" title="Getting Data"></a>Getting Data</h2><p>Based on the economic intuitions, I grabbed the following well-defined and organized economic data from the <a target="_blank" rel="noopener" href="https://fred.stlouisfed.org/">Federal Reserve Economic Data</a> of the St. Louis Fed. The FRED allows modelers to write programs and build applications that retrieve data through an API provided. There is a list of <a target="_blank" rel="noopener" href="https://fred.stlouisfed.org/docs/api/fred/">packages/libraries</a> that one can turn to, depending on one&#x2019;s programming language. Since I have to model everything in Python as it&#x2019;s compatible with the github&#xA0;blog, I use the library <a target="_blank" rel="noopener" href="https://github.com/mortada/fredapi">fredapi</a> to request the data. However, in practice, I would probably go for EViews as most economists prefer and do. </p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd</span><br><span class="line"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np</span><br><span class="line"><span class="hljs-keyword">from</span> fredapi <span class="hljs-keyword">import</span> Fred</span><br><span class="line"><span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt</span><br><span class="line"><span class="hljs-keyword">from</span> datetime <span class="hljs-keyword">import</span> datetime</span><br><span class="line">%matplotlib inline</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">import</span> statsmodels.api <span class="hljs-keyword">as</span> sm</span><br><span class="line"><span class="hljs-keyword">from</span> statsmodels.tsa.stattools <span class="hljs-keyword">import</span> adfuller</span><br><span class="line"><span class="hljs-keyword">from</span> statsmodels.tsa.stattools <span class="hljs-keyword">import</span> kpss</span><br><span class="line"><span class="hljs-keyword">from</span> statsmodels.tsa.api <span class="hljs-keyword">import</span> VAR</span><br><span class="line"><span class="hljs-keyword">from</span> statsmodels.tsa.vector_ar <span class="hljs-keyword">import</span> vecm</span><br><span class="line"><span class="hljs-keyword">from</span> statsmodels.tsa <span class="hljs-keyword">import</span> filters</span><br><span class="line"></span><br><span class="line">pd.options.display.max_colwidth = <span class="hljs-number">50</span></span><br><span class="line">pd.options.display.max_rows = <span class="hljs-number">400</span></span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fred = Fred(api_key=your_key_string)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>The period I study is from 1962Q1 to 2021Q2, which ensures that the economic data that I am interested in all has a value. </p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">startDate = <span class="hljs-string">&apos;1962-01-01&apos;</span></span><br><span class="line">endDate = <span class="hljs-string">&apos;2021-04-01&apos;</span></span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_series_and_print_info</span>(<span class="hljs-params">fred, series_id, startDate, endDate, name</span>):</span></span><br><span class="line">&#xA0; &#xA0; series = fred.get_series(series_id, observation_start=startDate, observation_end=endDate, frequency=<span class="hljs-string">&apos;q&apos;</span>)</span><br><span class="line">&#xA0; &#xA0; print(name+<span class="hljs-string">&apos;: &apos;</span>+fred.get_series_info(series_id).title)</span><br><span class="line">&#xA0; &#xA0; <span class="hljs-keyword">return</span> series</span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">data = {}</span><br><span class="line">data[<span class="hljs-string">&apos;saving_rate&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;a072rc1q156sbea&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;saving_rate&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;ns&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;w986rc1q027sbea&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;ns&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;nnw&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;TNWBSHNO&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;nnw&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;nl&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;TCMILBSHNO&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;nl&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;na&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;TABSHNO&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;na&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;nfa&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;TFAABSHNO&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;nfa&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;interest_payments&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;b069rc1q027sbea&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;interest_payments&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;cpi&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;cpiaucsl&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;cpi&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;c_deflator&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;dpcerd3q086sbea&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;c_deflator&apos;</span>)/<span class="hljs-number">100</span></span><br><span class="line">data[<span class="hljs-string">&apos;dff&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;DFF&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;dff&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;yield_3m&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;dgs3&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;yield_3m&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;yield_10y&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;irltlt01usq156n&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;yield_10y&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;prime_rate&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;dprime&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;prime_rate&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;m2&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;M2REAL&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;m2&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;ndy&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;dpi&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;ndy&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;rdy&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;dpic96&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;rdy&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;npiy&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;b703rc1q027sbea&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;npiy&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;ny&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;pincome&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;ny&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;ry&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;rpi&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;ry&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;nc&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;pcec&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;nc&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;rc&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;pcecc96&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;rc&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;nc_services&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;pcesv&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;nc_services&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;nc_durable_goods&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;pcdg&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;nc_durable_goods&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;unemp&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;unrate&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;unemp&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;house_prices&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;ussthpi&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;house_prices&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;mortgage_30y&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;MORTGAGE30US&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;mortgage_30y&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;consumer_confidence&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;CSCICP03USM665S&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;consumer_confidence&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;gov_debt&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;fygfdpun&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;gov_debt&apos;</span>)</span><br><span class="line">data[<span class="hljs-string">&apos;gov_transfers&apos;</span>] = get_series_and_print_info(fred, <span class="hljs-string">&apos;w211rc1q027sbea&apos;</span>,startDate, endDate, <span class="hljs-string">&apos;gov_transfers&apos;</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>&#xA0; &#xA0; saving_rate: Personal saving as a percentage of disposable personal income<br>&#xA0; &#xA0; ns: Net private saving: Households and institutions<br>&#xA0; &#xA0; nnw: Households and Nonprofit Organizations; Net Worth, Level<br>&#xA0; &#xA0; nl: Households and Nonprofit Organizations; Debt Securities and Loans; Liability, Level<br>&#xA0; &#xA0; na: Households and Nonprofit Organizations; Total Assets, Level<br>&#xA0; &#xA0; nfa: Households and Nonprofit Organizations; Total Financial Assets, Level<br>&#xA0; &#xA0; interest_payments: Personal interest payments<br>&#xA0; &#xA0; cpi: Consumer Price Index for All Urban Consumers: All Items in U.S. City Average<br>&#xA0; &#xA0; c_deflator: Personal consumption expenditures (implicit price deflator)<br>&#xA0; &#xA0; dff: Federal Funds Effective Rate<br>&#xA0; &#xA0; yield_3m: Market Yield on U.S. Treasury Securities at 3-Year Constant Maturity<br>&#xA0; &#xA0; yield_10y: Long-Term Government Bond Yields: 10-year: Main (Including Benchmark) for the United States<br>&#xA0; &#xA0; prime_rate: Bank Prime Loan Rate<br>&#xA0; &#xA0; m2: Real M2 Money Stock<br>&#xA0; &#xA0; ndy: Disposable Personal Income<br>&#xA0; &#xA0; rdy: Real Disposable Personal Income<br>&#xA0; &#xA0; npiy: Personal income receipts on assets: Personal dividend income<br>&#xA0; &#xA0; ny: Personal Income<br>&#xA0; &#xA0; ry: Real Personal Income<br>&#xA0; &#xA0; nc: Personal Consumption Expenditures<br>&#xA0; &#xA0; rc: Real Personal Consumption Expenditures<br>&#xA0; &#xA0; nc_services: Personal Consumption Expenditures: Services<br>&#xA0; &#xA0; nc_durable_goods: Personal Consumption Expenditures: Durable Goods<br>&#xA0; &#xA0; unemp: Unemployment Rate<br>&#xA0; &#xA0; house_prices: All-Transactions House Price Index for the United States<br>&#xA0; &#xA0; mortgage_30y: 30-Year Fixed Rate Mortgage Average in the United States<br>&#xA0; &#xA0; consumer_confidence: Consumer Opinion Surveys: Confidence Indicators: Composite Indicators: OECD Indicator for the United States<br>&#xA0; &#xA0; gov_debt: Federal Debt Held by the Public<br>&#xA0; &#xA0; gov_transfers: Personal current transfer payments</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df = pd.DataFrame(data)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Since we are interested in predicting the <strong>real consumption</strong>, which means eliminating the effect of prices, nominal variables including consumption, disposable income and net wealth need to be converted into real terms. Here they are deflated by the price deflator for consumption (c_deflator). </p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="hljs-string">&apos;rnw&apos;</span>] = df[<span class="hljs-string">&apos;nnw&apos;</span>]/df[<span class="hljs-string">&apos;c_deflator&apos;</span>]</span><br><span class="line">df[<span class="hljs-string">&apos;rl&apos;</span>] = df[<span class="hljs-string">&apos;nl&apos;</span>]/df[<span class="hljs-string">&apos;c_deflator&apos;</span>]</span><br><span class="line">df[<span class="hljs-string">&apos;ra&apos;</span>] = df[<span class="hljs-string">&apos;na&apos;</span>]/df[<span class="hljs-string">&apos;c_deflator&apos;</span>]</span><br><span class="line">df[<span class="hljs-string">&apos;rfa&apos;</span>] = df[<span class="hljs-string">&apos;nfa&apos;</span>]/df[<span class="hljs-string">&apos;c_deflator&apos;</span>]</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="Data-Visualization-and-Preliminary-Analysis-Some-Fun-Ideas"><a href="#Data-Visualization-and-Preliminary-Analysis-Some-Fun-Ideas" class="headerlink" title="Data Visualization and Preliminary Analysis (Some Fun Ideas)"></a>Data Visualization and Preliminary Analysis (Some Fun Ideas)</h2><h3 id="Structural-Breaks"><a href="#Structural-Breaks" class="headerlink" title="Structural Breaks"></a>Structural Breaks</h3><p>To get a feel for the data, let&#x2019;s plot log(rc/rdy) against log(rnw/rdy). Also regress log(rc/rdy) on a constant and log(rnw/rdy) and then examine the fitted residuals, looking for evidence of any structural changes in the relationship between consumption, disposable income and net wealth. </p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">fig, ax1 = plt.subplots()</span><br><span class="line">ax1.set_xlabel(<span class="hljs-string">&apos;Year&apos;</span>)</span><br><span class="line">ax1.set_ylabel(<span class="hljs-string">&apos;rdy rl&apos;</span>)</span><br><span class="line">ax1.plot(df[<span class="hljs-string">&apos;rc&apos;</span>], color=<span class="hljs-string">&apos;tab:grey&apos;</span>,label=<span class="hljs-string">&apos;real consumption&apos;</span>)</span><br><span class="line">ax1.plot(df[<span class="hljs-string">&apos;rdy&apos;</span>], color=<span class="hljs-string">&apos;tab:blue&apos;</span>,label=<span class="hljs-string">&apos;real disposable income&apos;</span>)</span><br><span class="line">ax1.plot(df[<span class="hljs-string">&apos;rl&apos;</span>], color=<span class="hljs-string">&apos;tab:green&apos;</span>,label=<span class="hljs-string">&apos;real liability&apos;</span>)</span><br><span class="line">ax1.legend(loc=<span class="hljs-string">&apos;upper left&apos;</span>)</span><br><span class="line">ax2 = ax1.twinx() &#xA0;</span><br><span class="line">ax2.set_ylabel(<span class="hljs-string">&apos;rnw ra rfa&apos;</span>) </span><br><span class="line">ax2.plot(df[<span class="hljs-string">&apos;rnw&apos;</span>], color=<span class="hljs-string">&apos;tab:red&apos;</span>,label=<span class="hljs-string">&apos;real net worth&apos;</span>)</span><br><span class="line">ax2.plot(df[<span class="hljs-string">&apos;ra&apos;</span>], color=<span class="hljs-string">&apos;tab:orange&apos;</span>,label=<span class="hljs-string">&apos;real asset&apos;</span>)</span><br><span class="line">ax2.plot(df[<span class="hljs-string">&apos;rfa&apos;</span>], color=<span class="hljs-string">&apos;tab:purple&apos;</span>,label=<span class="hljs-string">&apos;real fincl asset&apos;</span>)</span><br><span class="line">ax2.legend(loc=<span class="hljs-string">&apos;lower right&apos;</span>)</span><br><span class="line">fig.tight_layout() </span><br><span class="line">plt.show()</span><br></pre></td></tr></tbody></table></figure>
+
+<img src="http://yumeng-li.github.io/VECM_files/VECM_14_0.png">
+
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">data1 = df[<span class="hljs-string">&apos;rc&apos;</span>]/df[<span class="hljs-string">&apos;rdy&apos;</span>]</span><br><span class="line">data2 = df[<span class="hljs-string">&apos;rc&apos;</span>]/df[<span class="hljs-string">&apos;rnw&apos;</span>]</span><br><span class="line">data3 = df[<span class="hljs-string">&apos;rc&apos;</span>]/df[<span class="hljs-string">&apos;rl&apos;</span>]</span><br><span class="line">data4 = df[<span class="hljs-string">&apos;rc&apos;</span>]/df[<span class="hljs-string">&apos;ra&apos;</span>]</span><br><span class="line">data5 = df[<span class="hljs-string">&apos;rc&apos;</span>]/df[<span class="hljs-string">&apos;rfa&apos;</span>]</span><br><span class="line">fig, ax1 = plt.subplots()</span><br><span class="line">ax1.set_xlabel(<span class="hljs-string">&apos;Year&apos;</span>)</span><br><span class="line">ax1.set_ylabel(<span class="hljs-string">&apos;rdy&apos;</span>)</span><br><span class="line">ax1.plot(data1, color=<span class="hljs-string">&apos;tab:blue&apos;</span>,label=<span class="hljs-string">&apos;rc/rdy&apos;</span>)</span><br><span class="line">ax1.legend(loc=<span class="hljs-string">&apos;upper left&apos;</span>)</span><br><span class="line">ax2 = ax1.twinx() &#xA0;</span><br><span class="line">ax2.set_ylabel(<span class="hljs-string">&apos;rnw ra rfa&apos;</span>) </span><br><span class="line">ax2.plot(data2, color=<span class="hljs-string">&apos;tab:red&apos;</span>,label=<span class="hljs-string">&apos;rc/rnw&apos;</span>)</span><br><span class="line">ax2.plot(data4, color=<span class="hljs-string">&apos;tab:orange&apos;</span>,label=<span class="hljs-string">&apos;rc/ra&apos;</span>)</span><br><span class="line">ax2.plot(data5, color=<span class="hljs-string">&apos;tab:purple&apos;</span>,label=<span class="hljs-string">&apos;rc/rfa&apos;</span>)</span><br><span class="line">ax2.legend(loc=<span class="hljs-string">&apos;upper right&apos;</span>)</span><br><span class="line">fig.tight_layout() </span><br><span class="line">plt.show()</span><br></pre></td></tr></tbody></table></figure>
+<img src="http://yumeng-li.github.io/VECM_files/VECM_15_0.png">
+
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">data1 = np.log(df[<span class="hljs-string">&apos;rc&apos;</span>]/df[<span class="hljs-string">&apos;rdy&apos;</span>])</span><br><span class="line">data2 = np.log(df[<span class="hljs-string">&apos;rnw&apos;</span>]/df[<span class="hljs-string">&apos;rdy&apos;</span>])</span><br><span class="line">fig, ax1 = plt.subplots()</span><br><span class="line">color = <span class="hljs-string">&apos;tab:green&apos;</span></span><br><span class="line">ax1.set_xlabel(<span class="hljs-string">&apos;Year&apos;</span>)</span><br><span class="line">ax1.set_ylabel(<span class="hljs-string">&apos;rc/rdy&apos;</span>, color=color)</span><br><span class="line">ax1.plot(data1, color=color)</span><br><span class="line">ax1.tick_params(axis=<span class="hljs-string">&apos;y&apos;</span>, labelcolor=color)</span><br><span class="line">ax2 = ax1.twinx() &#xA0;</span><br><span class="line">color = <span class="hljs-string">&apos;tab:blue&apos;</span></span><br><span class="line">ax2.set_ylabel(<span class="hljs-string">&apos;rnw/rdy&apos;</span>, color=color) </span><br><span class="line">ax2.plot(data2, color=color)</span><br><span class="line">ax2.tick_params(axis=<span class="hljs-string">&apos;y&apos;</span>, labelcolor=color)</span><br><span class="line">fig.tight_layout()</span><br><span class="line">ax1.axvline(x=datetime(<span class="hljs-number">1975</span>, <span class="hljs-number">10</span>, <span class="hljs-number">1</span>), color=<span class="hljs-string">&apos;k&apos;</span>)</span><br><span class="line">ax1.axvline(x=datetime(<span class="hljs-number">2008</span>, <span class="hljs-number">7</span>, <span class="hljs-number">1</span>), color=<span class="hljs-string">&apos;k&apos;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></tbody></table></figure>
+
+<img src="http://yumeng-li.github.io/VECM_files/VECM_16_0.png">
+
+
+<p>Are there any structural breaks in the relationship before 1975Q4 and after 2008Q3? If so, we have to create dummies to allow for them. Let&#x2019;s run a regression to further confirm it.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Y = np.log(df[<span class="hljs-string">&apos;rc&apos;</span>]/df[<span class="hljs-string">&apos;rdy&apos;</span>])</span><br><span class="line">X = np.log(df[<span class="hljs-string">&apos;rnw&apos;</span>]/df[<span class="hljs-string">&apos;rdy&apos;</span>])</span><br><span class="line">X = sm.add_constant(X)</span><br><span class="line">model = sm.OLS(Y,X)</span><br><span class="line">res = model.fit()</span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ax = res.resid[:<span class="hljs-number">-8</span>].plot(style=<span class="hljs-string">&apos;.&apos;</span>,grid=<span class="hljs-literal">True</span>)</span><br><span class="line">ax.xaxis.grid(<span class="hljs-literal">True</span>, linestyle=<span class="hljs-string">&apos;--&apos;</span>, linewidth=<span class="hljs-number">0.25</span>)</span><br><span class="line">ax.axvline(x=datetime(<span class="hljs-number">1975</span>, <span class="hljs-number">10</span>, <span class="hljs-number">1</span>), color=<span class="hljs-string">&apos;k&apos;</span>)</span><br><span class="line">ax.axvline(x=datetime(<span class="hljs-number">2008</span>, <span class="hljs-number">7</span>, <span class="hljs-number">1</span>), color=<span class="hljs-string">&apos;k&apos;</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<img src="http://yumeng-li.github.io/VECM_files/VECM_19_1.png">
+
+
+
+<p>Both the time plot and the regression of log(rc/rdy) on a constant and log(rnw/rdy) suggests that there were structural breaks around 1975Q4 and 2008Q3. Notice the consistently negative residuals till 1975Q4 and the wider gap between log(rc/rdy) and log(rnw/rdy) before 1976 compared to the gap after 1976. Another one is that household net worth and assets have increased at an accelerating rate after the 2008 global financial crisis (increasing rnw/rdy ratio). While at the same time, we don&#x2019;t see a rising trend of consumption compared to income even though households have accumulated higher real net wealth benefited from the booming asset prices post-crisis, which is a quite different behavior compared to pre-crisis.</p>
+<p>These are strong suggestive evidence that structural breaks occurred around 1975Q4 and 2008Q3. <strong>But why? What are the drivers?</strong></p>
+<h3 id="Inequality-and-the-Kondratiev-theory"><a href="#Inequality-and-the-Kondratiev-theory" class="headerlink" title="Inequality and the Kondratiev theory"></a>Inequality and the Kondratiev theory</h3><p>Let&#x2019;s now take a look at the inequality data, which will give us better clues to our questions. </p>
+<p>Data is downloaded from the World Inequality Database <a target="_blank" rel="noopener" href="https://wid.world/data/">WID</a>. Buckets I selected are top 10%, middle 40% and the bottom 50% of the US population.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">income_inequality = pd.read_csv(<span class="hljs-string">&apos;income_inequality.csv&apos;</span>,index_col=<span class="hljs-number">0</span>)</span><br><span class="line">wealth_inequality = pd.read_csv(<span class="hljs-string">&apos;wealth_inequality.csv&apos;</span>,index_col=<span class="hljs-number">0</span>)</span><br><span class="line">pretax_income = pd.read_csv(<span class="hljs-string">&apos;pretax_income.csv&apos;</span>,index_col=<span class="hljs-number">0</span>)</span><br><span class="line">net_wealth = pd.read_csv(<span class="hljs-string">&apos;net_wealth.csv&apos;</span>,index_col=<span class="hljs-number">0</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>As we can tell from the following graphs, income inequality in the US has risen dramatically since the mid 1970s, see how the income of the top 10% grows whereas that of the middle and bottom classes remains nearly flat. This issue has drawn heightened attention in recent years (including me :D). </p>
+<p>In the past decade, economic observers have also become increasingly worried about &#x201C;secular stagnation&#x201D; - or a chronic shortfall of aggregate demand, fearing that this shortfall will constrain American economic growth in coming years. These two phenomena&#x2014;<strong>rising inequality</strong> and <strong>chronic weakness of demand</strong> - are related. Specifically, since the <strong>marginal propensity to consume (MPC)</strong> is much lower at the higher wealth quintiles (for low-wealth households, the MPC is <strong>10 times larger</strong> than it is for wealthy households, see this <a target="_blank" rel="noopener" href="https://www.bostonfed.org/publications/research-department-working-paper/2019/estimating-the-marginal-propensity-to-consume-using-the-distributions-income-consumption-wealth.aspx">paper</a> elaborating it), rising inequality transfers income from high MPC households in the bottom and middle of the income distribution to lower MPC households at the top. All else equal, this redistribution away from low- to high-saving households reduces consumption spending, which drags on demand growth.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pretax_income.iloc[:,<span class="hljs-number">1</span>:].plot(title=<span class="hljs-string">&apos;Pre-tax Income&apos;</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<img src="http://yumeng-li.github.io/VECM_files/VECM_26_1.png">
+
+
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net_wealth.iloc[:,<span class="hljs-number">1</span>:].plot(title=<span class="hljs-string">&apos;Net Wealth&apos;</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<p>&#xA0; &#xA0; &lt;matplotlib.axes._subplots.AxesSubplot at 0x23c76c39e48&gt;</p>
+<img src="http://yumeng-li.github.io/VECM_files/VECM_27_1.png">
+
+
+
+<p>Due to the differences in income growth, we see a larger and larger wealth gap between groups.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">data1 = wealth_inequality[<span class="hljs-string">&apos;sw_p99p100&apos;</span>]</span><br><span class="line">data2 = wealth_inequality[<span class="hljs-string">&apos;sw_p90p100&apos;</span>]</span><br><span class="line">data3 = wealth_inequality[<span class="hljs-string">&apos;sw_p50p90&apos;</span>]</span><br><span class="line">data4 = wealth_inequality[<span class="hljs-string">&apos;sw_p0p50&apos;</span>]</span><br><span class="line"></span><br><span class="line">fig, ax1 = plt.subplots()</span><br><span class="line">color = <span class="hljs-string">&apos;tab:blue&apos;</span></span><br><span class="line">ax1.set_xlabel(<span class="hljs-string">&apos;Year&apos;</span>)</span><br><span class="line">ax1.set_ylabel(<span class="hljs-string">&apos;Rich&apos;</span>, color=color)</span><br><span class="line">ax1.plot(data1, color=<span class="hljs-string">&apos;royalblue&apos;</span>,label=<span class="hljs-string">&apos;Share of p99p100&apos;</span>)</span><br><span class="line">ax1.plot(data2, color=<span class="hljs-string">&apos;dodgerblue&apos;</span>,label=<span class="hljs-string">&apos;Share of p90p100&apos;</span>)</span><br><span class="line">ax1.tick_params(axis=<span class="hljs-string">&apos;y&apos;</span>, labelcolor=color)</span><br><span class="line">ax1.legend(loc =<span class="hljs-string">&apos;center left&apos;</span>)</span><br><span class="line">ax1.set_title(<span class="hljs-string">&apos;Wealth Inequality&apos;</span>)</span><br><span class="line">ax2 = ax1.twinx() &#xA0;</span><br><span class="line">color = <span class="hljs-string">&apos;tab:green&apos;</span></span><br><span class="line">ax2.set_ylabel(<span class="hljs-string">&apos;Poor&apos;</span>, color=color) </span><br><span class="line">ax2.plot(data3, color=<span class="hljs-string">&apos;limegreen&apos;</span>,label=<span class="hljs-string">&apos;Share of p50p90&apos;</span>)</span><br><span class="line">ax2.plot(data4, color=<span class="hljs-string">&apos;lightgreen&apos;</span>,label=<span class="hljs-string">&apos;Share of p0p50&apos;</span>)</span><br><span class="line">ax2.tick_params(axis=<span class="hljs-string">&apos;y&apos;</span>, labelcolor=color)</span><br><span class="line">fig.tight_layout() </span><br><span class="line">ax2.legend(loc =<span class="hljs-string">&apos;center right&apos;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></tbody></table></figure>
+
+<img src="http://yumeng-li.github.io/VECM_files/VECM_29_0.png">
+
+
+<p>Based on the theory, we can assume that there is a negative correlation between income inequality and consumption. Here I created an inequality indicator using the difference in shares of wealth of the top 10% and the bottom 50%, so that we can further look into the change of inequality over the last half century. The long-term trend is estimated using the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Hodrick%E2%80%93Prescott_filter"><strong>Hodrick&#x2013;Prescott filter</strong></a>, which can smooth the data by getting rid of the short-term fluctuations (shorter cycles).</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wealth_inequality.index = pd.to_datetime(wealth_inequality.index, format=<span class="hljs-string">&apos;%Y&apos;</span>)</span><br><span class="line"><span class="hljs-comment"># create a variable nw_inequlity for the wealth gap between top 10% and bottom 50%</span></span><br><span class="line">wealth_inequality[<span class="hljs-string">&apos;nw_inequality&apos;</span>] = wealth_inequality[<span class="hljs-string">&apos;sw_p90p100&apos;</span>]-wealth_inequality[<span class="hljs-string">&apos;sw_p50p90&apos;</span>]</span><br><span class="line"><span class="hljs-comment"># apply the Hodrick-Prescott filter to smooth the inequality data and estimate the long-term trend</span></span><br><span class="line">wealth_inequality[<span class="hljs-string">&apos;f_nw_inequality&apos;</span>] = pd.DataFrame(filters.hp_filter.hpfilter(wealth_inequality[<span class="hljs-string">&apos;nw_inequality&apos;</span>],lamb=<span class="hljs-number">6.25</span>)[<span class="hljs-number">1</span>])</span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">f, (ax1, ax2) = plt.subplots(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,figsize=(<span class="hljs-number">15</span>,<span class="hljs-number">4</span>))</span><br><span class="line">ax1.plot(wealth_inequality[<span class="hljs-string">&apos;nw_inequality&apos;</span>])</span><br><span class="line">ax2.plot(wealth_inequality[<span class="hljs-string">&apos;f_nw_inequality&apos;</span>])</span><br><span class="line">ax1.set_title(<span class="hljs-string">&apos;nw inequality&apos;</span>)</span><br><span class="line">ax2.set_title(<span class="hljs-string">&apos;filtered nw inequality (trend)&apos;</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+
+<img src="http://yumeng-li.github.io/VECM_files/VECM_32_1.png">
+
+
+
+<p>Seeing the long-term inequity trend, it&#x2019;s no wonder why we have identified two structural breaks. </p>
+<p>Actually up to now, if you are familiar with the theory of Kondratieff cycles, this probably starts to look quite interesting to you. <strong>Kondratiev waves</strong> (also called super-cycles, great surges, long waves, K-waves or the long economic cycle) are hypothesized cycle-like phenomena in the modern world economy. The phenomenon is closely connected with the technology life cycle. It is stated that the period of a wave ranges from forty to sixty years, the cycles consist of alternating intervals of high sectoral growth and intervals of relatively slow growth. </p>
+<p>Though there is a lack of agreement about both the cause of the waves and the start and end years of particular waves, <strong>inequity appears to be the most obvious driver</strong>, and yet some researchers have presented a technological and credit cycle explanation as well. However, among several modern timing versions of the cycles based on any of the causes, the consensus is that the start of our current cycle - Wave of the Information and Telecommunications Revolution falls into the range of early 1970s to mid 1980s, which happens to be the first break point we identified.</p>
+<p>Every wave of innovations lasts approximately until the profits from the new innovation or sector fall to the level of other, older, more traditional sectors. It is a situation when the new technology, which originally increased a capacity to utilize new sources from nature, reached its limits and it is not possible to overcome this limit without an application of another new technology. For the end of an application phase of any wave there is typically an economic crisis and economic stagnation. The financial crisis of 2007&#x2013;2008 is viewed by some as a result of the coming end of the Wave of the Information and Telecommunications Revolution, our second break point.</p>
+<p>So after all, I create two dummy variables below to represent the turning points of the cycle.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="hljs-string">&apos;sb_1975_4&apos;</span>] = np.where(df.index &lt; <span class="hljs-string">&apos;1976-10-1&apos;</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>)</span><br><span class="line">df[<span class="hljs-string">&apos;sb_2008_3&apos;</span>] = np.where(df.index &lt; <span class="hljs-string">&apos;2008-07-1&apos;</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="Long-run-Model-Specification"><a href="#Long-run-Model-Specification" class="headerlink" title="Long-run Model Specification"></a>Long-run Model Specification</h2><p>Now let&#x2019;s put aside the fun ideas and start model development with specifying the long-run predictive equation for real consumption.</p>
+<p>Consider the following long-run model for U.S. real consumption:</p>
+<p>\begin{align}<br>\log rc_t &amp;= \beta_0 + \beta_1 \log rdy_t + \beta_1 \log rnw_t + \epsilon_t<br>\end{align}</p>
+<p>It&#x2019;s helpful to express our model in logarithmic form, so that the parameter estimates are elasticities.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="hljs-string">&apos;ln_rc&apos;</span>] = np.log(df[<span class="hljs-string">&apos;rc&apos;</span>])</span><br><span class="line">df[<span class="hljs-string">&apos;ln_rdy&apos;</span>] = np.log(df[<span class="hljs-string">&apos;rdy&apos;</span>])</span><br><span class="line">df[<span class="hljs-string">&apos;ln_rnw&apos;</span>] = np.log(df[<span class="hljs-string">&apos;rnw&apos;</span>])</span><br><span class="line">df[<span class="hljs-string">&apos;const&apos;</span>] = <span class="hljs-number">1</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Sample-and-Forecast-Period"><a href="#Sample-and-Forecast-Period" class="headerlink" title="Sample and Forecast Period"></a>Sample and Forecast Period</h3><p>The sample period for model specification i.e., specifying the preferred model for forecasting purposes can be 1962:1 to 2016:4 (and no later than 2007:4). Remember we have to stick with the train data from now on for the model development. The test set will be preserved for testing the predictive power of the model.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cut = <span class="hljs-number">220</span></span><br><span class="line">train,test = df[:cut], df[cut:]</span><br><span class="line">train.shape,test.shape</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<p>&#xA0; &#xA0; ((220, 39), (18, 39))</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">train.tail()</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<p>    .dataframe tbody tr th {<br>        vertical-align: top;<br>    }</p>
+<p>    .dataframe thead th {<br>        text-align: right;<br>    }<br></style><p></p>
+
+&#xA0; 
+&#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; 
+&#xA0; 
+&#xA0; 
+&#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; 
+&#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; 
+&#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; 
+&#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; 
+&#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; &#xA0; 
+&#xA0; &#xA0; 
+&#xA0; <table border="1" class="dataframe"><thead><tr style="text-align: right;"><th></th><th>saving_rate</th><th>ns</th><th>nnw</th><th>nl</th><th>na</th><th>nfa</th><th>interest_payments</th><th>cpi</th><th>c_deflator</th><th>dff</th><th>...</th><th>rnw</th><th>rl</th><th>ra</th><th>rfa</th><th>sb_1975_4</th><th>sb_2008_3</th><th>ln_rc</th><th>ln_rdy</th><th>ln_rnw</th><th>const</th></tr></thead><tbody><tr><th>2015-10-01</th><td>7.4</td><td>1026.972</td><td>89638.832</td><td>14191.141</td><td>104202.900</td><td>72619.083</td><td>271.856</td><td>237.837</td><td>1.03286</td><td>0.16</td><td>...</td><td>86787.010824</td><td>13739.655907</td><td>100887.729218</td><td>70308.737873</td><td>1</td><td>1</td><td>9.392924</td><td>9.505978</td><td>11.371212</td><td>1</td></tr><tr><th>2016-01-01</th><td>7.5</td><td>1046.172</td><td>90792.562</td><td>14181.444</td><td>105350.157</td><td>73464.821</td><td>266.871</td><td>237.689</td><td>1.03340</td><td>0.36</td><td>...</td><td>87858.101413</td><td>13723.092704</td><td>101945.187730</td><td>71090.401587</td><td>1</td><td>1</td><td>9.400231</td><td>9.513525</td><td>11.383478</td><td>1</td></tr><tr><th>2016-04-01</th><td>6.9</td><td>969.635</td><td>92170.184</td><td>14313.771</td><td>106862.978</td><td>74353.858</td><td>271.273</td><td>239.590</td><td>1.03989</td><td>0.37</td><td>...</td><td>88634.551731</td><td>13764.697228</td><td>102763.732702</td><td>71501.656906</td><td>1</td><td>1</td><td>9.405301</td><td>9.511885</td><td>11.392277</td><td>1</td></tr><tr><th>2016-07-01</th><td>6.8</td><td>961.218</td><td>93991.425</td><td>14497.803</td><td>108869.331</td><td>75700.352</td><td>274.959</td><td>240.607</td><td>1.04379</td><td>0.39</td><td>...</td><td>90048.213721</td><td>13889.578363</td><td>104301.948668</td><td>72524.503971</td><td>1</td><td>1</td><td>9.411142</td><td>9.516705</td><td>11.408101</td><td>1</td></tr><tr><th>2016-10-01</th><td>6.8</td><td>974.320</td><td>94743.726</td><td>14601.767</td><td>109726.272</td><td>76056.719</td><td>277.958</td><td>242.135</td><td>1.04872</td><td>0.45</td><td>...</td><td>90342.251507</td><td>13923.418072</td><td>104628.758868</td><td>72523.379930</td><td>1</td><td>1</td><td>9.415978</td><td>9.522002</td><td>11.411361</td><td>1</td></tr></tbody>
+</table>
+<p>5 rows &#xD7; 39 columns</p>
+</div>
+
+
+
+<h2 id="Check-for-Stationary"><a href="#Check-for-Stationary" class="headerlink" title="Check for Stationary"></a>Check for Stationary</h2><p>I&#x2019;m going to pre-test the data to determine whether if it has a unit root, that is, whether it&#x2019;s stationary or non-stationary.</p>
+<h3 id="1-What-is-stationarity"><a href="#1-What-is-stationarity" class="headerlink" title="1. What is stationarity?"></a>1. What is stationarity?</h3><p>A stationary process is a stochastic process whose probability distribution does not change over time. For our work in time series analysis, we mostly care about stationarity in its weak form - covariance stationary.</p>
+<h4 id="Covariance-stationary"><a href="#Covariance-stationary" class="headerlink" title="Covariance stationary:"></a>Covariance stationary:</h4><ul>
+<li>Constant mean:<br>\begin{align}<br>&amp;E(y_t) = E(y_{t+1}) = \mu<br>\end{align}</li>
+<li>Constant variance:<br>\begin{align}<br>&amp;Var(y_t) = Var(y_{t+1}) = \sigma^2<br>\end{align}</li>
+<li>Covariance depends on time that has elapsed between observations, not on reference period:<br>\begin{align}<br>&amp;Cov(y_t,y_{t+j}) = Cov(y_s,y_{s+j}) = \gamma_j<br>\end{align}</li>
+</ul>
+<p>To get an intuition of stationarity, one can imagine a frictionless pendulum. It swings back and forth in an oscillatory motion, yet the amplitude and frequency remain constant. Although the pendulum is moving, the process is stationary as its &#x201C;statistics&#x201D; are constant (frequency and amplitude). However, if a force were to be applied to the pendulum, either the frequency or amplitude would change, thus making the process non-stationary. </p>
+<h3 id="2-Why-is-stationarity-important"><a href="#2-Why-is-stationarity-important" class="headerlink" title="2. Why is stationarity important?"></a>2. Why is stationarity important?</h3><p>Stationarity is one important assumption underlying in time series analysis as if the series is non-stationary, the shocks do not die out, the impact of disturbances become more influential over time and so gives a poor forecast accuracy.</p>
+<h4 id="Consequences-of-non-stationarity"><a href="#Consequences-of-non-stationarity" class="headerlink" title="Consequences of non-stationarity"></a>Consequences of non-stationarity</h4><ul>
+<li>The effect of a shock will diminish as time elapses</li>
+<li>Statistical consequences<br>&#xA0; &#xA0; &#xA0;- Non-normal distribution of test statistics<br>&#xA0; &#xA0; &#xA0;- Bias in autoregressive coefficients; we might mistakenly estimate an AR(1), deficient forecast<br>&#xA0; &#xA0; &#xA0;- Usual confidence intervals for coefficients not valid, poor forecast ability</li>
+</ul>
+<h3 id="3-How-do-we-determine-whether-a-time-series-is-nonstationary"><a href="#3-How-do-we-determine-whether-a-time-series-is-nonstationary" class="headerlink" title="3. How do we determine whether a time series is nonstationary?"></a>3. How do we determine whether a time series is nonstationary?</h3><p>As always, visual inspection is one of the most useful ways to identify non stationary series. It looks that all of the curves obviously have a trend, which is definitely against the definition of stationarity.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">train[[<span class="hljs-string">&apos;ln_rc&apos;</span>,<span class="hljs-string">&apos;ln_rdy&apos;</span>,<span class="hljs-string">&apos;ln_rnw&apos;</span>]].plot()</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<p>&#xA0; &#xA0; &lt;matplotlib.axes._subplots.AxesSubplot at 0x23c0007c248&gt;</p>
+<img src="http://yumeng-li.github.io/VECM_files/VECM_44_1.png">
+
+
+
+<p>Then we can turn to statistical tests. The first would be <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Augmented_Dickey%E2%80%93Fuller_test"><strong>Augmented Dickey-Fuller (ADF) Test</strong></a>, which tests for non-stationarity. </p>
+<p>Recall AR(1) model:<br>\begin{align}<br>y_t = &#xA0;by{t_1} + \epsilon_t<br>\end{align}</p>
+<p>A special case is the random walk when $b = 1$. However, for stationarity, it requires $b&lt;1$. </p>
+<p>If generalizing to AR(p), it means that roots of the polynomial below must all be &gt;1 in abs value,<br>\begin{align}<br>1 - b_1z -b_2z^2-b_3z^3-&#x2026;-b_pz^p<br>\end{align}</p>
+<p>If one of the roots = 1, then it is said to have a <strong>unit root</strong> i.e., non-stationary.</p>
+<p>The ADF Test can test for the coefficient on $y_{t-1}$. Basically, it regresses y on its lag testing for significance of coefficient. I won&#x2019;t go into great mathematical details, if anyone&#x2019;s interested, check out this <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Augmented_Dickey%E2%80%93Fuller_test">wiki page</a>.</p>
+<p>However, ADF has been found to have low power in certain circumstances:</p>
+<ul>
+<li>stationary processes with near-unit roots. For example, it has difficulty distinguishing between b = 1 and b = 0.95, especially with small samples.</li>
+<li>Trend stationary processes.</li>
+</ul>
+<p>So alternative tests have been designed, which are <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Phillips%E2%80%93Perron_test"><strong>Phillips&#x2013;Perron (PP) Test</strong></a> and <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/KPSS_test"><strong>Kwiatkowski&#x2013;Phillips&#x2013;Schmidt&#x2013;Shin (KPSS)Test</strong></a>. I usually prefer to use all three of them together, but here I would focus on ADF and KPSS as they have been implemented in statsmodels.</p>
+<p>A few notes:<br>&#xA0;- ADF and PP are called <strong>unit root tests</strong>; the null hypothesis is that $y_t$ has a unit root; is I(1) or higher.<br>&#xA0;- KPSS, on the other hand, is a <strong>stationarity test</strong>; the null hypothesis is that $y_t$ is I(0).<br>&#xA0;- Correct specification is key. Intercept and trend should be included when appropriate as critical values for the t-statistics will vary depending on whether they are included.<br>&#xA0;- Structural breaks can complicate matters further. That&#x2019;s why we start this blog with detecting structural breaks.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">augmented_dickey_fuller_test</span>(<span class="hljs-params">time_series</span>):</span></span><br><span class="line">&#xA0; &#xA0; result = adfuller(time_series.values)</span><br><span class="line">&#xA0; &#xA0; print(<span class="hljs-string">&apos;ADF Statistic: %f&apos;</span> % result[<span class="hljs-number">0</span>])</span><br><span class="line">&#xA0; &#xA0; print(<span class="hljs-string">&apos;ADF p-value: %f&apos;</span> % result[<span class="hljs-number">1</span>])</span><br><span class="line">&#xA0; &#xA0; <span class="hljs-keyword">if</span> result[<span class="hljs-number">1</span>]&lt;<span class="hljs-number">0.05</span>:</span><br><span class="line">&#xA0; &#xA0; &#xA0; &#xA0; print(<span class="hljs-string">&apos;stationary - null hypothesis of a unit root can be rejected at a 5% significance level&apos;</span>)</span><br><span class="line">&#xA0; &#xA0; <span class="hljs-keyword">else</span>:</span><br><span class="line">&#xA0; &#xA0; &#xA0; &#xA0; print(<span class="hljs-string">&apos;non-stationary - null hypothesis of a unit root cannot be rejected at a 5% significance level&apos;</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">kpss_test</span>(<span class="hljs-params">timeseries</span>):</span></span><br><span class="line">&#xA0; &#xA0; result = kpss(timeseries, regression=<span class="hljs-string">&quot;c&quot;</span>)</span><br><span class="line">&#xA0; &#xA0; print(<span class="hljs-string">&apos;KPSS Statistic: %f&apos;</span> % result[<span class="hljs-number">0</span>])</span><br><span class="line">&#xA0; &#xA0; print(<span class="hljs-string">&apos;KPSS p-value: %f&apos;</span> % result[<span class="hljs-number">1</span>])</span><br><span class="line">&#xA0; &#xA0; <span class="hljs-keyword">if</span> result[<span class="hljs-number">1</span>]&gt;=<span class="hljs-number">0.05</span>:</span><br><span class="line">&#xA0; &#xA0; &#xA0; &#xA0; print(<span class="hljs-string">&apos;stationary - null hypothesis of stationary cannot be rejected at a 5% significance level&apos;</span>)</span><br><span class="line">&#xA0; &#xA0; <span class="hljs-keyword">else</span>:</span><br><span class="line">&#xA0; &#xA0; &#xA0; &#xA0; print(<span class="hljs-string">&apos;non-stationary - null hypothesis of stationary can be rejected at a 5% significance level&apos;</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">augmented_dickey_fuller_test(train[<span class="hljs-string">&apos;ln_rc&apos;</span>])</span><br><span class="line">kpss_test(train[<span class="hljs-string">&apos;ln_rc&apos;</span>])</span><br></pre></td></tr></tbody></table></figure>
+
+<p>&#xA0; &#xA0; ADF Statistic: -1.949803<br>&#xA0; &#xA0; ADF p-value: 0.309007<br>&#xA0; &#xA0; non-stationary - null hypothesis of a unit root cannot be rejected at a 5% significance level<br>&#xA0; &#xA0; KPSS Statistic: 2.297233<br>&#xA0; &#xA0; KPSS p-value: 0.010000<br>&#xA0; &#xA0; non-stationary - null hypothesis of stationary can be rejected at a 5% significance level</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">augmented_dickey_fuller_test(train[<span class="hljs-string">&apos;ln_rdy&apos;</span>])</span><br><span class="line">kpss_test(train[<span class="hljs-string">&apos;ln_rdy&apos;</span>])</span><br></pre></td></tr></tbody></table></figure>
+
+<p>&#xA0; &#xA0; ADF Statistic: -2.970069<br>&#xA0; &#xA0; ADF p-value: 0.037786<br>&#xA0; &#xA0; stationary - null hypothesis of a unit root can be rejected at a 5% significance level<br>&#xA0; &#xA0; KPSS Statistic: 2.292161<br>&#xA0; &#xA0; KPSS p-value: 0.010000<br>&#xA0; &#xA0; non-stationary - null hypothesis of stationary can be rejected at a 5% significance level</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">augmented_dickey_fuller_test(train[<span class="hljs-string">&apos;ln_rnw&apos;</span>])</span><br><span class="line">kpss_test(train[<span class="hljs-string">&apos;ln_rnw&apos;</span>])</span><br></pre></td></tr></tbody></table></figure>
+
+<p>&#xA0; &#xA0; ADF Statistic: -0.266563<br>&#xA0; &#xA0; ADF p-value: 0.930108<br>&#xA0; &#xA0; non-stationary - null hypothesis of a unit root cannot be rejected at a 5% significance level<br>&#xA0; &#xA0; KPSS Statistic: 2.300497<br>&#xA0; &#xA0; KPSS p-value: 0.010000<br>&#xA0; &#xA0; non-stationary - null hypothesis of stationary can be rejected at a 5% significance level</p>
+<p>None of the variables can be considered stationary with the two tests. We can therefore ask whether the variables form a cointegrated system with a given number of &#x201C;common trends&#x201D;. <strong>Intuitively, I would argue that there exists one cointegration equation among the three variables as in the long run, one&#x2019;s amount consumed and wealth accumulated should be equal to the income that one earns.</strong> </p>
+<p>We will discuss how to test for cointegration relationships and how to estimate them using a vector error correction model in the next blog.</p>
+</body></html>
+    
+    </div>
+    
+    
+    <div class="columns is-mobile is-multiline article-nav">
+        <span class="column is-12-mobile is-half-desktop  article-nav-prev">
+            
+            <a href="/2022/01/11/VECM2/">Predicting Post-Pandemic Consumption Behaviors Given Potential Paths of Monetary Policy, Part 2 -- Cointegration, VAR/VECM and Forecast</a>
+            
+        </span>
+        <span class="column is-12-mobile is-half-desktop  article-nav-next">
+            
+            <a href="/2021/10/02/projectcovidmixed/">Project Covid Admissions Based on Vaccine Progress, Part 3 -- Mixed-effect models and Bayesian Inference</a>
+            
+        </span>
+    </div>
+    
+</article>
+
+
+
+
+    </div>
+</section>
+    <footer class="footer">
+    <div class="container">
+        <div class="columns content">
+            <div class="column is-narrow has-text-centered">
+                &copy; 2025 Yumeng Li&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
+                        target="_blank" rel="noopener" href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
+            </div>
+            <div class="column is-hidden-mobile"></div>
+
+            
+            <div class="column is-narrow">
+                <div class="columns is-mobile is-multiline is-centered">
+                
+                    
+                <a class="column is-narrow has-text-black" title="GitHub" target="_blank" rel="noopener" href="https://github.com/ppoffice/hexo-theme-minos">
+                    
+                    GitHub
+                    
+                </a>
+                
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</footer>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
+
+<!-- test if the browser is outdated -->
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" target="_blank" rel="noopener" href="http://outdatedbrowser.com/">Update my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // plugin function, place inside DOM ready function
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        })
+    });
+</script>
+
+<script>
+    window.FontAwesomeConfig = {
+        searchPseudoElements: true
+    }
+    moment.locale("en-AU");
+</script>
+
+
+    
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+    MathJax.Hub.Config({
+        "HTML-CSS": {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+</script>
+
+    
+    
+    
+    
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/js/lightgallery-all.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/js/jquery.justifiedGallery.min.js"></script>
+<script>
+    (function ($) {
+        $(document).ready(function () {
+            if (typeof($.fn.lightGallery) === 'function') {
+                $('.article.gallery').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof($.fn.justifiedGallery) === 'function') {
+                $('.justified-gallery').justifiedGallery();
+            }
+        });
+    })(jQuery);
+</script>
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <style>
+        .hljs {
+            position: relative;
+        }
+
+        .hljs .clipboard-btn {
+            float: right;
+            color: #9a9a9a;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .hljs .clipboard-btn:hover {
+          color: #8a8a8a;
+        }
+
+        .hljs > .clipboard-btn {
+            display: none;
+            position: absolute;
+            right: 4px;
+            top: 4px;
+        }
+
+        .hljs:hover > .clipboard-btn {
+            display: inline;
+        }
+
+        .hljs > figcaption > .clipboard-btn {
+            margin-right: 4px;
+        }
+    </style>
+    <script>
+      $(document).ready(function () {
+        $('figure.hljs').each(function(i, figure) {
+          var codeId = 'code-' + i;
+          var code = figure.querySelector('.code');
+          var copyButton = $('<button>Copy <i class="far fa-clipboard"></i></button>');
+          code.id = codeId;
+          copyButton.addClass('clipboard-btn');
+          copyButton.attr('data-clipboard-target-id', codeId);
+
+          var figcaption = figure.querySelector('figcaption');
+
+          if (figcaption) {
+            figcaption.append(copyButton[0]);
+          } else {
+            figure.prepend(copyButton[0]);
+          }
+        })
+
+        var clipboard = new ClipboardJS('.clipboard-btn', {
+          target: function(trigger) {
+            return document.getElementById(trigger.getAttribute('data-clipboard-target-id'));
+          }
+        });
+        clipboard.on('success', function(e) {
+          e.clearSelection();
+        })
+      })
+    </script>
+
+    
+    
+
+    
+
+
+
+<script src="/js/script.js"></script>
+
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-mask"></div>
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="Type something..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+    
+</body>
+</html>

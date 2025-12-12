@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+<head>
+    <meta charset="utf-8">
+<title>Project Covid Admissions Based on Vaccine Progress, Part 1 -- From Simple Linear Regression to Weighted Time Series Regression - The Practical Quant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css">
+
+
+
+
+<meta name="description" content="">
+
+
+
+
+
+    <meta name="description" content="Lately I&amp;#x2019;ve been working on a project predicting credit losses for mortgages with a bunch of loan-level attributes. To be honest, the data wasn&amp;#x2019;t rich. In pursuit of good predictive powe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Project Covid Admissions Based on Vaccine Progress, Part 1 -- From Simple Linear Regression to Weighted Time Series Regression">
+<meta property="og:url" content="http://yoursite.com/2021/09/21/projectcovid/index.html">
+<meta property="og:site_name" content="The Practical Quant">
+<meta property="og:description" content="Lately I&amp;#x2019;ve been working on a project predicting credit losses for mortgages with a bunch of loan-level attributes. To be honest, the data wasn&amp;#x2019;t rich. In pursuit of good predictive powe">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yumeng-li.github.io/projectcovid_files/projectcovid_43_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/projectcovid_files/projectcovid_45_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/projectcovid_files/projectcovid_49_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/projectcovid_files/projectcovid_53_0.png">
+<meta property="og:image" content="http://yumeng-li.github.io/projectcovid_files/projectcovid_55_1.png">
+<meta property="article:published_time" content="2021-09-21T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-12T03:45:12.361Z">
+<meta property="article:author" content="Yumeng Li">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yumeng-li.github.io/projectcovid_files/projectcovid_43_0.png">
+
+
+
+
+
+<link rel="icon" href="/favicon.png">
+
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ovo|Source+Code+Pro">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/css/justifiedGallery.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+<script defer src="//use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+
+<meta name="generator" content="Hexo 5.0.0"></head>
+<body>
+    
+<nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item navbar-logo" href="/">
+                
+                    
+                    THE PRACTICAL QUANT
+                    
+                
+            </a>
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <div class="navbar-menu navbar-start">
+            
+            <a class="navbar-item "
+               href="/archives">Archives</a>
+            
+            <a class="navbar-item "
+               href="/categories">Category</a>
+            
+            <a class="navbar-item "
+               target="_blank" rel="noopener" href="http://allaboutmacros.com/">Blog</a>
+            
+            <a class="navbar-item "
+               target="_blank" rel="noopener" href="https://www.linkedin.com/in/emmelineli/">Linkedin</a>
+            
+        </div>
+        
+        <div class="navbar-menu navbar-end">
+            
+            <a class="navbar-item search" title="Search" href="javascript:;">
+                <i class="fas fa-search"></i>
+            </a>
+            
+            
+            
+            <a class="navbar-item" title="GitHub" target="_blank" rel="noopener" href="https://github.com/ppoffice/hexo-theme-minos">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+               
+            
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+    <div class="container">
+    <article class="article content gallery" itemscope itemprop="blogPost">
+    <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
+        
+            Project Covid Admissions Based on Vaccine Progress, Part 1 -- From Simple Linear Regression to Weighted Time Series Regression
+        
+    </h1>
+    <div class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile">
+        <span class="column is-narrow">
+            <time datetime="2021-09-21T16:00:00.000Z" itemprop="datePublished">Sep 21 2021</time>
+        </span>
+        
+        <span class="column is-narrow article-category">
+            <i class="far fa-folder"></i>
+            <a class="article-category-link" href="/categories/Applied-Statistics/">Applied Statistics</a>
+        </span>
+        
+        
+        <span class="column is-narrow">
+            
+            
+            16 minutes read (About 2473 words)
+        </span>
+        
+    </div>
+    <div class="article-entry is-size-6-mobile" itemprop="articleBody">
+    
+        <html><head></head><body><p>Lately I&#x2019;ve been working on a project predicting credit losses for mortgages with a bunch of loan-level attributes. To be honest, the data wasn&#x2019;t rich. In pursuit of good predictive power, I had to try from the simple multi-period regression, to generalized linear model with distributions beyond the Gaussian family, then mixed effect models, and even used some curve fitting techniques like splines at last to fix the oversimple (or wrong) assumptions I made at the beginning. Overall, I think the journey was inspiring as it basically shows that one can almost crack any problem with regression analysis, more importantly, in an elegant way.</p>
+<p>When it comes to predictive modeling, people always turn to linear regressions, which isn&#x2019;t wrong, just so you know that linear regression models and OLS make a number of assumptions about the predictor variables, the response variable, and their relationship. Violating these assumptions can result in biased predictions or imprecise coefficients, in short cause your model to be less predictive. Well, the good news is that there are numerous extensions have been developed that allow each of these assumptions to be relaxed, and in some cases eliminated entirely, but only if you know what they are and when to use them. More commonly, I see people get stuck and choose to live with a just-fine-fit model without knowing that they can easily fix it by employing a more generalized regression models. Now let&#x2019;s see how powerful regressions can get through a trendy modeling case - project covid admissions based on the vaccinate progress.</p>
+<h2 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h2><figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np</span><br><span class="line"><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd</span><br><span class="line"><span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt</span><br><span class="line"><span class="hljs-keyword">import</span> matplotlib.colors</span><br><span class="line"><span class="hljs-keyword">import</span> seaborn <span class="hljs-keyword">as</span> sns</span><br><span class="line"><span class="hljs-keyword">import</span> statsmodels.api <span class="hljs-keyword">as</span> sm</span><br><span class="line"><span class="hljs-keyword">import</span> sys</span><br><span class="line"><span class="hljs-keyword">import</span> covid_analysis <span class="hljs-keyword">as</span> covid <span class="hljs-comment"># some functions developed for this blog</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>The data I use includes hospital admissions and vaccinations from the CDC website, and the most up-to-date populations by state from the US Census Bureau.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data_dir=<span class="hljs-string">&quot;../data&quot;</span></span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">hospitalizations=pd.read_csv(<span class="hljs-string">f&quot;<span class="hljs-subst">{data_dir}</span>/covid_hospitalizations.csv&quot;</span>,parse_dates=[<span class="hljs-string">&quot;date&quot;</span>])</span><br><span class="line">vaccinations=pd.read_csv(<span class="hljs-string">f&quot;<span class="hljs-subst">{data_dir}</span>/covid_vaccinations.csv&quot;</span>,parse_dates=[<span class="hljs-string">&quot;date&quot;</span>])</span><br><span class="line">population=pd.read_csv(<span class="hljs-string">f&quot;<span class="hljs-subst">{data_dir}</span>/population.csv&quot;</span>)</span><br><span class="line"></span><br><span class="line">event=<span class="hljs-string">&quot;admissions&quot;</span></span><br><span class="line">data=hospitalizations</span><br><span class="line"></span><br><span class="line">data=data.merge(vaccinations,on=[<span class="hljs-string">&quot;date&quot;</span>,<span class="hljs-string">&quot;state&quot;</span>])</span><br><span class="line">data=data.merge(population,on=<span class="hljs-string">&quot;state&quot;</span>)</span><br><span class="line">data[<span class="hljs-string">&quot;vaccinated&quot;</span>]=data[<span class="hljs-string">&quot;vaccinated&quot;</span>]/data[<span class="hljs-string">&quot;population&quot;</span>]</span><br><span class="line">data.head()</span><br></pre></td></tr></tbody></table></figure>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th &#123;
+    vertical-align: top;
+&#125;
+
+.dataframe thead th &#123;
+    text-align: right;
+&#125;</code></pre>
+<p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>date</th>
+      <th>state</th>
+      <th>used_beds</th>
+      <th>admissions</th>
+      <th>vaccinated</th>
+      <th>population</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2021-06-10</td>
+      <td>MT</td>
+      <td>66.0</td>
+      <td>16.0</td>
+      <td>0.397597</td>
+      <td>1080577</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2021-06-21</td>
+      <td>MT</td>
+      <td>57.0</td>
+      <td>13.0</td>
+      <td>0.411614</td>
+      <td>1080577</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2021-08-05</td>
+      <td>MT</td>
+      <td>149.0</td>
+      <td>23.0</td>
+      <td>0.440153</td>
+      <td>1080577</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2021-07-15</td>
+      <td>MT</td>
+      <td>62.0</td>
+      <td>9.0</td>
+      <td>0.431722</td>
+      <td>1080577</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2021-08-21</td>
+      <td>MT</td>
+      <td>224.0</td>
+      <td>59.0</td>
+      <td>0.449196</td>
+      <td>1080577</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<br>
+Now we are good to go. As always, let&#x2019;s first check on our old friend, simple linear regression with one single explanatory variable, as a warm-up. 
+
+<p>Here specifically, I am using weighted least squares rather than ordinary least squares to incorporate the knowledge of state populations. WLS is a generalization of OLS and a specialization of generalized least squares, which can relax the assumptions of constant variance, allowing the variances of the observations to be unequal i.e., heteroscedasticity (btw one of my favorite words in statistics, the pronunciation&#x2019;s fun).</p>
+<h2 id="Single-Period-Regression"><a href="#Single-Period-Regression" class="headerlink" title="Single Period Regression"></a>Single Period Regression</h2><h3 id="Model-Definition"><a href="#Model-Definition" class="headerlink" title="Model Definition"></a>Model Definition</h3><p>The weighted linear regression model is defined as:<br>\begin{eqnarray}<br>    \hat{y}_i &amp;= c + \beta x_i \newline<br>    y_i &amp;=\hat{y}_i+ \epsilon_i \newline<br>\end{eqnarray}<br>and we minimize the <strong>weighted least squares error</strong> :<br>\begin{equation}<br>    E_w = \sum_i P_i(y - \hat{y}_i)^2<br>\end{equation}<br>where </p>
+<ul>
+<li>Each observation $i$ represents a single state.</li>
+<li>$\hat{y}_i$ is the predicted probability of hospital admissions <em>per  persons</em> on that state.</li>
+<li>$y_i$ is the actual number of events per person observed.</li>
+<li>$x_i$ is the percentage of the state population fully vaccinated.</li>
+<li>$P_i$ is the population of the  state.</li>
+<li>$\epsilon_i$ is a Gaussian uncorrelated noise with constant variance $\sigma$ </li>
+<li>the parameters $c$ and $\beta$ will be fitted to the observed data to maximize agreement with the model</li>
+</ul>
+<p>We first fit the regression model to <strong>single  day</strong> of state hospitalization data.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">offset=<span class="hljs-number">9</span> <span class="hljs-comment"># if we do not want to look at the last day, subtract here.</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>Let&#x2019;s take Aug.15,</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">last_date=data[<span class="hljs-string">&quot;date&quot;</span>].max()-pd.offsets.Day(offset)</span><br><span class="line">last_data=data[data[<span class="hljs-string">&quot;date&quot;</span>]==last_date]</span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">X=sm.add_constant(last_data[<span class="hljs-string">&quot;vaccinated&quot;</span>])</span><br><span class="line">P=last_data[<span class="hljs-string">&quot;population&quot;</span>]</span><br><span class="line">Y=last_data[event]/last_data[<span class="hljs-string">&quot;population&quot;</span>]</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Use-statmodels-for-Weighted-Linear-Regression"><a href="#Use-statmodels-for-Weighted-Linear-Regression" class="headerlink" title="Use statmodels for Weighted Linear Regression"></a>Use statmodels for Weighted Linear Regression</h3><p>Let&#x2019;s first use the  <strong>Weighted Linear Regression</strong> model from <a target="_blank" rel="noopener" href="https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Poisson.html">statmodels</a>.<br>The exact same estimation can be done by a different way, which I will show later.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mod=sm.WLS(Y,X,P)</span><br><span class="line">res=mod.fit()</span><br><span class="line">res.params</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>const         0.000127
+vaccinated   -0.000190
+dtype: float64</code></pre>
+<p>So here&#x2019;s our estimation of the coefficients and some statistics that are helpful for diagnosis. It&#x2019;s easy to read that the R-squared is 0.327. But we can also calculate it ourselves.</p>
+<p>The R-square is defined as ratio of square loss to target variance,</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">square_error</span>(<span class="hljs-params">y,y_hat,P</span>):</span></span><br><span class="line">    err=y-y_hat</span><br><span class="line">    <span class="hljs-keyword">return</span> np.sum(P*err**<span class="hljs-number">2</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Y_pred=res.predict(X)</span><br><span class="line">Y_bar=(Y*P).sum()/P.sum()</span><br><span class="line">R2=<span class="hljs-number">1</span> - square_error(Y,Y_pred,P)/square_error(Y,Y_bar,P)</span><br><span class="line">R2</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>0.3266337795171833</code></pre>
+<h3 id="Use-statmodels-GLM-for-Weighted-Linear-Regression"><a href="#Use-statmodels-GLM-for-Weighted-Linear-Regression" class="headerlink" title="Use statmodels GLM for Weighted Linear Regression"></a>Use statmodels GLM for Weighted Linear Regression</h3><p>Exactly the same model can be written in the more general language of <strong>Generalized Linear models</strong> as</p>
+<h3 id="Model-Definition-1"><a href="#Model-Definition-1" class="headerlink" title="Model Definition"></a>Model Definition</h3><p>The linear regression  model is defined as:<br>\begin{eqnarray}<br>    &amp;\eta_i &amp;=c + \beta*x_i \newline<br>    \mathbb{E}(y_i|x_i) =&amp; \hat{y}_i &amp;= \eta_i  \newline<br>    &amp;p(y_i|x_i) &amp; = N(\hat{y}_i,\sigma)<br>\end{eqnarray}</p>
+<p>The fact that $\eta_i=\hat{y}_i$ means we are using the <strong>identity</strong> link between the Gaussian family and the linear model $\eta$. One should be aware here that linear model is just a specical case of GLM.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">glm_model=sm.GLM(Y,X,family=sm.families.Gaussian(sm.families.links.identity()),var_weights=P)</span><br><span class="line">glm_res=glm_model.fit()</span><br><span class="line">glm_res.params</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>const         0.000127
+vaccinated   -0.000190
+dtype: float64</code></pre>
+<p>Results <strong>are the same</strong>. But with the <code>GLM</code> language we will be able to perform regression many more kinds of variables. </p>
+<p>The generalization of square error for a GLM model is called the  <strong>deviance</strong>. This is  the <em>square error</em> the Gaussian Family used  in linear regression. Let&#x2019;s calculate the in-sample R-squared in the GLM way and compare it with the previous.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">glm_res.deviance, square_error(Y,Y_pred,P)</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>(0.12246143037040369, 0.12246143037040369)</code></pre>
+<p>The resuls also include the deviance for the <strong>null model</strong> fitted to just a constant</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">glm_res.null_deviance,square_error(Y,Y_bar,P)</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>(0.1818645287591, 0.1818645287591)</code></pre>
+<p>The ratio defines an $R^2$ value. Not surprisingly, the results are exactly the same. Overall, I admit a 32.7% R-squared model can barely be said to be a good model. But no worries, all can be fixed.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-number">1</span>-glm_res.deviance/glm_res.null_deviance</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>0.3266337795171833</code></pre>
+<p>Now, as we have a better understanding of the data and the modeling methodologies, let&#x2019;s move on to model the time series. </p>
+<p>The data we have here is time series data, indeed panel data, as time series and cross-sectional data are both special cases of panel data that are in one dimension only. But we will deal with the multi-subjects matter in the next blog(probably should have a spoiler tag oops). Anyways, let&#x2019;s first start with the multi-period regression, here I have trend variables added to the model to represent time.</p>
+<h2 id="Multiple-Period-Regression"><a href="#Multiple-Period-Regression" class="headerlink" title="Multiple Period Regression"></a>Multiple Period Regression</h2><h3 id="Model-Definition-2"><a href="#Model-Definition-2" class="headerlink" title="Model Definition"></a>Model Definition</h3><p>\begin{eqnarray}<br>    &amp;\eta_i &amp;=c + \beta_1 x_i  + \beta_2 t_i + \beta_3 t_i^2 \newline<br>    \mathbb{E}(y_i|x_i) =&amp; \hat{y}_i &amp;= \eta_i  \newline<br>    &amp;p(y_i|x_i) &amp; = N(\hat{y_i},\sigma^2)<br>\end{eqnarray}<br>where </p>
+<ul>
+<li>Each observation $i$ represents a single state at one particular date.</li>
+<li>$y_i$ is the number of events on that state.</li>
+<li>$\hat{y}_i$ is the <em>predicted</em> number of events on that state.</li>
+<li>$x_i$ is the percentage of the state population fully vaccinated on that state.</li>
+<li>$t_i$ is the number of days elapsed since the beginning of the training period.</li>
+<li>$\sigma^2$ is the level of <em>noise</em> of the observations (the variance of the residuals).</li>
+<li>the parameters $c$ and $\beta_1,\beta_2,\beta_3$ will be fitted to the observed data to maximize agreement with the model</li>
+</ul>
+<p>This can be fitter as a <strong>linear model</strong> where the inputs are $x_i$, $t_i$ and $t_i^2$</p>
+<p>First we select the training period:</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">start_train=<span class="hljs-string">&quot;2021-07-15&quot;</span></span><br><span class="line">end_train=<span class="hljs-string">&quot;2021-08-15&quot;</span></span><br><span class="line">train_data=data[(data[<span class="hljs-string">&apos;date&apos;</span>] &gt;= start_train) &amp; (data[<span class="hljs-string">&apos;date&apos;</span>] &lt;= end_train)].copy()</span><br><span class="line">date0=train_data[<span class="hljs-string">&quot;date&quot;</span>].min()</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Then a 7-day testing period:</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">test_period=<span class="hljs-number">7</span> <span class="hljs-comment"># days</span></span><br><span class="line">test_end=pd.Timestamp(end_train)+pd.DateOffset(days=test_period)</span><br><span class="line">test_data=data[(data[<span class="hljs-string">&quot;date&quot;</span>]&gt;end_train) &amp; (data[<span class="hljs-string">&quot;date&quot;</span>]&lt;=test_end)].copy()</span><br></pre></td></tr></tbody></table></figure>
+
+<p>I write a function to generate the <strong>desired matrix</strong>,</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">define_variables</span>(<span class="hljs-params">data,date0</span>):</span></span><br><span class="line">        N=len(data)</span><br><span class="line">        T=(data[<span class="hljs-string">&quot;date&quot;</span>]-date0).dt.days</span><br><span class="line">        X=data[<span class="hljs-string">&quot;vaccinated&quot;</span>].copy().to_frame()</span><br><span class="line">        X[<span class="hljs-string">&quot;T&quot;</span>]=T</span><br><span class="line">        X[<span class="hljs-string">&quot;T2&quot;</span>]=T**<span class="hljs-number">2</span></span><br><span class="line">        P=data[<span class="hljs-string">&quot;population&quot;</span>]</span><br><span class="line">        X[<span class="hljs-string">&quot;const&quot;</span>]=np.ones(N)</span><br><span class="line">        <span class="hljs-keyword">return</span> X,P</span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">X_train,P_train=covid.define_variables(train_data,date0)</span><br><span class="line">Y_train=train_data[event]/train_data[<span class="hljs-string">&quot;population&quot;</span>]</span><br><span class="line">X_test,P_test=covid.define_variables(test_data,date0)</span><br><span class="line">Y_test=test_data[event]/test_data[<span class="hljs-string">&quot;population&quot;</span>]</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Weighted-Multi-period-Linear-Regression"><a href="#Weighted-Multi-period-Linear-Regression" class="headerlink" title="Weighted Multi-period Linear Regression"></a>Weighted Multi-period Linear Regression</h3><figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mod=sm.WLS(Y_train,X_train,P_train)</span><br><span class="line">res=mod.fit()</span><br><span class="line">res.summary()</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<table class="simpletable">
+<caption>WLS Regression Results</caption>
+<tbody><tr>
+  <th>Dep. Variable:</th>            <td>y</td>        <th>  R-squared:         </th>  <td>   0.373</td> 
+</tr>
+<tr>
+  <th>Model:</th>                   <td>WLS</td>       <th>  Adj. R-squared:    </th>  <td>   0.371</td> 
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th>  <td>   322.3</td> 
+</tr>
+<tr>
+  <th>Date:</th>             <td>Tue, 21 Sep 2021</td> <th>  Prob (F-statistic):</th>  <td>3.12e-164</td>
+</tr>
+<tr>
+  <th>Time:</th>                 <td>15:16:26</td>     <th>  Log-Likelihood:    </th>  <td>  15151.</td> 
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td>  1632</td>      <th>  AIC:               </th> <td>-3.029e+04</td>
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td>  1628</td>      <th>  BIC:               </th> <td>-3.027e+04</td>
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>     3</td>      <th>                     </th>      <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>      <td> </td>    
+</tr>
+</tbody></table>
+<table class="simpletable">
+<tbody><tr>
+       <td></td>         <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P&gt;|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>vaccinated</th> <td>   -0.0002</td> <td> 6.13e-06</td> <td>  -24.647</td> <td> 0.000</td> <td>   -0.000</td> <td>   -0.000</td>
+</tr>
+<tr>
+  <th>T</th>          <td> 1.038e-06</td> <td> 1.82e-07</td> <td>    5.686</td> <td> 0.000</td> <td>  6.8e-07</td> <td>  1.4e-06</td>
+</tr>
+<tr>
+  <th>T2</th>         <td> -1.18e-09</td> <td> 5.69e-09</td> <td>   -0.207</td> <td> 0.836</td> <td>-1.23e-08</td> <td> 9.98e-09</td>
+</tr>
+<tr>
+  <th>const</th>      <td>   8.1e-05</td> <td> 3.17e-06</td> <td>   25.544</td> <td> 0.000</td> <td> 7.48e-05</td> <td> 8.72e-05</td>
+</tr>
+</tbody></table>
+<table class="simpletable">
+<tbody><tr>
+  <th>Omnibus:</th>       <td>1418.486</td> <th>  Durbin-Watson:     </th> <td>   0.372</td> 
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th>  <td> 0.000</td>  <th>  Jarque-Bera (JB):  </th> <td>43359.192</td>
+</tr>
+<tr>
+  <th>Skew:</th>           <td> 4.022</td>  <th>  Prob(JB):          </th> <td>    0.00</td> 
+</tr>
+<tr>
+  <th>Kurtosis:</th>       <td>26.936</td>  <th>  Cond. No.          </th> <td>6.93e+03</td> 
+</tr>
+</tbody></table><br><br>Notes:<br>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.<br>[2] The condition number is large, 6.93e+03. This might indicate that there are<br>strong multicollinearity or other numerical problems.
+
+<br>
+Calculate the R-squared again, still, not good enough.So let&apos;s take a deep dive and see where can be improved.
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Y_bar=np.sum(Y_train*P_train)/np.sum(P_train) <span class="hljs-comment"># weighted average</span></span><br><span class="line">Y_pred=res.predict(X_train)</span><br><span class="line"></span><br><span class="line">deviance=square_error(Y_train,Y_pred,P_train)</span><br><span class="line">null_deviance=square_error(Y_train,Y_bar,P_train)</span><br><span class="line">R2=<span class="hljs-number">1</span>-deviance/null_deviance</span><br><span class="line">R2</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>0.3726019173009557</code></pre>
+<h3 id="Extrapolation-of-Time-trends"><a href="#Extrapolation-of-Time-trends" class="headerlink" title="Extrapolation of Time trends"></a>Extrapolation of Time trends</h3><p>The linear model projects the admission to be increasing steadily if assuming current vaccination rate.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">covid.plot_time_extrapolation(train_data,res,event,date0)</span><br></pre></td></tr></tbody></table></figure>
+<img src="http://yumeng-li.github.io/projectcovid_files/projectcovid_43_0.png">
+
+
+<h3 id="In-sample-model-Fit"><a href="#In-sample-model-Fit" class="headerlink" title="In-sample model Fit"></a>In-sample model Fit</h3><p>To better evaluate the model fit, we visualize the real observations and model prodictions. Here&#x2019;s some <strong>snapshots</strong> of the fit for a few selected dates on the training period. </p>
+<p>Observations are arranged by state and date.</p>
+<p>Don&#x2019;t have to say much, you can tell the weighted linear model doesn&#x2019;t fit well as the corelation between vaccinations and admissions looks more like a curve than a straight line.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">covid.plot_time_facets(train_data,res,event,date0)</span><br></pre></td></tr></tbody></table></figure>
+
+<img src="http://yumeng-li.github.io/projectcovid_files/projectcovid_45_0.png">
+
+
+<p>We can further plot out the residuals. I choose one date from the dates above, Aug.15 and apply the following function to generate its residual plot.</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">plot_residuals</span>(<span class="hljs-params">data,event,res</span>):</span></span><br><span class="line">    P=data[<span class="hljs-string">&quot;population&quot;</span>]</span><br><span class="line">    <span class="hljs-comment"># Create two subplots and unpack the output array immediately</span></span><br><span class="line">    f, (ax1, ax2) = plt.subplots(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>,sharex=<span class="hljs-literal">True</span>,figsize=(<span class="hljs-number">16</span>,<span class="hljs-number">4</span>))</span><br><span class="line">    norm=matplotlib.colors.LogNorm(vmin=<span class="hljs-number">100</span>_000, vmax=P.max(), clip=<span class="hljs-literal">False</span>)</span><br><span class="line">    m=ax1.scatter(data[<span class="hljs-string">&quot;vaccinated&quot;</span>],data[event]/data[<span class="hljs-string">&quot;population&quot;</span>]*<span class="hljs-number">100</span>_000,</span><br><span class="line">                c=P,norm=norm,cmap=<span class="hljs-string">&quot;Blues&quot;</span>,label=event)</span><br><span class="line">    plt.colorbar(m,label=<span class="hljs-string">&quot;State Population&quot;</span>)</span><br><span class="line">    x=np.linspace(<span class="hljs-number">0.3</span>,<span class="hljs-number">0.75</span>,<span class="hljs-number">201</span>)</span><br><span class="line">    x= pd.DataFrame({<span class="hljs-string">&apos;vaccinated&apos;</span>:x, <span class="hljs-string">&apos;T&apos;</span>:<span class="hljs-number">31</span>, <span class="hljs-string">&apos;T2&apos;</span>:<span class="hljs-number">31</span>*<span class="hljs-number">31</span>})</span><br><span class="line">    x[<span class="hljs-string">&quot;const&quot;</span>]=np.ones(<span class="hljs-number">201</span>)</span><br><span class="line">    y_pred=res.predict(x)</span><br><span class="line">    ax1.plot(x.vaccinated, y_pred*<span class="hljs-number">100</span>_000,<span class="hljs-string">&quot;k--&quot;</span>,label=<span class="hljs-string">&quot;predicted&quot;</span>) </span><br><span class="line">    </span><br><span class="line">    idx = data.index</span><br><span class="line">    ax2.scatter(data[<span class="hljs-string">&quot;vaccinated&quot;</span>], res.resid[idx],</span><br><span class="line">                c=P,norm=norm,cmap=<span class="hljs-string">&quot;Blues&quot;</span>,label=event)</span><br><span class="line">    ax2.set_ybound(lower=<span class="hljs-number">-0.00008</span>,upper=<span class="hljs-number">0.00008</span>)</span><br><span class="line">    ax2.set_title(<span class="hljs-string">&quot;Residuals&quot;</span>)</span><br><span class="line">    ax2.set_xlabel(<span class="hljs-string">&quot;vaccination&quot;</span>)</span><br><span class="line">    ax2.set_ylabel(<span class="hljs-string">&quot;residual&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment"># select outlier state</span></span><br><span class="line">    outlier_idx=np.argpartition(np.array(res.resid[idx]), <span class="hljs-number">-2</span>)[<span class="hljs-number">-2</span>:]</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> outlier_idx:</span><br><span class="line">        outlier=data.iloc[i]</span><br><span class="line">        ax1.annotate(outlier[<span class="hljs-string">&quot;state&quot;</span>],(outlier[<span class="hljs-string">&quot;vaccinated&quot;</span>]+<span class="hljs-number">0.01</span>,outlier[event]/outlier[<span class="hljs-string">&quot;population&quot;</span>]*<span class="hljs-number">100</span>_000))</span><br><span class="line">        ax2.annotate(outlier[<span class="hljs-string">&quot;state&quot;</span>],(outlier[<span class="hljs-string">&quot;vaccinated&quot;</span>]+<span class="hljs-number">0.01</span>,res.resid[idx].iloc[i]))</span><br></pre></td></tr></tbody></table></figure>
+
+<p>We can see that </p>
+<ul>
+<li>Predicted events can be negative for large vaccination rates, saying we are <strong>over estimating</strong> how fast the admission rate is increasing.</li>
+<li>residual variance is negatively correlated with vaccinations rate i.e., smaller vaccination rates have larger magnitude residuals. A <strong>Poisson model</strong> can fix those issues, which will be the topic of our next blog.</li>
+<li>Some states like FL and KY look like outliers, indicating that they may have different intercepts than the others, which is not surprising as states are different subjects and each may have unique fundamentals. A <strong>mixed model</strong> would be a good solution for this. </li>
+</ul>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">plot_residuals(last_data,event,res)</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<img src="http://yumeng-li.github.io/projectcovid_files/projectcovid_49_0.png">
+
+
+<h2 id="Model-Prediction"><a href="#Model-Prediction" class="headerlink" title="Model Prediction"></a>Model Prediction</h2><p>We will now use the model <strong>without recalibrating</strong> to make predictions about admission rates on new data.</p>
+<p>This is <strong>out of sample</strong> evaluation. It is the only way to make sure the model really works.</p>
+<h3 id="Out-of-Sample-Model-Fit"><a href="#Out-of-Sample-Model-Fit" class="headerlink" title="Out of Sample Model Fit"></a>Out of Sample Model Fit</h3><p>Besides greater residuals, the out of sample evaluation is basically telling us a same story. </p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">covid.plot_time_facets(test_data,res,event,date0)</span><br></pre></td></tr></tbody></table></figure>
+
+<img src="http://yumeng-li.github.io/projectcovid_files/projectcovid_53_0.png">
+
+
+<h2 id="Day-of-the-Week-Effects"><a href="#Day-of-the-Week-Effects" class="headerlink" title="Day of the Week Effects"></a>Day of the Week Effects</h2><p>Before we move on to GLM, there&#x2019;s another trick to play with. The data reporting obviously has day of the week effects,</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">aggregate=data.groupby([<span class="hljs-string">&quot;date&quot;</span>])[event].sum()</span><br><span class="line">aggregate=aggregate.to_frame().reset_index()</span><br><span class="line">aggregate.plot(x=<span class="hljs-string">&quot;date&quot;</span>,y=event)</span><br></pre></td></tr></tbody></table></figure>
+
+<img src="http://yumeng-li.github.io/projectcovid_files/projectcovid_55_1.png">
+
+
+<p>We use a new function to generate the train data, more dummy variables are added to represent days of a week,</p>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">define_variables2</span>(<span class="hljs-params">data,date0</span>):</span></span><br><span class="line">        N=len(data)</span><br><span class="line">        T=(data[<span class="hljs-string">&quot;date&quot;</span>]-date0).dt.days</span><br><span class="line">        X=data[<span class="hljs-string">&quot;vaccinated&quot;</span>].copy().to_frame()</span><br><span class="line">        X[<span class="hljs-string">&quot;T&quot;</span>]=T</span><br><span class="line">        X[<span class="hljs-string">&quot;T2&quot;</span>]=T**<span class="hljs-number">2</span></span><br><span class="line">        X[<span class="hljs-string">&quot;const&quot;</span>]=np.ones(N)</span><br><span class="line">        Z=pd.get_dummies(data[<span class="hljs-string">&quot;date&quot;</span>].dt.day_name(),drop_first=<span class="hljs-literal">True</span>)</span><br><span class="line">        X=pd.concat([X,Z],axis=<span class="hljs-number">1</span>)</span><br><span class="line">        P=data[<span class="hljs-string">&quot;population&quot;</span>]</span><br><span class="line">        <span class="hljs-keyword">return</span> X,P</span><br></pre></td></tr></tbody></table></figure>
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">X_train,P_train=define_variables2(train_data,date0)</span><br><span class="line">X_train.head()</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th &#123;
+    vertical-align: top;
+&#125;
+
+.dataframe thead th &#123;
+    text-align: right;
+&#125;</code></pre>
+<p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>vaccinated</th>
+      <th>T</th>
+      <th>T2</th>
+      <th>const</th>
+      <th>Monday</th>
+      <th>Saturday</th>
+      <th>Sunday</th>
+      <th>Thursday</th>
+      <th>Tuesday</th>
+      <th>Wednesday</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>0.440153</td>
+      <td>21</td>
+      <td>441</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.431722</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.435852</td>
+      <td>10</td>
+      <td>100</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.441906</td>
+      <td>24</td>
+      <td>576</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>0.437877</td>
+      <td>15</td>
+      <td>225</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mod=sm.WLS(Y_train,X_train,P_train)</span><br><span class="line">res=mod.fit()</span><br><span class="line">res.params</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>vaccinated   -1.510900e-04
+T             1.028112e-06
+T2           -6.639196e-10
+const         8.186223e-05
+Monday       -2.235516e-06
+Saturday     -8.318830e-07
+Sunday       -3.189080e-06
+Thursday     -2.233662e-08
+Tuesday       3.232847e-07
+Wednesday    -2.672040e-07
+dtype: float64</code></pre>
+<figure class="highlight python hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res.rsquared</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<pre><code>0.37572844250241666</code></pre>
+<p>$R^2$ is 0.376, higher than the 0.373 we previously have. Day of the week provides a <strong>small improvement</strong> on $R^2$ compared to original model.</p>
+</body></html>
+    
+    </div>
+    
+    
+    <div class="columns is-mobile is-multiline article-nav">
+        <span class="column is-12-mobile is-half-desktop  article-nav-prev">
+            
+            <a href="/2021/09/26/projectcovidGLM/">Project Covid Admissions Based on Vaccine Progress, Part 2 -- Generalized Linear Models, From Poisson Regression to Negative Binomial Regression</a>
+            
+        </span>
+        <span class="column is-12-mobile is-half-desktop  article-nav-next">
+            
+            <a href="/2020/08/02/word2vec-on-bbg/">Training Word Embedding on Bloomberg News</a>
+            
+        </span>
+    </div>
+    
+</article>
+
+
+
+
+    </div>
+</section>
+    <footer class="footer">
+    <div class="container">
+        <div class="columns content">
+            <div class="column is-narrow has-text-centered">
+                &copy; 2025 Yumeng Li&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
+                        target="_blank" rel="noopener" href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
+            </div>
+            <div class="column is-hidden-mobile"></div>
+
+            
+            <div class="column is-narrow">
+                <div class="columns is-mobile is-multiline is-centered">
+                
+                    
+                <a class="column is-narrow has-text-black" title="GitHub" target="_blank" rel="noopener" href="https://github.com/ppoffice/hexo-theme-minos">
+                    
+                    GitHub
+                    
+                </a>
+                
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</footer>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
+
+<!-- test if the browser is outdated -->
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" target="_blank" rel="noopener" href="http://outdatedbrowser.com/">Update my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // plugin function, place inside DOM ready function
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        })
+    });
+</script>
+
+<script>
+    window.FontAwesomeConfig = {
+        searchPseudoElements: true
+    }
+    moment.locale("en-AU");
+</script>
+
+
+    
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+    MathJax.Hub.Config({
+        "HTML-CSS": {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+</script>
+
+    
+    
+    
+    
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/js/lightgallery-all.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/js/jquery.justifiedGallery.min.js"></script>
+<script>
+    (function ($) {
+        $(document).ready(function () {
+            if (typeof($.fn.lightGallery) === 'function') {
+                $('.article.gallery').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof($.fn.justifiedGallery) === 'function') {
+                $('.justified-gallery').justifiedGallery();
+            }
+        });
+    })(jQuery);
+</script>
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <style>
+        .hljs {
+            position: relative;
+        }
+
+        .hljs .clipboard-btn {
+            float: right;
+            color: #9a9a9a;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .hljs .clipboard-btn:hover {
+          color: #8a8a8a;
+        }
+
+        .hljs > .clipboard-btn {
+            display: none;
+            position: absolute;
+            right: 4px;
+            top: 4px;
+        }
+
+        .hljs:hover > .clipboard-btn {
+            display: inline;
+        }
+
+        .hljs > figcaption > .clipboard-btn {
+            margin-right: 4px;
+        }
+    </style>
+    <script>
+      $(document).ready(function () {
+        $('figure.hljs').each(function(i, figure) {
+          var codeId = 'code-' + i;
+          var code = figure.querySelector('.code');
+          var copyButton = $('<button>Copy <i class="far fa-clipboard"></i></button>');
+          code.id = codeId;
+          copyButton.addClass('clipboard-btn');
+          copyButton.attr('data-clipboard-target-id', codeId);
+
+          var figcaption = figure.querySelector('figcaption');
+
+          if (figcaption) {
+            figcaption.append(copyButton[0]);
+          } else {
+            figure.prepend(copyButton[0]);
+          }
+        })
+
+        var clipboard = new ClipboardJS('.clipboard-btn', {
+          target: function(trigger) {
+            return document.getElementById(trigger.getAttribute('data-clipboard-target-id'));
+          }
+        });
+        clipboard.on('success', function(e) {
+          e.clearSelection();
+        })
+      })
+    </script>
+
+    
+    
+
+    
+
+
+
+<script src="/js/script.js"></script>
+
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-mask"></div>
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="Type something..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+    
+</body>
+</html>
